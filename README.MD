@@ -16,40 +16,40 @@ Plugin feito para coachs. O administrador poderá criar quiz, adicionar pergunta
  * O administrador poderá inserir vários resultados possíveis com base na pontuação do teste.
 
  * __O usuário/cliente__
-  * Poderá se registrar via site ou então ter seu registro feito pelo administrador.
-  * Deve ter acesso ao painel de usuário onde os testes vinculados ao seu ID estarão disponíveis, assim como os resultados de testes já feitos.
-  * Cada usuário poderá fazer o teste disponível uma única vez.
+   * Poderá se registrar via site ou então ter seu registro feito pelo administrador.
+   * Deve ter acesso ao painel de usuário onde os testes vinculados ao seu ID estarão disponíveis, assim como os resultados de testes já feitos.
+   * Cada usuário poderá fazer o teste disponível uma única vez.
 
  * __Front-end da página do quiz__
-  * Utilizar um modelo de página como template(elementor) para o questionário. Além disso o resultado deverá ser exibido na hora.
+   * Utilizar um modelo de página como template(elementor) para o questionário. Além disso o resultado deverá ser exibido na hora.
 
 ### Post Types
  * __CPT: uc_quiz__: O título recebe o nome do quiz, também podemos adicionar configurações de template e categorias.
-  * No editor: Assim como em outros plugins de quiz, nós vamos inserir botões e opções para adicionar perguntas e respostas relativos ao quiz.
-  * No Front-end: Dentro do post inserimos um shortcode com as questões relacionadas a ele.
-  * Cada quiz recebe um meta-campo "ids/user ids" para salvar id(s) do(s) usuários habilitados a fazer o quiz.
-   > Em um campo select mostrar todos os usuários cadastrados. Também mostrar uma opção de busca por nome. O administrador poderá selecionar vários usuários.
+   * No editor: Assim como em outros plugins de quiz, nós vamos inserir botões e opções para adicionar perguntas e respostas relativos ao quiz.
+   * No Front-end: Dentro do post inserimos um shortcode com as questões relacionadas a ele.
+   * Cada quiz recebe um meta-campo "ids/user ids" para salvar id(s) do(s) usuários habilitados a fazer o quiz.
+    > Em um campo select mostrar todos os usuários cadastrados. Também mostrar uma opção de busca por nome. O administrador poderá selecionar vários usuários.
 
  * __Post type: uc_questions__: Cada nova questão será um post com título, descrição e até categoria.
-  * Cada pergunta recebe um meta-campo "valor/peso" que deve ser preenchido pelo administrador com um valor numérico.
-  * Cada pergunta recebe um meta-campo "show/hide" para definir se a pergunta deverá aparecer ou não no teste do usuário no front-end.
+   * Cada pergunta recebe um meta-campo "valor/peso" que deve ser preenchido pelo administrador com um valor numérico.
+   * Cada pergunta recebe um meta-campo "show/hide" para definir se a pergunta deverá aparecer ou não no teste do usuário no front-end.
 
  * __Post type: uc_anwers__: Cada resposta será um novo post com um titulo genérico e a descrição inserida pelo administrador.
-  * Cada resposta será vinculada a pergunta que pertence através de ID ou hierarquia de posts.
-  * Além disso cada resposta recebe um meta-campo "correto" para apontar a resposta certa.
+   * Cada resposta será vinculada a pergunta que pertence através de ID ou hierarquia de posts.
+   * Além disso cada resposta recebe um meta-campo "correto" para apontar a resposta certa.
 
 ### Módulos
 * Quiz
-  * Criação do quiz
-  * Adição das perguntas e suas configurações
-  * Adição das respostas e suas configurações
-  * Correção e Resultado
+   * Criação do quiz
+   * Adição das perguntas e suas configurações
+   * Adição das respostas e suas configurações
+   * Correção e Resultado
 * Front-end
- * Página do quiz
+  * Página do quiz
 * Painel usuário
- * Mostrar os testes disponíveis no painel do usuário
- * Mostrar os resultados dos testes no painel do usuário
- * Criar página template para o quiz(front-end)
+  * Mostrar os testes disponíveis no painel do usuário
+  * Mostrar os resultados dos testes no painel do usuário
+  * Criar página template para o quiz(front-end)
 
 ## Instalação
 1) Faça o upload no diretório ou instale o plugin de forma comum pelo painel do wordpress
