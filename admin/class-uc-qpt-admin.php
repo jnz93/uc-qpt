@@ -52,6 +52,9 @@ class Uc_Qpt_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+
+		// Create custom post type
+		add_action('init', array($this, 'create_custom_post_types'));
 	}
 
 	/**
@@ -98,6 +101,127 @@ class Uc_Qpt_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/uc-qpt-admin.js', array( 'jquery' ), $this->version, false );
 
+	}
+
+	/**
+	 * Register custom post types
+	 * 
+	 * @since 1.0.0
+	 */
+	public function create_custom_post_types()
+	{
+		$labels = array(
+			'name'                  => _x( 'Quiz Personality Test', 'Post type general name', 'textdomain' ),
+			'singular_name'         => _x( 'QPT', 'Post type singular name', 'textdomain' ),
+			'menu_name'             => _x( 'QPT', 'Admin Menu text', 'textdomain' ),
+			'name_admin_bar'        => _x( 'QPT', 'Add New on Toolbar', 'textdomain' ),
+			'add_new'               => __( 'Adicionar novo', 'textdomain' ),
+			'add_new_item'          => __( 'Adicionar novo teste', 'textdomain' ),
+			'new_item'              => __( 'Novo teste', 'textdomain' ),
+			'edit_item'             => __( 'Editar teste', 'textdomain' ),
+			'view_item'             => __( 'Ver teste', 'textdomain' ),
+			'all_items'             => __( 'Todos os testes', 'textdomain' ),
+			'search_items'          => __( 'Procurar teste', 'textdomain' ),
+			'parent_item_colon'     => __( 'Parent test:', 'textdomain' ),
+			'not_found'             => __( 'Nenhum teste encontrado.', 'textdomain' ),
+			'not_found_in_trash'    => __( 'Nenhum teste encontrado na lixeira.', 'textdomain' ),
+			'featured_image'        => _x( 'Capa do teste', 'Overrides the “Featured Image” phrase for this post type. Added in 4.3', 'textdomain' ),
+			'set_featured_image'    => _x( 'Definir imagem de capa', 'Overrides the “Set featured image” phrase for this post type. Added in 4.3', 'textdomain' ),
+			'remove_featured_image' => _x( 'Remover imagem de capa', 'Overrides the “Remove featured image” phrase for this post type. Added in 4.3', 'textdomain' ),
+			'use_featured_image'    => _x( 'Usar imagem como capa', 'Overrides the “Use as featured image” phrase for this post type. Added in 4.3', 'textdomain' ),
+			'archives'              => _x( 'Arquivo de testes', 'The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4', 'textdomain' ),
+			'insert_into_item'      => _x( 'Inserir no teste', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'textdomain' ),
+			'uploaded_to_this_item' => _x( 'Carregar para este teste', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'textdomain' ),
+			'filter_items_list'     => _x( 'Filtro de testes', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'textdomain' ),
+			'items_list_navigation' => _x( 'Navegação da lista de teste', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'textdomain' ),
+			'items_list'            => _x( 'Lista de teste', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'textdomain' ),
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'description'        => 'Teste de personalidade',
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => 'quiz' ),
+			'capability_type'    => 'post',
+			'has_archive'        => true,
+			'hierarchical'       => true,
+			'menu_position'      => 20,
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail' ),
+			'taxonomies'         => array( 'category', 'post_tag' ),
+			'show_in_rest'       => true
+		);
+		register_post_type( 'uc_quiz', $args );
+
+		// Questões
+		unset($labels);
+		unset($args);
+		$labels = array(
+			'name'                  => _x( 'QPT - Questões', 'Post type general name', 'textdomain' ),
+			'singular_name'         => _x( 'Questão', 'Post type singular name', 'textdomain' ),
+			'menu_name'             => _x( 'QPT - Questões', 'Admin Menu text', 'textdomain' ),
+			'name_admin_bar'        => _x( 'QPT - Questões', 'Add New on Toolbar', 'textdomain' ),
+			'add_new'               => __( 'Adicionar nova', 'textdomain' ),
+			'add_new_item'          => __( 'Adicionar nova questão', 'textdomain' ),
+			'new_item'              => __( 'Nova questão', 'textdomain' ),
+			'edit_item'             => __( 'Editar Questão', 'textdomain' ),
+			'view_item'             => __( 'Ver Questão', 'textdomain' ),
+			'all_items'             => __( 'Todas as Questões', 'textdomain' )
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'description'        => 'Perguntas utilizadas nos testes',
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => 'question' ),
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => 20,	
+			'supports'           => array( 'title', 'editor', 'author' ),
+			'taxonomies'         => array( 'category', 'post_tag' ),
+			'show_in_rest'       => true
+		);
+		register_post_type( 'uc_question', $args );
+
+		// Respostas
+		unset($labels);
+		unset($args);
+		$labels = array(
+			'name'                  => _x( 'QPT - Respostas', 'Post type general name', 'textdomain' ),
+			'singular_name'         => _x( 'Resposta', 'Post type singular name', 'textdomain' ),
+			'menu_name'             => _x( 'QPT - Respostas', 'Admin Menu text', 'textdomain' ),
+			'name_admin_bar'        => _x( 'QPT - Respostas', 'Add New on Toolbar', 'textdomain' ),
+			'add_new'               => __( 'Adicionar nova', 'textdomain' ),
+			'add_new_item'          => __( 'Adicionar nova resposta', 'textdomain' ),
+			'new_item'              => __( 'Nova resposta', 'textdomain' ),
+			'edit_item'             => __( 'Editar resposta', 'textdomain' ),
+			'view_item'             => __( 'Ver resposta', 'textdomain' ),
+			'all_items'             => __( 'Todas as respostas', 'textdomain' )
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'description'        => 'Perguntas utilizadas nos testes',
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => 'answers' ),
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => 20,	
+			'supports'           => array( 'title', 'editor', 'author' ),
+			'show_in_rest'       => true
+		);
+		register_post_type( 'uc_answer', $args );
 	}
 
 }
