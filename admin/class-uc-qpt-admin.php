@@ -77,6 +77,7 @@ class Uc_Qpt_Admin {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/uc-qpt-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'uikit', plugin_dir_url( __FILE__ ) . 'css/uikit.min.css', array(), '3.6.5');
 
 	}
 
@@ -100,7 +101,25 @@ class Uc_Qpt_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/uc-qpt-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'uikit', plugin_dir_url( __FILE__ ) . 'js/uikit.min.js', array(), '3.6.5', false );
+		wp_enqueue_script( 'uikit-icons', plugin_dir_url( __FILE__ ) . 'js/uikit-icons.min.js', array(), '3.6.5', false );
+	}
 
+	/**
+	 * Create page admin of plugin
+	 * 
+	 * @since 1.0.0
+	 */
+	public function create_admin_page()
+	{
+		$page_title = 'Unitycode Heartbeat';
+		$menu_title = 'UC Heartbeat';
+		$menu_slug 	= 'uchb';
+		$capability = 10;
+		$icon_url 	= 'dashicons-store';
+		$position 	= 10;
+
+		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this, 'construct_admin_page'), $icon_url, $position);
 	}
 
 	/**
