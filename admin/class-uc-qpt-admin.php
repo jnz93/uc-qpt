@@ -52,6 +52,8 @@ class Uc_Qpt_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		// Menu admin item
+		add_action('admin_menu', array($this, 'create_plugin_menu'));
 
 		// Create custom post type
 		add_action('init', array($this, 'create_custom_post_types'));
@@ -110,16 +112,48 @@ class Uc_Qpt_Admin {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function create_admin_page()
+	public function create_plugin_menu()
 	{
-		$page_title = 'Unitycode Heartbeat';
-		$menu_title = 'UC Heartbeat';
+		$page_title = 'Quiz Personality Test';
+		$menu_title = 'QPT - Quiz';
 		$menu_slug 	= 'uchb';
 		$capability = 10;
-		$icon_url 	= 'dashicons-store';
-		$position 	= 10;
+		$icon_url 	= 'dashicons-editor-spellcheck';
+		$position 	= 20;
 
-		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this, 'construct_admin_page'), $icon_url, $position);
+		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this, 'construct_plugin_page'), $icon_url, $position);
+	}
+
+	/**
+	 * Construct page admin function
+	 * 
+	 * @since 1.0.0
+	 */
+	public function construct_plugin_page()
+	{
+		$buttons = '<p uk-margin>
+						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-projetos">Projetos</button>
+						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-orcamentos">Orçamentos</button>
+						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-clientes">Clientes</button>
+						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-financas">Finanças</button>
+					</p>';
+
+		$card_buttons = '<div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
+							<div>
+								<div class="uk-card uk-card-default uk-card-body">
+									<h3 class="uk-card-title">Menu Principal</h3>
+									'. $buttons .'
+								</div>
+							</div>
+						</div>';
+		
+		// Outputs
+		echo $card_buttons;
+
+		// include templates
+		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-project.php';
+		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-customer.php';
+		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-budget.php';
 	}
 
 	/**
