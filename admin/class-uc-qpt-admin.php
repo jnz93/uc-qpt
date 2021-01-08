@@ -57,6 +57,11 @@ class Uc_Qpt_Admin {
 
 		// Create custom post type
 		add_action('init', array($this, 'create_custom_post_types'));
+
+		// Ajax actions
+		add_action('wp_ajax_ucqpt_create_new_quiz', array($this, 'ucqpt_create_new_quiz_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_create_draft_quiz', array($this, 'ucqpt_create_draft_quiz_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_create_question_and_answers', array($this, 'ucqpt_create_question_and_answers_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -116,7 +121,7 @@ class Uc_Qpt_Admin {
 	{
 		$page_title = 'Quiz Personality Test';
 		$menu_title = 'QPT - Quiz';
-		$menu_slug 	= 'uchb';
+		$menu_slug 	= 'qpt-admin';
 		$capability = 10;
 		$icon_url 	= 'dashicons-editor-spellcheck';
 		$position 	= 20;
@@ -132,10 +137,7 @@ class Uc_Qpt_Admin {
 	public function construct_plugin_page()
 	{
 		$buttons = '<p uk-margin>
-						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-projetos">Projetos</button>
-						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-orcamentos">Orçamentos</button>
-						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-clientes">Clientes</button>
-						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #modal-financas">Finanças</button>
+						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #new-quiz">Novo Teste de Personalidade</button>
 					</p>';
 
 		$card_buttons = '<div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
@@ -151,7 +153,7 @@ class Uc_Qpt_Admin {
 		echo $card_buttons;
 
 		// include templates
-		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-project.php';
+		require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-new-quiz.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-customer.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-budget.php';
 	}
@@ -269,7 +271,7 @@ class Uc_Qpt_Admin {
 			'query_var'          => true,
 			'rewrite'            => array( 'slug' => 'answers' ),
 			'has_archive'        => true,
-			'hierarchical'       => false,
+			'hierarchical'       => true,
 			'menu_position'      => 20,	
 			'supports'           => array( 'title', 'editor', 'author' ),
 			'show_in_rest'       => true
@@ -277,4 +279,112 @@ class Uc_Qpt_Admin {
 		register_post_type( 'uc_answer', $args );
 	}
 
+	/**
+	 * Recebe os dados para criação do novo teste via ajax
+	 * 
+	 * @since 1.0.0
+	 */
+	public function ucqpt_create_new_quiz_by_ajax()
+	{
+		$data 				= $_POST['data'];
+		$extract_data 		= explode('||', $data);
+		$post_title 		= $extract_data[0];
+		$post_description 	= $extract_data[1];
+
+		$postarr = array(
+			'post_title'    => $post_title,
+			'post_content'  => $post_description,
+			'post_status'   => 'publish',
+			'post_type'		=> 'uc_quiz'
+		);
+		$post_id = wp_insert_post( $postarr );
+
+		if ( !is_wp_error( $post_id )) :
+			echo '<span id="quiz-id" style="display: none;">'. $post_id .'</span>';
+		else :
+			echo 'err';
+		endif;
+	}
+
+	/**
+	 * Cria novo rascunho de teste via ajax
+	 * 
+	 * @since 1.0.0
+	 */
+	public function ucqpt_create_draft_quiz_by_ajax()
+	{
+		$postarr = array(
+			'post_title'	=> 'Rascunho de avaliação',
+			'post_status'	=> 'draft',
+			'post_type'		=> 'uc_quiz'
+		);
+
+		$draft_id = wp_insert_post( $postarr );
+
+		if ( !is_wp_error( $draft_id ) ) :
+			echo $draft_id;
+		else :
+			echo 'Erro ao criar rascunho';
+		endif;
+	}
+
+	/**
+	 * Criação de perguntas e respostas via ajax
+	 * 
+	 * @since 1.0.0
+	 */
+	public function ucqpt_create_question_and_answers_by_ajax()
+	{
+		$question 	= $_POST['question'];
+		$answers 	= $_POST['answers'];
+		$quiz_id 	= $_POST['quizId'];
+
+		$question 				= explode('||', $question);
+		$question_title 		= $question[0];
+		$question_description 	= $question[1];
+
+		$answers = explode('||', $answers);
+		// insert new question
+		$postarr = array(
+			'post_title'	=> $question_title,
+			'post_content'	=> $question_description,
+			'post_type'		=> 'uc_question',
+			'post_status'	=> 'publish'
+		);
+		$question_id = wp_insert_post( $postarr );
+		if ( !is_wp_error( $question_id ) ) :
+
+			foreach ($answers as $answer) :
+
+				# Sanitize Answer title
+				$arr 		= explode('>>', $answer);
+				$title 		= $arr[0];
+				$is_correct	= $arr[1];
+
+				$postarr = array(
+					'post_title' 	=> $title,
+					'post_parent'	=> $question_id,
+					'post_type'		=> 'uc_answer',
+					'post_status'	=> 'publish'
+				);
+				// echo $title;
+				// echo $is_correct;
+				$answer_id = wp_insert_post( $postarr );
+
+				// update_post_meta para assinalar certa ou errada.
+				update_post_meta( $answer_id, 'answer_is_correct', $is_correct );
+			endforeach;
+
+			// Salvar id da pergunta no quiz
+			$curr_questions_ids = get_post_meta($quiz_id, 'quiz_questions_ids', true);
+			if ( !empty($curr_questions_ids) ) :
+				$new_questions_ids = $curr_questions_ids . ',' . $question_id;
+			else :
+				$new_questions_ids = $question_id;
+			endif;
+
+			// Update post meta
+			update_post_meta( $quiz_id, 'quiz_questions_ids', $new_questions_ids );
+		endif;
+	}
 }
