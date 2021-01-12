@@ -340,15 +340,11 @@ class Uc_Qpt_Admin {
 		$answers 	= $_POST['answers'];
 		$quiz_id 	= $_POST['quizId'];
 
-		$question 				= explode('||', $question);
-		$question_title 		= $question[0];
-		$question_description 	= $question[1];
-
 		$answers = explode('||', $answers);
 		// insert new question
 		$postarr = array(
-			'post_title'	=> $question_title,
-			'post_content'	=> $question_description,
+			'post_title'	=> $question,
+			'post_content'	=> '',
 			'post_type'		=> 'uc_question',
 			'post_status'	=> 'publish'
 		);
@@ -360,7 +356,7 @@ class Uc_Qpt_Admin {
 				# Sanitize Answer title
 				$arr 		= explode('>>', $answer);
 				$title 		= $arr[0];
-				$is_correct	= $arr[1];
+				$perfil		= $arr[1];
 
 				$postarr = array(
 					'post_title' 	=> $title,
@@ -368,12 +364,10 @@ class Uc_Qpt_Admin {
 					'post_type'		=> 'uc_answer',
 					'post_status'	=> 'publish'
 				);
-				// echo $title;
-				// echo $is_correct;
 				$answer_id = wp_insert_post( $postarr );
 
 				// update_post_meta para assinalar certa ou errada.
-				update_post_meta( $answer_id, 'answer_is_correct', $is_correct );
+				update_post_meta( $answer_id, 'answer_perfil', $perfil);
 			endforeach;
 
 			// Salvar id da pergunta no quiz

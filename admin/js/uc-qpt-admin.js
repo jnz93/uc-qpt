@@ -127,41 +127,84 @@ function addTplQuestion(ajaxUrl)
 								<div class="uk-margin">
 									<input class="uk-input question-title" type="text" placeholder="Insira a pergunta">
 								</div>
-
-								<div class="uk-margin">
-									<textarea class="question-description" cols="" rows="" style="width: 100%">Adicione uma descrição</textarea>
-								</div>
-
 								<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid" style="display: none;">
 									<label><input class="uk-checkbox" id="disable-question" type="checkbox"> Desabilitar pergunta</label>
 								</div>
 							</div>
 
 							<!-- Respostas -->
-							<div class="uk-width-1-2">
+							<div class="uk-width-1-1">
 								<h4 class="">Respostas</h4>
-								<div class="uk-margin">
-									<input class="uk-input answer-one" type="text" placeholder="Resposta #1">
-									<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-										<label><input class="uk-checkbox answer-one-check" type="checkbox"> Resposta correta?</label>
+								<div class="uk-margin uk-flex uk-flex-row">
+									<input class="uk-input uk-form-width-large answer-one" type="text" placeholder="Resposta #1">
+									<div class="uk-margin-left">
+										<div uk-form-custom="target: > * > span:first-child">
+											<select class="answer-one-perfil">
+												<option value="">Perfil da resposta</option>
+												<option value="A">Afetivo</option>
+												<option value="P">Pragmático</option>
+												<option value="R">Racional</option>
+												<option value="V">Visionário</option>
+											</select>
+											<button class="uk-button uk-button-default" type="button" tabindex="-1">
+												<span></span>
+												<span uk-icon="icon: chevron-down"></span>
+											</button>
+										</div>
 									</div>
 								</div>
-								<div class="uk-margin">
-									<input class="uk-input answer-two" type="text" placeholder="Resposta #2">
-									<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-										<label><input class="uk-checkbox answer-two-check" type="checkbox"> Resposta correta?</label>
+								<div class="uk-margin uk-flex uk-flex-row">
+									<input class="uk-input uk-form-width-large answer-two" type="text" placeholder="Resposta #2">
+									<div class="uk-margin-left">
+										<div uk-form-custom="target: > * > span:first-child">
+											<select class="answer-two-perfil">
+												<option value="">Perfil da resposta</option>
+												<option value="A">Afetivo</option>
+												<option value="P">Pragmático</option>
+												<option value="R">Racional</option>
+												<option value="V">Visionário</option>
+											</select>
+											<button class="uk-button uk-button-default" type="button" tabindex="-1">
+												<span></span>
+												<span uk-icon="icon: chevron-down"></span>
+											</button>
+										</div>
 									</div>
 								</div>
-								<div class="uk-margin">
-									<input class="uk-input answer-three" type="text" placeholder="Resposta #3">
-									<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-										<label><input class="uk-checkbox answer-three-check" type="checkbox"> Resposta correta?</label>
+								<div class="uk-margin uk-flex uk-flex-row">
+									<input class="uk-input uk-form-width-large answer-three" type="text" placeholder="Resposta #3">
+									<div class="uk-margin-left">
+										<div uk-form-custom="target: > * > span:first-child">
+											<select class="answer-three-perfil">
+												<option value="">Perfil da resposta</option>
+												<option value="A">Afetivo</option>
+												<option value="P">Pragmático</option>
+												<option value="R">Racional</option>
+												<option value="V">Visionário</option>
+											</select>
+											<button class="uk-button uk-button-default" type="button" tabindex="-1">
+												<span></span>
+												<span uk-icon="icon: chevron-down"></span>
+											</button>
+										</div>
 									</div>
 								</div>
-								<div class="uk-margin">
-									<input class="uk-input answer-four" type="text" placeholder="Resposta #4">
-									<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-										<label><input class="uk-checkbox answer-four-check" type="checkbox"> Resposta correta?</label>
+								<div class="uk-margin uk-flex uk-flex-row">
+									<input class="uk-input uk-form-width-large answer-four" type="text" placeholder="Resposta #4">
+									<div class="uk-margin-left">
+										<div uk-form-custom="target: > * > span:first-child">
+											<select class="answer-four-perfil">
+												<option value="">Perfil da resposta</option>
+												<option value="A">Afetivo</option>
+												<option value="P">Pragmático</option>
+												<option value="R">Racional</option>
+												<option value="V">Visionário</option>
+											</select>
+											<button class="uk-button uk-button-default" type="button" tabindex="-1">
+												<span></span>
+												<span uk-icon="icon: chevron-down"></span>
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -191,19 +234,18 @@ function saveQuestionAndAnswer(ajaxUrl, el)
 
 	// console.log(wrapperQuestion);
 	var questionTitle 		= wrapperQuestion.find('.question-title').val(),
-		questionDescription = wrapperQuestion.find('.question-description').val(),
 		answerOne 			= wrapperQuestion.find('.answer-one').val(),
 		answerTwo 			= wrapperQuestion.find('.answer-two').val(),
 		answerThree 		= wrapperQuestion.find('.answer-three').val(),
 		answerFour 			= wrapperQuestion.find('.answer-four').val();
 
-	var isCorrectOne 		= wrapperQuestion.find('.answer-one-check').is(':checked'),
-		isCorrectTwo 		= wrapperQuestion.find('.answer-two-check').is(':checked'),
-		isCorrectThree 		= wrapperQuestion.find('.answer-three-check').is(':checked'),
-		isCorrectFour 		= wrapperQuestion.find('.answer-four-check').is(':checked');
+	var perfilOne 		= wrapperQuestion.find('.answer-one-perfil').val(),
+		perfilTwo 		= wrapperQuestion.find('.answer-two-perfil').val(),
+		perfilThree 	= wrapperQuestion.find('.answer-three-perfil').val(),
+		perfilFour 		= wrapperQuestion.find('.answer-four-perfil').val();
 
-	var newQuestion 		= questionTitle + '||' + questionDescription,
-		newAnswers 			= answerOne + '>>' + isCorrectOne + '||' + answerTwo + '>>' + isCorrectTwo +  '||' + answerThree + '>>' + isCorrectThree + '||' + answerFour + '>>' + isCorrectFour;
+	var newQuestion 		= questionTitle,
+		newAnswers 			= answerOne + '>>' + perfilOne + '||' + answerTwo + '>>' + perfilTwo +  '||' + answerThree + '>>' + perfilThree + '||' + answerFour + '>>' + perfilFour;
 
 	var quizId 				= jQuery('#quiz-id').text();
 
