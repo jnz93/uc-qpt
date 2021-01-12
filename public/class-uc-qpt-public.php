@@ -169,14 +169,14 @@ class Uc_Qpt_Public {
 				// echo '</pre>';
 
 				# Front-end
-				$question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4><div class="uk-margin"><input class="uk-input uk-form-width-small" type="number" id="peso-'. $id .'" placeholder="Peso"></div>';
+				$question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4><div class="uk-width-1-2@s"><input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso"></div>';
 				
 				if ( !empty($answers) ) :
 					$letters = array('a)', 'b)', 'c)', 'd)', 'e)', 'f)');
 					$pos = 0;
 					$options = '<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">';
 					foreach ( $answers as $answer ) :
-						$options .= '<label><input class="uk-radio" type="radio" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'</label><br>';
+						$options .= '<div class="uk-width-1-1" uk-grid><label class="uk-width-1-1@s"><input class="uk-radio" type="radio" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'</label></div>';
 						$pos++;
 					endforeach;
 					$options .= '</div>';
