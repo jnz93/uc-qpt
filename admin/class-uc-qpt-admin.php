@@ -153,6 +153,7 @@ class Uc_Qpt_Admin {
 		echo $card_buttons;
 
 		// include templates
+		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-list-all-quizes.php';
 		require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-new-quiz.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-customer.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-budget.php';
