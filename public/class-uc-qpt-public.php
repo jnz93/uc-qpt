@@ -81,6 +81,7 @@ class Uc_Qpt_Public {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/uc-qpt-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'uikit', plugin_dir_url( __FILE__ ) . 'css/uikit.min.css', array(), '3.6.9', 'all' );
 
 	}
 
@@ -104,6 +105,8 @@ class Uc_Qpt_Public {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/uc-qpt-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'uikit', plugin_dir_url( __FILE__ ) . 'js/uikit.min.js', array(), '3.6.9', false );
+		wp_enqueue_script( 'uikit-icons', plugin_dir_url( __FILE__ ) . 'js/uikit-icons.min.js', array(), '3.6.9', false );
 
 	}
 
@@ -136,6 +139,17 @@ class Uc_Qpt_Public {
 			$quizContent = '<div class="wrapper-quiz" data-id="'. $quiz_id .'"><h2>'. $title_quiz .'</h2><p>'. $desc_quiz .'</p><div class="wrapper-result">';
 			$number = 1;
 			$question = '';
+			$caution = '<div>
+							<h4>Teste de estilo</h4>
+							<p class="">Analise cuidadosamente cada questão e suas alternativas e atribua:</p>
+							<ul class="uk-list uk-list-hyphen">
+								<li>Nota 6 para a alternativa que <b>MAIS</b> tem a ver com você.</li>
+								<li>Nota 4 para a alternativa que se aproxima <b>UM POUCO MAIS</b> de você.</li>
+								<li>Nota 2 para a alternativa que se aproxima <b>UM POUCO MENOS</b> de você.</li>
+								<li>Nota 1 para alternativa que <b>MENOS</b> tem a ver com você.</li>
+							</ul>
+							<span class="">OBS: Use a pontuação 1, 2, 4 e 6 em todas as questões, na ordem que escolher, sem repetir valores.</span>
+						</div>';
 			foreach ( $idsarr as $id ) :
 
 				# Data question
@@ -155,7 +169,7 @@ class Uc_Qpt_Public {
 				// echo '</pre>';
 
 				# Front-end
-				$question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4>';
+				$question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4><div class="uk-margin"><input class="uk-input uk-form-width-small" type="number" id="peso-'. $id .'" placeholder="Peso"></div>';
 				
 				if ( !empty($answers) ) :
 					$letters = array('a)', 'b)', 'c)', 'd)', 'e)', 'f)');
@@ -173,6 +187,7 @@ class Uc_Qpt_Public {
 				$number++;
 			endforeach;
 		echo $quizContent;
+		echo $caution;
 		echo $question;
 		endif;
 		?>
