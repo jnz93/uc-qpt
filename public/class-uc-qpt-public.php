@@ -164,19 +164,20 @@ class Uc_Qpt_Public {
 				);
 				$answers = get_posts( $args );
 
-				// echo '<pre>';
-				// print_r($answers);
-				// echo '</pre>';
-
 				# Front-end
-				$question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4><div class="uk-width-1-2@s"><input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso"></div>';
+				$question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4>';
 				
 				if ( !empty($answers) ) :
 					$letters = array('a)', 'b)', 'c)', 'd)', 'e)', 'f)');
 					$pos = 0;
 					$options = '<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">';
 					foreach ( $answers as $answer ) :
-						$options .= '<div class="uk-width-1-1" uk-grid><label class="uk-width-1-1@s"><input class="uk-radio" type="radio" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'</label></div>';
+						$options .= '<div class="uk-width-1-1" uk-grid>
+										<label class="uk-width-1-1@s">
+											<input class="uk-radio" type="checkbox" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'
+											<input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso">
+										</label>
+									</div>';
 						$pos++;
 					endforeach;
 					$options .= '</div>';
@@ -203,48 +204,10 @@ class Uc_Qpt_Public {
 	 */
 	public function ucqpt_submit_quiz()
 	{
-		$answers 		= $_POST['answers'];
-		$question_ids 	= $_POST['questionIds'];
-
-		// print_r($answers);
-		// print_r($question_ids);
-		# Definição do peso das  perguntas
-		$total_questions 	= count($question_ids);
-		$value_question 	= 10 / $total_questions;
-
-		// echo $value_question . '----';
-		// echo $number_questions;
-		$result_quiz = 0.0;
-		if( !empty($answers) ) :
-			$meta_key = 'answer_is_correct';
-			foreach ($answers as $id) :
-				$is_correct = get_post_meta($id, $meta_key, true);
-				if ( $is_correct == 'true' ) :
-					// echo 'Resposta certa! - ' . $id . '<br>';
-					$result_quiz = $result_quiz + $value_question;
-				else :
-					// echo 'Resposta errada! - ' . $id . '<br>';
-				endif;
-			endforeach;
-		endif;
-
-		// echo 'Resultado: ' . $result_quiz;
-
-		// RESULTADO
-		$result_text 	= '<h3>Resultado: </h3><p>Sua nota: '. $result_quiz .'</p>';
-		$pragmatico 	= '<p>PRAGMÁTICO: Percebe e valoriza no mundo a ação, decisão e o resultado.</p>';
-		$visionario 	= '<p>VISIONÁRIO: Percebe e valoriza no mundo as ideias, o novo e a oportunidade.</p>';
-		$afetivo 		= '<p>AFETIVO: Percebe e valoriza no mundo o sentimento e as pessoas.</p>';
-		$racional 		= '<p>RACIONAL: Percebe e valoriza as regras, a previsibilidade e a organização.</p>';
-
-		if ( $result_quiz < 2.5) :
-			echo $result_text . $pragmatico;
-		elseif ( $result_quiz > 2.5 && $result_quiz < 5.0 ) :
-			echo $result_text . $visionario;
-		elseif ( $result_quiz > 5.0 && $result_quiz < 7.5 ) :
-			echo $result_text . $afetivo;
-		else :
-			echo $result_text . $racional;
-		endif;
+		# Data sanitize: model string = q_id:a_id:weight
+		$data = $_POST['data'];
+		echo '<pre>';
+		print_r($data);
+		echo '</pre>';
 	}
 }

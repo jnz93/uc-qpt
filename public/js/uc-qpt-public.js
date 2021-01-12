@@ -34,36 +34,38 @@
 
 function submitAnswers(ajaxUrl, el)
 {
-	// console.log(ajaxUrl);
-	// console.log(el);
-
-	var checkedAnswers 	= [],
-		questionIds 	= [];
+	var checkedAnswers 	= [];
 	el.each(function (index)
 	{
-		// console.log(jQuery(this).find('input[type=radio]'));
-		jQuery(this).find('input[type=radio]').each(function (index)
+		// Coletando as respostas marcadas
+		var qId = jQuery(this).attr('data-id');
+		jQuery(this).find('input[type=checkbox]').each(function (index)
 		{
 			var currAnswer = jQuery(this);
-			if (currAnswer.is(':checked')){
-				checkedAnswers.push(currAnswer.attr('data-id'));
-			}
+			if (currAnswer.is(':checked')) {
+
+				var answerId = currAnswer.attr('data-id'),
+					weight = currAnswer.siblings('input[type=number]').val()
+					data = qId + ":" + answerId + ":" + weight;
+
+				checkedAnswers.push(data);
+				
+			};
 		});
-
-		// console.log(checkedAnswers);
-		questionIds.push(el.attr('data-id'));
 	});
-
+	console.log(checkedAnswers);
+	
+	// if (false) {
 	jQuery.ajax({
 		type: 'POST',
 		url: ajaxUrl,
 		data: {
 			action: 'ucqpt_submit_quiz',
-			answers: checkedAnswers,
-			questionIds: questionIds
+			data: checkedAnswers
 		},
 	}).done(function(res){
 		console.log(res);
 		jQuery('.wrapper-result').html(res);
-	})
+	});
+	// }
 }
