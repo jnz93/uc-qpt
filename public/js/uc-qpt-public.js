@@ -30,3 +30,40 @@
 	 */
 
 })( jQuery );
+
+
+function submitAnswers(ajaxUrl, el)
+{
+	// console.log(ajaxUrl);
+	// console.log(el);
+
+	var checkedAnswers 	= [],
+		questionIds 	= [];
+	el.each(function (index)
+	{
+		// console.log(jQuery(this).find('input[type=radio]'));
+		jQuery(this).find('input[type=radio]').each(function (index)
+		{
+			var currAnswer = jQuery(this);
+			if (currAnswer.is(':checked')){
+				checkedAnswers.push(currAnswer.attr('data-id'));
+			}
+		});
+
+		// console.log(checkedAnswers);
+		questionIds.push(el.attr('data-id'));
+	});
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: {
+			action: 'ucqpt_submit_quiz',
+			answers: checkedAnswers,
+			questionIds: questionIds
+		},
+	}).done(function(res){
+		console.log(res);
+		jQuery('.wrapper-result').html(res);
+	})
+}
