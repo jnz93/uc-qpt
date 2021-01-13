@@ -204,10 +204,104 @@ class Uc_Qpt_Public {
 	 */
 	public function ucqpt_submit_quiz()
 	{
-		# Data sanitize: model string = q_id:a_id:weight
+		# Data - model array = [pos] => 'q_id:a_id:weight'
 		$data = $_POST['data'];
-		echo '<pre>';
-		print_r($data);
-		echo '</pre>';
+		if ( !empty($data) ) :
+
+			# Iniciação das variaveis de contagem
+			$total_afetivo 		= 0;
+			$total_pragmatico 	= 0;
+			$total_racional 	= 0;
+			$total_visionario 	= 0;
+			$total_points 		= 0;
+
+			foreach ( $data as $item ) : 
+
+				# collect ids and weight
+				$itemarr	= explode(':', $item);
+				$q_id 		= intval($itemarr[0]);
+				$a_id 		= intval($itemarr[1]);
+				$weight 	= intval($itemarr[2]);
+
+				if ( strlen($q_id) != 0 && strlen($a_id) != 0 && strlen($weight) != 0 ) :
+					
+					# Definição do perfil e contagem dos pontos
+					$a_perfil_abv 	= get_post_meta( $a_id, 'answer_perfil', true);
+					$a_perfil_str 	= '';
+					switch ( $a_perfil_abv ) :
+						case 'A':
+							$a_perfil_str = 'Afetivo';
+							$total_afetivo += $weight;
+							break;
+						case 'P':
+							$a_perfil_str = 'Pragmático';
+							$total_pragmatico += $weight;
+							break;
+						case 'R':
+							$a_perfil_str = 'Racional';
+							$total_racional += $weight;
+							break;
+						case 'V':
+							$a_perfil_str = 'Visionário';
+							$total_visionario += $weight;
+							break;
+						default:
+							$a_perfil_str = 'Perfil não cadastrado.';
+							break;
+					endswitch;
+					$total_points += $weight;
+				else : 
+					die('Verifique os dados enviados e tente novamente.');
+				endif;
+			
+			endforeach;
+
+			// Análise das pontuações e definição de pontos fortes e fracos
+			$strength_points 	= array();
+			$weak_points 		= array();
+			$line_of_cut 		= 30;
+			
+			if ( $total_afetivo >= $line_of_cut ) :
+				$strength_points[] = 'Afetivo';
+			else :
+				$weak_points[] = 'Afetivo';
+			endif;
+
+			if ( $total_pragmatico >= $line_of_cut ) :
+				$strength_points[] = 'Pragmático';
+			else :
+				$weak_points[] = 'Pragmático';
+			endif;
+
+			if ( $total_racional >= $line_of_cut ) :
+				$strength_points[] = 'Racional';
+			else :
+				$weak_points[] = 'Racional';
+			endif;
+
+			if ( $total_visionario >= $line_of_cut ) :
+				$strength_points[] = 'Visionário';
+			else :
+				$weak_points[] = 'Visionário';
+			endif;
+
+			$strength_points_str 	= implode(', ', $strength_points);
+			$weak_points_str 		= implode(', ', $weak_points);
+
+			# Resultado
+			$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-2">
+						<h3 class="uk-card-title">Resultado</h3>
+						<ul class="uk-list">
+							<li>Pontos Fortes: '. $strength_points_str.'</li>
+							<li>Pontos Fracos: '. $weak_points_str .'</li>
+							<li>Total: '. $total_points .'</li>
+						</ul>
+					</div>';
+
+			echo $result;
+
+		else :
+			die('Dados inválidos');
+		endif;
 	}
 }
