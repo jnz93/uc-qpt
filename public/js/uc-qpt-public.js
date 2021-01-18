@@ -32,7 +32,7 @@
 })( jQuery );
 
 
-function submitAnswers(ajaxUrl, el)
+function submitAnswers(el, quizId, userId, ajaxUrl)
 {
 	var checkedAnswers 	= [];
 	el.each(function (index)
@@ -61,7 +61,9 @@ function submitAnswers(ajaxUrl, el)
 		url: ajaxUrl,
 		data: {
 			action: 'ucqpt_submit_quiz',
-			data: checkedAnswers
+			data: checkedAnswers,
+			userId: userId,
+			quizId: quizId
 		},
 	}).done(function(res){
 		console.log(res);

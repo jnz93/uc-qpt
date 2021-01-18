@@ -119,14 +119,21 @@ class Uc_Qpt_Public {
 	public function template_quiz($atts)
 	{
 		$atts = shortcode_atts( array(
-			'quiz_id' 	=> 747
+			'quiz_id' 	=> 0
 		), $atts, 'quiz' );
 
+		if ( !is_user_logged_in() ) :
+			die('Somente usuários logados tem acesso!');
+		endif;
+
+		$quiz_id 	= $atts['quiz_id'];
+		$curr_user 	= wp_get_current_user();
+		$user_id 	= $curr_user->ID;
+
 		# Admin url ajax
-		$ajax_url = admin_url( 'admin-ajax.php' );
+		$ajax_url 	= admin_url( 'admin-ajax.php' );
 
 		# Data quiz
-		$quiz_id = $atts['quiz_id'];
 		$title_quiz = get_the_title( $quiz_id );
 		$desc_quiz 	= get_the_excerpt( $quiz_id );
 		
@@ -134,8 +141,12 @@ class Uc_Qpt_Public {
 		$meta_ids	= get_post_meta($quiz_id, 'quiz_questions_ids', true);
 		$idsarr 	= explode(',', $meta_ids);
 
-		# Wrapper perguntas e respostas
-		if ( !empty($idsarr) ) :
+		$has_completed_test = Uc_Qpt_Public::ucqpt_check_user_has_completed_test($user_id, $quiz_id);
+		
+		// echo $has_completed;
+		if ( $has_completed_test == false && !empty($idsarr)) :			
+			
+			# Wrapper perguntas e respostas
 			$quizContent = '<div class="wrapper-quiz" data-id="'. $quiz_id .'"><h2>'. $title_quiz .'</h2><p>'. $desc_quiz .'</p><div class="wrapper-result">';
 			$number = 1;
 			$question = '';
@@ -187,13 +198,15 @@ class Uc_Qpt_Public {
 				$question .= '</div>';
 				$number++;
 			endforeach;
-		echo $quizContent;
-		echo $caution;
-		echo $question;
-		endif;
-		?>
-		</div><div><button class="btn-primary" type="button" onclick="submitAnswers('<?php echo $ajax_url ?>', jQuery('.wrapper-question'))">Responder Quiz</button></div></div>
+			echo $quizContent;
+			echo $caution;
+			echo $question;
+			?>
+			</div><div><button class="btn-primary" type="button" onclick="submitAnswers(jQuery('.wrapper-question'), '<?php echo $quiz_id; ?>', '<?php echo $user_id; ?>', '<?php echo $ajax_url; ?>')">Responder Quiz</button></div></div>
 		<?php
+		else :
+			Uc_Qpt_Public::ucqpt_print_result_test($user_id, $quiz_id);
+		endif;
 	}
 
 
@@ -205,7 +218,10 @@ class Uc_Qpt_Public {
 	public function ucqpt_submit_quiz()
 	{
 		# Data - model array = [pos] => 'q_id:a_id:weight'
-		$data = $_POST['data'];
+		$data 		= $_POST['data'];
+		$user_id 	= $_POST['userId'];
+		$quiz_id 	= $_POST['quizId'];
+
 		if ( !empty($data) ) :
 
 			# Iniciação das variaveis de contagem
@@ -215,6 +231,7 @@ class Uc_Qpt_Public {
 			$total_visionario 	= 0;
 			$total_points 		= 0;
 
+			# Avaliação e notas
 			foreach ( $data as $item ) : 
 
 				# collect ids and weight
@@ -261,6 +278,7 @@ class Uc_Qpt_Public {
 			$weak_points 		= array();
 			$line_of_cut 		= 30;
 			
+			# Produção do resultado
 			if ( $total_afetivo >= $line_of_cut ) :
 				$strength_points[] = 'Afetivo';
 			else :
@@ -288,7 +306,24 @@ class Uc_Qpt_Public {
 			$strength_points_str 	= implode(', ', $strength_points);
 			$weak_points_str 		= implode(', ', $weak_points);
 
-			# Resultado
+			# Tratamento dados do resultado do quiz para salvar
+			$user_key_result 			= 'qpt_result_of_' . $quiz_id;
+			$user_meta_value_result 	= 'quiz_id:'. $quiz_id .'|res_str_pts:'. $strength_points_str .'|res_weak_pts:'. $weak_points_str .'|pts_a:'. $total_afetivo .'|pts_p:'. $total_pragmatico .'|pts_r:'. $total_racional .'|pts_v:'. $total_visionario .'|total_pts:'. $total_points;
+			
+			# Tratamento para salvar id do quiz submetido
+			$user_key_qids				= 'qpt_ids_done';
+			$user_meta_qids_value 		= get_user_meta( $user_id, $user_meta_qids, true ) . ', ' . $quiz_id;
+			
+			# Salvar dados no usuário
+			update_user_meta( $user_id, $user_key_result, $user_meta_value_result );
+			update_user_meta( $user_id, $user_key_qids, $user_meta_qids_value );
+
+			# Salvar id do usuário no quiz submetido
+			$meta_key_quiz 		= 'qpt_users_ids';
+			$meta_value_quiz 	= get_post_meta( $quiz_id, $meta_key_quiz, true ) . ',' . $user_id;
+			update_post_meta( $quiz_id, $meta_key_quiz, $meta_value_quiz );
+
+			# Imprimindo o Resultado
 			$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-2">
 						<h3 class="uk-card-title">Resultado</h3>
 						<ul class="uk-list">
@@ -303,5 +338,79 @@ class Uc_Qpt_Public {
 		else :
 			die('Dados inválidos');
 		endif;
+	}
+
+	
+	/**
+	 * Checa se o usuário já fez o teste
+	 * 
+	 * @param $user_id
+	 * @param $quiz_id 
+	 * 
+	 * @since 1.1.0
+	 */
+	public function ucqpt_check_user_has_completed_test($user_id, $quiz_id)
+	{
+		$user_has_completed_str		= get_user_meta( $user_id, 'qpt_ids_done', true ); # String de ids de testes concluídos pelo usuário
+		$test_has_completed_str 	= get_post_meta( $quiz_id, 'qpt_users_ids', true); # String de ids de usuários que concluiram o teste
+
+		$user_has_completed_arr 	= explode(',', $user_has_completed_str);
+		$test_has_completed_arr 	= explode(',', $test_has_completed_str);
+
+		$has_testid_in_user 		= in_array($quiz_id, $user_has_completed_arr);
+		$has_userid_in_test 		= in_array($user_id, $test_has_completed_arr);
+
+		if ( $has_testid_in_user && $has_userid_in_test ) :
+			return true;
+		else :
+			return false;
+		endif;
+	}
+
+
+	/**
+	 * Imprime resultado do teste completado
+	 * 
+	 * @param $user_id
+	 * @param $quiz_id
+	 * 
+	 * @since 1.1.0
+	 */
+	public function ucqpt_print_result_test($user_id, $quiz_id)
+	{
+		$data_result 		= get_user_meta( $user_id, 'qpt_result_of_'. $quiz_id, true ); # Resultado completo do teste
+		$data_result_arr 	= explode('|', $data_result);
+
+		$sanitized_result 	= array();
+		for ( $i = 0; $i < count($data_result_arr) ; $i++ ) :
+
+			$data = explode( ':', $data_result_arr[$i] );
+			$sanitized_result[$data[0]] = $data[1];
+	
+		endfor;
+
+		$quiz_id 			= $sanitized_result['quiz_id'];
+		$pts_strong 		= $sanitized_result['res_str_pts'];
+		$pts_weakness		= $sanitized_result['res_weak_pts'];
+		$pts_afetivo 		= $sanitized_result['pts_a'];
+		$pts_pragmatico 	= $sanitized_result['pts_p'];
+		$pts_racional 		= $sanitized_result['pts_r'];
+		$pts_visionario 	= $sanitized_result['pts_v'];
+		$pts_total 			= $sanitized_result['total_pts'];
+
+		$result 		= '<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m">
+								<div class="uk-card-badge uk-label">Total: '. $pts_total .'</div>
+								<h3 class="uk-card-title">Resultado final:</h3>
+								<ul class="uk-list uk-list-striped">
+									<li>Ponto(s) forte(s): '. $pts_strong .'</li>
+									<li>Ponto(s) fraco(s): '. $pts_weakness .'</li>
+									<li>Afetivo: '. $pts_afetivo .'</li>
+									<li>Pragmático: '. $pts_pragmatico .'</li>
+									<li>Racional: '. $pts_racional .'</li>
+									<li>Visionário: '. $pts_visionario .'</li>
+								</ul>
+							</div>';
+
+		echo $result;
 	}
 }
