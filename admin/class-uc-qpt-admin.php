@@ -62,6 +62,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_create_new_quiz', array($this, 'ucqpt_create_new_quiz_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_draft_quiz', array($this, 'ucqpt_create_draft_quiz_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_question_and_answers', array($this, 'ucqpt_create_question_and_answers_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_register_company', array($this, 'ucqpt_register_company_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -139,6 +140,9 @@ class Uc_Qpt_Admin {
 		$buttons = '<p uk-margin>
 						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #new-quiz">Novo Teste de Personalidade</button>
 					</p>';
+		$buttons .= '<p uk-margin>
+						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #register-company">Cadastrar Empresa</button>
+					</p>';
 
 		$card_buttons = '<div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
 							<div>
@@ -155,6 +159,7 @@ class Uc_Qpt_Admin {
 		// include templates
 		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-list-all-quizes.php';
 		require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-new-quiz.php';
+		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-register-company.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-customer.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-budget.php';
 	}
@@ -380,6 +385,41 @@ class Uc_Qpt_Admin {
 
 			// Update post meta
 			update_post_meta( $quiz_id, 'quiz_questions_ids', $new_questions_ids );
+		endif;
+	}
+
+	/**
+	 * Registro de empresa via form
+	 * 
+	 * @since 1.1.0
+	 */
+	public function ucqpt_register_company_by_ajax()
+	{
+		$company_name 		= $_POST['name'];
+		$company_email 		= $_POST['email'];
+		$company_tel 		= $_POST['tel'];
+		$company_cnpj 		= $_POST['cnpj'];
+		$company_vouchers 	= $_POST['vouchers'];
+
+		if ( empty($company_name) || empty($company_email) || empty($company_vouchers) ) :
+			die('Erro ao registrar usuário');
+		endif;
+
+		$user_data = array(
+			'user_login'            => $company_name,   //(string) The user's login username.
+			'user_nicename'         => $company_name,   //(string) The URL-friendly user name.
+			'user_email'            => $company_email,   //(string) The user email address.
+			'role'                  => 'contributor',   //(string) User's role.
+		);
+		$user_id = wp_insert_user( $user_data );
+
+		if ( is_wp_error( $user_id ) ) :
+			die('Erro ao registrar usuário');
+		else :
+			update_user_meta( $user_id, 'ucqpt_company_tel', $company_tel );
+			update_user_meta( $user_id, 'ucqpt_company_doc', $company_cnpj );
+			update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
+			die('Registrado com sucesso');
 		endif;
 	}
 }

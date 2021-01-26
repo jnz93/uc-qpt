@@ -276,3 +276,48 @@ function getCheckVal()
 
 	console.log(checkVal);
 }
+
+/**
+ * Submit company data for register in back-end
+ * @param {*} ajaxUrl
+ * 
+ * @since 1.1.0
+ */
+function submitCompanyData(ajaxUrl)
+{
+	'use strict';
+
+	var companyName 	= document.getElementById('ucqpt_company_name').value,
+		companyEmail 	= document.getElementById('ucqpt_company_email').value,
+		companyTel 		= document.getElementById('ucqpt_company_phone').value,
+		companyCnpj 	= document.getElementById('ucqpt_company_cnpj').value,
+		companyVouchers = document.getElementById('ucqpt_company_vouchers').value;
+
+	var dataToSend = {
+		action: 'ucqpt_register_company',
+		name: companyName,
+		email: companyEmail,
+		tel: companyTel,
+		cnpj: companyCnpj,
+		vouchers: companyVouchers
+	};
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: dataToSend,
+	})
+	.done( function(res, data) {
+
+		if (res == 'Erro ao registrar usuário') {
+			UIkit.notification({ message: '<span uk-icon=\'icon: close\'></span> Erro ao registrar usuário. Tente novamente.', pos: 'bottom-center', status:'danger' })
+		}
+
+		if (res == 'Registrado com sucesso') {
+			UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Usuário registrado com sucesso!', pos: 'bottom-center', status:'success' })
+			document.getElementById('form-company').reset();
+			UIkit.modal('#register-company').hide();
+		}
+	});
+
+}

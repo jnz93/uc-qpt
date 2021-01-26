@@ -122,9 +122,9 @@ class Uc_Qpt_Public {
 			'quiz_id' 	=> 0
 		), $atts, 'quiz' );
 
-		if ( !is_user_logged_in() ) :
-			die('Somente usuários logados tem acesso!');
-		endif;
+		// if ( !is_user_logged_in() ) :
+		// 	die('Somente usuários logados tem acesso!');
+		// endif;
 
 		$quiz_id 	= $atts['quiz_id'];
 		$curr_user 	= wp_get_current_user();
@@ -336,7 +336,7 @@ class Uc_Qpt_Public {
 			echo $result;
 
 		else :
-			die('Dados inválidos');
+			die('Dados inválidos. Atualize a página e faça o teste novamente!');
 		endif;
 	}
 
