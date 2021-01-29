@@ -307,17 +307,86 @@ function submitCompanyData(ajaxUrl)
 		url: ajaxUrl,
 		data: dataToSend,
 	})
-	.done( function(res, data) {
+	.done( function(res) {
 
-		if (res == 'Erro ao registrar usuário') {
+		if (res == 'error') {
 			UIkit.notification({ message: '<span uk-icon=\'icon: close\'></span> Erro ao registrar usuário. Tente novamente.', pos: 'bottom-center', status:'danger' })
 		}
 
-		if (res == 'Registrado com sucesso') {
+		if (res == 'success') {
 			UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Usuário registrado com sucesso!', pos: 'bottom-center', status:'success' })
-			document.getElementById('form-company').reset();
 			UIkit.modal('#register-company').hide();
+			document.getElementById('form-company').reset();
 		}
 	});
 
+}
+
+/**
+ * Generate new code and replace the current
+ * 
+ * @param {*} ajaxUrl
+ * 
+ * @since 1.1.0
+ */
+function generateCodVoucher(ajaxUrl)
+{
+	'use strict';
+	var dataSend = {
+		action: 'ucqpt_generate_voucher_code',
+	};
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: dataSend,
+	})
+	.done( function (res) {
+		// console.log(res);
+		var response = res; 
+
+		if (response == 'success') {
+			UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Usuário registrado com sucesso!', pos: 'bottom-center', status:'success' });
+			document.getElementById('form-company').reset();
+		} else {
+
+		}
+		jQuery('#ucqpt_company_voucher').val(res);
+	})
+}
+
+
+/**
+ * Sumit code and company id to create a new voucher
+ * 
+ * @param {*} ajaxUrl
+ * 
+ * @since 1.1.0
+ */
+function createNewVoucher(ajaxUrl)
+{
+	'use strict';
+
+	var code = jQuery('#ucqpt_company_voucher').val(),
+		ciaId = jQuery('#ucqpt_company_selected').val();
+
+	var dataSend = {
+		action: 'ucqpt_create_voucher',
+		voucherCode: code,
+		companyId: ciaId
+	};
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: dataSend
+	})
+	.done( function (res) {
+		if (res == 'error') {
+			console.log(res);
+		} else {
+			UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Voucher registrado com sucesso! Cód: '+ res, pos: 'bottom-center', status:'success' });
+			document.getElementById('form-voucher').reset();
+		}
+	});
 }

@@ -63,6 +63,8 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_create_draft_quiz', array($this, 'ucqpt_create_draft_quiz_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_question_and_answers', array($this, 'ucqpt_create_question_and_answers_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_register_company', array($this, 'ucqpt_register_company_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_generate_voucher_code', array($this, 'ucqpt_generate_voucher_code_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_create_voucher', array($this, 'ucqpt_create_voucher_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -143,6 +145,9 @@ class Uc_Qpt_Admin {
 		$buttons .= '<p uk-margin>
 						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #register-company">Cadastrar Empresa</button>
 					</p>';
+		$buttons .= '<p uk-margin>
+						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #register-voucher">Cadastrar Voucher</button>
+					</p>';
 
 		$card_buttons = '<div class="uk-child-width-1-2@s uk-grid-match" uk-grid>
 							<div>
@@ -160,6 +165,7 @@ class Uc_Qpt_Admin {
 		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-list-all-quizes.php';
 		require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-new-quiz.php';
 		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-register-company.php';
+		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-create-voucher.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-customer.php';
 		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-budget.php';
 	}
@@ -283,6 +289,39 @@ class Uc_Qpt_Admin {
 			'show_in_rest'       => true
 		);
 		register_post_type( 'uc_answer', $args );
+
+		// Voucher
+		unset($labels);
+		unset($args);
+		$labels = array(
+			'name'                  => _x( 'Vouchers', 'Post type general name', 'textdomain' ),
+			'singular_name'         => _x( 'Voucher', 'Post type singular name', 'textdomain' ),
+			'menu_name'             => _x( 'Vouchers', 'Admin Menu text', 'textdomain' ),
+			'name_admin_bar'        => _x( 'Vouchers', 'Add New on Toolbar', 'textdomain' ),
+			'add_new'               => __( 'Adicionar novo', 'textdomain' ),
+			'add_new_item'          => __( 'Adicionar novo voucher', 'textdomain' ),
+			'new_item'              => __( 'Nova Voucher', 'textdomain' ),
+			'edit_item'             => __( 'Editar Voucher', 'textdomain' ),
+			'view_item'             => __( 'Ver Voucher', 'textdomain' ),
+			'all_items'             => __( 'Todas os Vouchers', 'textdomain' )
+		);
+
+		$args = array(
+			'labels'             => $labels,
+			'description'        => 'Vouchers para usuários fazer os testes',
+			'public'             => true,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'rewrite'            => array( 'slug' => 'voucher' ),
+			'has_archive'        => true,
+			'hierarchical'       => true,
+			'menu_position'      => 20,	
+			'supports'           => array( 'title', 'author' ),
+			'show_in_rest'       => true
+		);
+		register_post_type( 'uc_voucher', $args );
 	}
 
 	/**
@@ -413,13 +452,79 @@ class Uc_Qpt_Admin {
 		);
 		$user_id = wp_insert_user( $user_data );
 
-		if ( is_wp_error( $user_id ) ) :
-			die('Erro ao registrar usuário');
-		else :
+		if ( !is_wp_error( $user_id ) ) :
 			update_user_meta( $user_id, 'ucqpt_company_tel', $company_tel );
 			update_user_meta( $user_id, 'ucqpt_company_doc', $company_cnpj );
 			update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
-			die('Registrado com sucesso');
+
+			die('success');
+		else :
+			die('error');
 		endif;
+	}
+
+	/**
+	 * Generate voucher code
+	 * 
+	 * @since 1.1.0
+	 */
+	public function ucqpt_generate_voucher_code_by_ajax()
+	{
+		$voucher = strtoupper(wp_generate_password( 8, false, false ));
+
+		die($voucher);
+	}
+
+	/**
+	 * Create voucher by ajax 
+	 * 
+	 * @since 1.1.0
+	 */
+	public function ucqpt_create_voucher_by_ajax()
+	{
+		$voucher_code 	= $_POST['voucherCode'];
+		$user_id 		= $_POST['companyId'];
+		
+		$key_limit 		= 'ucqpt_company_vouchers';
+		$key_voucher	= 'ucqpt_company_registered_vouchers';
+
+		# Verificar a disponibilidade de vouchers com base no limite disponível para empresa
+		// update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
+		$voucher_limit			= get_user_meta( $user_id, $key_limit, true );
+		$voucher_registered_str	= get_user_meta( $user_id, $key_voucher, true );
+		$voucher_registered 	= explode( ',', $voucher_registered_str );
+		$voucher_total_registered = count( $voucher_registered );
+
+		if ( $voucher_limit > $voucher_total_registered ) :
+
+			$postarr = array(
+				'post_title'    => $voucher_code,
+				'post_status'   => 'publish',
+				'post_type'		=> 'uc_voucher'
+			);
+			$voucher_id = wp_insert_post( $postarr );
+
+			if ( !is_wp_error( $voucher_id ) ) :
+				$new_voucher_registered_value = $voucher_code . ',' . $voucher_registered_str;
+
+				update_post_meta( $voucher_id, 'ucqpt_voucher_code', $voucher_code );
+				update_user_meta( $user_id, $key_voucher, $new_voucher_registered_value );
+				
+				$new_title 		= $voucher_code . '-' . $voucher_id;
+				$data_update 	= array(
+					'ID' 			=> $voucher_id,
+					'post_title' 	=> $new_title,
+				);
+				wp_update_post( $data_update );
+				die($new_title);
+			else :
+
+				$error_string = $voucher_id->get_error_message();
+				die('error');
+
+			endif;
+		endif;
+
+		die();
 	}
 }
