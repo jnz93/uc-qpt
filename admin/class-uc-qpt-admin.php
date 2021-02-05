@@ -507,8 +507,9 @@ class Uc_Qpt_Admin {
 			if ( !is_wp_error( $voucher_id ) ) :
 				$new_voucher_registered_value = $voucher_code . ',' . $voucher_registered_str;
 
-				update_post_meta( $voucher_id, 'ucqpt_voucher_code', $voucher_code );
-				update_user_meta( $user_id, $key_voucher, $new_voucher_registered_value );
+				update_post_meta( $voucher_id, 'ucqpt_voucher_code', $voucher_code ); # Salvando o voucher code
+				update_post_meta( $voucher_id, 'ucqpt_company_id', $user_id ); # Salvando o ID do usuário(empresa) no voucher
+				update_user_meta( $user_id, $key_voucher, $new_voucher_registered_value ); # Salvando a string de vouchers no usuário(empresa)
 				
 				$new_title 		= $voucher_code . '-' . $voucher_id;
 				$data_update 	= array(

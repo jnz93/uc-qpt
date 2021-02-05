@@ -19,6 +19,11 @@ $args = array(
     'posts_per_page'    => 10,
 );
 $query = new WP_Query($args);
+
+# Testando resultados registrados no voucher
+$v_is_used = get_post_meta( 920, 'ucqpt_is_used', true );
+$v_result_test_data = get_post_meta( 920, 'ucqpt_result_test_data', true );
+
 ?>
 
 <?php 

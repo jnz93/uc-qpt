@@ -32,7 +32,7 @@
 })( jQuery );
 
 
-function submitAnswers(el, quizId, userId, ajaxUrl)
+function submitAnswers(el, quizId, voucherId, ajaxUrl)
 {
 	var checkedAnswers 	= [];
 	el.each(function (index)
@@ -62,12 +62,82 @@ function submitAnswers(el, quizId, userId, ajaxUrl)
 		data: {
 			action: 'ucqpt_submit_quiz',
 			data: checkedAnswers,
-			userId: userId,
-			quizId: quizId
+			quizId: quizId,
+			voucherId: voucherId
 		},
 	}).done(function(res){
 		console.log(res);
 		jQuery('.wrapper-result').html(res);
 	});
 	// }
+}
+
+
+function autenticateVoucher(ajaxUrl) 
+{
+    var voucherCode = jQuery('#ucqpt_voucher_code').val();
+
+	if ( voucherCode.length < 10 ) {
+		console.log('Voucher inválido.');
+		return;
+	}
+
+	if ( ajaxUrl.length == 0 ) {
+		console.log('ajaxUrl inválida.');
+		return;
+	}
+
+	var dataSend = {
+		action: 'ucqpt_checking_voucher',
+		voucherCode: voucherCode
+	};
+
+	jQuery.ajax({
+		url: ajaxUrl,
+		type: 'POST',
+		data: dataSend,
+		beforeSend: function() {
+			console.log('Autenticando...');
+		},
+	})
+	.done( function(res) {
+		console.log('Requisição finalizada');
+		jQuery('.entry-content').html(res);
+	});
+
+	console.log(voucherCode.length);
+}
+
+function submitUserData(ajaxUrl)
+{
+	var userName = jQuery('#user_full_name').val(),
+		userEmail = jQuery('#user_email').val(),
+		userPhone = jQuery('#user_phone').val();
+
+	if ( userName.length < 4 || userEmail.length < 4 || userPhone.length < 8 ) {
+		console.log('Dados do usuário estão incompletos');
+		return;
+	}
+
+	var dataUser = {
+		action: 'uqpt_record_user_data',
+		name: userName,
+		email: userEmail,
+		phone: userPhone,
+		quiz: quizId,
+		voucher: voucherId
+	};
+
+	jQuery.ajax({
+		url: ajaxUrl,
+		type: 'POST',
+		data: dataUser,
+		beforeSend: function(){
+			console.log('Salvando dados do usuário');
+		}
+	})
+	.done( function (res) {
+		jQuery('.entry-content').html(res);
+	});
+
 }

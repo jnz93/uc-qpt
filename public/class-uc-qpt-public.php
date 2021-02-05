@@ -58,6 +58,12 @@ class Uc_Qpt_Public {
 		// Ajax Actions
 		add_action('wp_ajax_ucqpt_submit_quiz', array($this, 'ucqpt_submit_quiz'));
 		add_action('wp_ajax_nopriv_ucqpt_submit_quiz', array($this, 'ucqpt_submit_quiz'));
+		
+		add_action('wp_ajax_ucqpt_checking_voucher', array($this, 'ucqpt_checking_voucher_by_ajax'));
+		add_action('wp_ajax_nopriv_ucqpt_checking_voucher', array($this, 'ucqpt_checking_voucher_by_ajax'));
+
+		add_action('wp_ajax_uqpt_record_user_data', array($this, 'uqpt_record_user_data_by_ajax'));
+		add_action('wp_ajax_nopriv_uqpt_record_user_data', array($this, 'uqpt_record_user_data_by_ajax'));
 
 	}
 
@@ -141,69 +147,15 @@ class Uc_Qpt_Public {
 		$meta_ids	= get_post_meta($quiz_id, 'quiz_questions_ids', true);
 		$idsarr 	= explode(',', $meta_ids);
 
-		$has_completed_test = Uc_Qpt_Public::ucqpt_check_user_has_completed_test($user_id, $quiz_id);
+		#$has_completed_test = Uc_Qpt_Public::ucqpt_check_user_has_completed_test($user_id, $quiz_id);
 		
 		// echo $has_completed;
-		if ( $has_completed_test == false && !empty($idsarr)) :			
+		// if ( $has_completed_test == false && !empty($idsarr)) :			
+		if ( true ) :			
 			
-			# Wrapper perguntas e respostas
-			$quizContent = '<div class="wrapper-quiz" data-id="'. $quiz_id .'"><h2>'. $title_quiz .'</h2><p>'. $desc_quiz .'</p><div class="wrapper-result">';
-			$number = 1;
-			$question = '';
-			$caution = '<div>
-							<h4>Teste de estilo</h4>
-							<p class="">Analise cuidadosamente cada questão e suas alternativas e atribua:</p>
-							<ul class="uk-list uk-list-hyphen">
-								<li>Nota 6 para a alternativa que <b>MAIS</b> tem a ver com você.</li>
-								<li>Nota 4 para a alternativa que se aproxima <b>UM POUCO MAIS</b> de você.</li>
-								<li>Nota 2 para a alternativa que se aproxima <b>UM POUCO MENOS</b> de você.</li>
-								<li>Nota 1 para alternativa que <b>MENOS</b> tem a ver com você.</li>
-							</ul>
-							<span class="">OBS: Use a pontuação 1, 2, 4 e 6 em todas as questões, na ordem que escolher, sem repetir valores.</span>
-						</div>';
-			foreach ( $idsarr as $id ) :
-
-				# Data question
-				$title_question = get_the_title( $id );
-				$desc_question 	= get_the_content( $id );
-
-				# Answers
-				$args = array(
-					'post_type'		=> 'uc_answer',
-					'post_parent'	=> $id,
-					'posts_per_page'=> -1,
-				);
-				$answers = get_posts( $args );
-
-				# Front-end
-				$question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4>';
-				
-				if ( !empty($answers) ) :
-					$letters = array('a)', 'b)', 'c)', 'd)', 'e)', 'f)');
-					$pos = 0;
-					$options = '<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">';
-					foreach ( $answers as $answer ) :
-						$options .= '<div class="uk-width-1-1" uk-grid>
-										<label class="uk-width-1-1@s">
-											<input class="uk-radio" type="checkbox" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'
-											<input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso">
-										</label>
-									</div>';
-						$pos++;
-					endforeach;
-					$options .= '</div>';
-				endif;
-
-				$question .= $options;
-				$question .= '</div>';
-				$number++;
-			endforeach;
-			echo $quizContent;
-			echo $caution;
-			echo $question;
-			?>
-			</div><div><button class="btn-primary" type="button" onclick="submitAnswers(jQuery('.wrapper-question'), '<?php echo $quiz_id; ?>', '<?php echo $user_id; ?>', '<?php echo $ajax_url; ?>')">Responder Quiz</button></div></div>
-		<?php
+			require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-voucher-validation.php';
+			// require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-quiz.php';
+			
 		else :
 			Uc_Qpt_Public::ucqpt_print_result_test($user_id, $quiz_id);
 		endif;
@@ -221,6 +173,7 @@ class Uc_Qpt_Public {
 		$data 		= $_POST['data'];
 		$user_id 	= $_POST['userId'];
 		$quiz_id 	= $_POST['quizId'];
+		$voucher_id = $_POST['voucherId'];
 
 		if ( !empty($data) ) :
 
@@ -306,22 +259,27 @@ class Uc_Qpt_Public {
 			$strength_points_str 	= implode(', ', $strength_points);
 			$weak_points_str 		= implode(', ', $weak_points);
 
-			# Tratamento dados do resultado do quiz para salvar
-			$user_key_result 			= 'qpt_result_of_' . $quiz_id;
-			$user_meta_value_result 	= 'quiz_id:'. $quiz_id .'|res_str_pts:'. $strength_points_str .'|res_weak_pts:'. $weak_points_str .'|pts_a:'. $total_afetivo .'|pts_p:'. $total_pragmatico .'|pts_r:'. $total_racional .'|pts_v:'. $total_visionario .'|total_pts:'. $total_points;
-			
-			# Tratamento para salvar id do quiz submetido
-			$user_key_qids				= 'qpt_ids_done';
-			$user_meta_qids_value 		= get_user_meta( $user_id, $user_meta_qids, true ) . ', ' . $quiz_id;
-			
-			# Salvar dados no usuário
-			update_user_meta( $user_id, $user_key_result, $user_meta_value_result );
-			update_user_meta( $user_id, $user_key_qids, $user_meta_qids_value );
+			# Tratamento dados do resultado do quiz para salvar no voucher
+			$key_voucher_result 		= 'ucqpt_test_result_data';
+			$key_voucher_is_used 		= 'ucqpt_is_used';
+			$voucher_value_result_data 	= $quiz_id
+											.'|res_str_pts:'. $strength_points_str 
+											.'|res_weak_pts:'. $weak_points_str 
+											.'|pts_a:'. $total_afetivo 
+											.'|pts_p:'. $total_pragmatico 
+											.'|pts_r:'. $total_racional 
+											.'|pts_v:'. $total_visionario 
+											.'|total_pts:'. $total_points;
 
-			# Salvar id do usuário no quiz submetido
-			$meta_key_quiz 		= 'qpt_users_ids';
-			$meta_value_quiz 	= get_post_meta( $quiz_id, $meta_key_quiz, true ) . ',' . $user_id;
-			update_post_meta( $quiz_id, $meta_key_quiz, $meta_value_quiz );
+			$key_voucher_id		= 'ucqpt_vouchers_data';
+			$value_voucher_ids 	= get_post_meta( $quiz_id, $meta_key_voucher_id, true ) . ',' . $voucher_id;	
+
+			# Salvar resultado no voucher
+			update_post_meta( $voucher_id, $key_voucher_result, $voucher_value_result_data );
+			update_post_meta( $voucher_id, $key_voucher_is_used, 'yes' );
+			
+			# Salvar id do voucher no quiz(id)
+			update_post_meta( $quiz_id, $key_voucher_id, $value_voucher_ids );
 
 			# Imprimindo o Resultado
 			$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-2">
@@ -334,6 +292,8 @@ class Uc_Qpt_Public {
 					</div>';
 
 			echo $result;
+
+			die();
 
 		else :
 			die('Dados inválidos. Atualize a página e faça o teste novamente!');
@@ -413,4 +373,131 @@ class Uc_Qpt_Public {
 
 		echo $result;
 	}
+
+	/**
+	 * Verificação do voucher para iniciar o teste
+	 * 
+	 * @since 1.1.0
+	 */
+	public function ucqpt_checking_voucher_by_ajax()
+	{
+		$voucher_code = $_POST['voucherCode'];
+		
+		$get_vouchers = wp_remote_get( get_site_url() . '/?rest_route=/wp/v2/uc_voucher' );
+
+		if ( ! is_wp_error( $get_vouchers ) ) :
+			
+			$vouchers = wp_remote_retrieve_body( $get_vouchers );
+			$vouchers = json_decode($vouchers);
+
+			/**
+			 * Data
+			 * id 
+			 * date 
+			 * link 
+			 * status 
+			 * title->rendered
+			 */
+			$data_voucher 	= array();
+			$voucher_exists = false;
+			$voucher_used 	= false;
+			$curr_date 		= new DateTime();
+			$today 			= $curr_date->format('d-M-Y H:i:s');
+			foreach ( $vouchers as $v ) :
+			
+				if ( $v->title->rendered == $voucher_code ) :
+					// echo $v->title->rendered . '</br>';
+					$is_used 		= get_post_meta( $v->id, 'ucqpt_is_used', true );
+					$by_user 		= get_post_meta( $v->id, 'ucqpt_for_user_data', true );
+					$company_id 	= get_post_meta( $v->id, 'ucqpt_company_id', true);
+					$result_data 	= get_post_meta( $v->id, 'ucqpt_test_result_data', true );
+
+					$data_voucher['id'] 			= $v->id;
+					$data_voucher['company_id']		= $company_id;
+					$data_voucher['created_date']	= $v->date;
+					$data_voucher['utilized_date']	= $today;
+					$data_voucher['status'] 		= $v->status;
+					$data_voucher['link'] 			= $v->link;
+					$data_voucher['title'] 			= $v->title->rendered;
+					$data_voucher['utilized'] 		= $is_used;
+					$data_voucher['user_data']		= $by_user;
+					$data_voucher['result_data'] 	= $result_data;
+
+					$voucher_exists = true;
+
+					if ( $is_used == 'yes' ) :
+						$voucher_used = true;
+					endif;
+				endif;
+			
+			endforeach;
+
+			if ( $voucher_exists ) :
+
+				echo $voucher_code . ' Válido! </br>';
+				
+				if ( $voucher_used ) :
+
+					echo 'Voucher já foi utilizado. </br>';
+					echo 'Resultado: </br>';
+					
+					echo '<pre>';
+					print_r($data_voucher);
+					echo '</pre>';
+
+				else :
+
+					require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-get-user-info.php';
+
+				endif;
+
+			else :
+				
+				echo $voucher_code . ' Inválido! </br>';
+
+			endif;
+		endif;
+
+		die();
+	}
+
+	/**
+	 * Salva os dados do usuário no teste e voucher e libera o teste
+	 * 
+	 * @since 1.1.0
+	 */
+	public function uqpt_record_user_data_by_ajax()
+	{
+		$user_name 	= $_POST['name'];
+		$user_email = $_POST['email'];
+		$user_phone = $_POST['phone'];
+		$voucher_id = $_POST['voucher'];
+		$quiz_id 	= $_POST['quiz'];
+
+		// echo 'Voucher: ' . $voucher_id . '</br>';
+		// echo 'Quiz: ' . $quiz_id . '</br>';
+
+		# Tratamento e salvamento dos dados do usuário no voucher
+		$meta_value = $user_name . '||' . $user_email . '||' . $user_phone;
+		update_post_meta( $voucher_id, 'ucqpt_for_user_data', $meta_value );
+
+		// Dados para renderizar corretamente as perguntas
+		# Data quiz
+		$title_quiz = get_the_title( $quiz_id );
+		$desc_quiz 	= get_the_excerpt( $quiz_id );
+		
+		# Ids das perguntas
+		$meta_ids	= get_post_meta($quiz_id, 'quiz_questions_ids', true);
+		$idsarr 	= explode(',', $meta_ids);
+
+		require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-quiz.php';
+		die();
+	}
 }
+
+/**
+ * O que falta agora é salvar os dados do teste no voucher e o id do voucher no teste na submissão do mesmo pelo usuário.
+ * Também precisa dar uma ajeitada na tela de cadastro
+ * Esconder as abas de perguntas, testes, etc.. do menu
+ * Mostrar abas com testes, vouchers e empresas na tela do plugin
+ */
