@@ -483,15 +483,19 @@ class Uc_Qpt_Admin {
 	public function ucqpt_create_voucher_by_ajax()
 	{
 		$voucher_code 	= $_POST['voucherCode'];
-		$user_id 		= $_POST['companyId'];
+		$company_id		= $_POST['companyId'];
+		$user_name 		= $_POST['userName'];
+		$user_email 	= $_POST['userEmail'];
+		$user_tel 		= $_POST['userTel'];
+		$user_cpf 		= $_POST['userCpf'];
 		
 		$key_limit 		= 'ucqpt_company_vouchers';
 		$key_voucher	= 'ucqpt_company_registered_vouchers';
 
 		# Verificar a disponibilidade de vouchers com base no limite disponível para empresa
-		// update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
-		$voucher_limit			= get_user_meta( $user_id, $key_limit, true );
-		$voucher_registered_str	= get_user_meta( $user_id, $key_voucher, true );
+		// update_user_meta( $company_id, 'ucqpt_company_vouchers', $company_vouchers);
+		$voucher_limit			= get_user_meta( $company_id, $key_limit, true );
+		$voucher_registered_str	= get_user_meta( $company_id, $key_voucher, true );
 		$voucher_registered 	= explode( ',', $voucher_registered_str );
 		$voucher_total_registered = count( $voucher_registered );
 
@@ -508,8 +512,14 @@ class Uc_Qpt_Admin {
 				$new_voucher_registered_value = $voucher_code . ',' . $voucher_registered_str;
 
 				update_post_meta( $voucher_id, 'ucqpt_voucher_code', $voucher_code ); # Salvando o voucher code
-				update_post_meta( $voucher_id, 'ucqpt_company_id', $user_id ); # Salvando o ID do usuário(empresa) no voucher
-				update_user_meta( $user_id, $key_voucher, $new_voucher_registered_value ); # Salvando a string de vouchers no usuário(empresa)
+				update_post_meta( $voucher_id, 'ucqpt_company_id', $company_id ); # Salvando o ID do usuário(empresa) no voucher
+				update_user_meta( $company_id, $key_voucher, $new_voucher_registered_value ); # Salvando a string de vouchers no usuário(empresa)
+
+				// Salvar dados do consumidor
+				update_post_meta( $voucher_id, 'ucqpt_costumer_name', $user_name );
+				update_post_meta( $voucher_id, 'ucqpt_costumer_email', $user_email );
+				update_post_meta( $voucher_id, 'ucqpt_costumer_cpf', $user_cpf );
+				update_post_meta( $voucher_id, 'ucqpt_costumer_tel', $user_tel );
 				
 				$new_title 		= $voucher_code . '-' . $voucher_id;
 				$data_update 	= array(
@@ -517,6 +527,7 @@ class Uc_Qpt_Admin {
 					'post_title' 	=> $new_title,
 				);
 				wp_update_post( $data_update );
+				
 				die($new_title);
 			else :
 

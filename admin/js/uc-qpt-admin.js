@@ -367,13 +367,22 @@ function createNewVoucher(ajaxUrl)
 {
 	'use strict';
 
-	var code = jQuery('#ucqpt_company_voucher').val(),
-		ciaId = jQuery('#ucqpt_company_selected').val();
+	var code 		= jQuery('#ucqpt_company_voucher').val(),
+		ciaId 		= jQuery('#ucqpt_company_selected').val(),
+		userName 	= jQuery('#ucqpt_customer_name').val(),
+		userEmail 	= jQuery('#ucqpt_customer_email').val(),
+		userTel 	= jQuery('#ucqpt_customer_cpf').val(),
+		userCpf 	= jQuery('#ucqpt_customer_tel').val();
+	// Add validação dos campos
 
 	var dataSend = {
 		action: 'ucqpt_create_voucher',
 		voucherCode: code,
-		companyId: ciaId
+		companyId: ciaId,
+		userName: userName,
+		userEmail: userEmail,
+		userTel: userTel,
+		userCpf: userCpf
 	};
 
 	jQuery.ajax({
