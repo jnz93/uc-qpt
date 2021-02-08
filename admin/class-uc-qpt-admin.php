@@ -159,15 +159,17 @@ class Uc_Qpt_Admin {
 						</div>';
 		
 		// Outputs
-		echo $card_buttons;
-
-		// include templates
-		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-list-all-quizes.php';
-		require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-new-quiz.php';
-		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-register-company.php';
-		require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-create-voucher.php';
-		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-customer.php';
-		// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-budget.php';
+		// echo $card_buttons;
+		echo '<div class="uk-container">';
+			require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-admin-display.php';
+			// include templates
+			require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-list-all-quizes.php';
+			require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-new-quiz.php';
+			require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-register-company.php';
+			require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-create-voucher.php';
+			// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-customer.php';
+			// require_once plugin_dir_path( __FILE__ ) . 'partials/templates/uchb-register-budget.php';
+		echo '</div>';
 	}
 
 	/**
