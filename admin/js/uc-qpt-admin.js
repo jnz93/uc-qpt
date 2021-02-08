@@ -203,7 +203,6 @@ function addTplQuestion(ajaxUrl)
 
 						<div class="uk-card-footer">
 							<button class="uk-button uk-button-primary" type="button" onclick="saveQuestionAndAnswer('${ajaxUrl}', jQuery(this))">Adicionar Pergunta</button>
-							<button class="uk-button" type="button" onclick="getCheckVal()">Check Val</button>
 						</div>
 
 					</div>`;
