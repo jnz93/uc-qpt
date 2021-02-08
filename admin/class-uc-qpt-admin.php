@@ -347,9 +347,9 @@ class Uc_Qpt_Admin {
 		$post_id = wp_insert_post( $postarr );
 
 		if ( !is_wp_error( $post_id )) :
-			echo '<span id="quiz-id" style="display: none;">'. $post_id .'</span>';
+			die('<span id="quiz-id" style="display: none;">'. $post_id .'</span>');
 		else :
-			echo 'err';
+			die('Err');
 		endif;
 	}
 

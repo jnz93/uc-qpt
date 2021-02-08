@@ -84,27 +84,17 @@ function createNewQuiz(ajaxUrl)
 			// Add loading
 			jQuery('.uk-modal-body').append('<div id="spinner" uk-spinner></div>');
 		},
-		success: function(res)
-		{
-			UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> <b>'+ quizName +'</b> criado com sucesso!', status: 'success', pos: 'bottom-center'});
-			console.log(res);
-		},
-		error: function(res)
-		{
-			UIkit.notification({message: '<span uk-icon=\'icon: close\'></span> Houve um problema com o cadastro. Tente novamente! <br /> Err: ' + res, status: 'error', pos: 'bottom-center'});
-		},
-		complete: function()
-		{
-			// Esconder loading
-			jQuery('#spinner').fadeOut();
-			jQuery('.uk-modal-body').children('.wrapper-new-question').fadeIn();
-		}
 	}).done(function(res) {
+		jQuery('.uk-modal-body').find('#spinner').hide();
+		jQuery('.uk-modal-body').children('.wrapper-new-question').fadeIn();
+
 		// mostrar título, descrição e botão atualizar teste
 		jQuery('.uk-modal-title').text(quizName);
 		jQuery('.uk-modal-title').siblings('p').text(quizDescription);
 		jQuery('.uk-modal-title').siblings('p').after(res);
 		jQuery('#test-update').fadeIn();
+
+		UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> <b>'+ quizName +'</b> criado com sucesso!', status: 'success', pos: 'bottom-center'});
 	});
 }
 
