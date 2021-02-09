@@ -474,14 +474,11 @@ class Uc_Qpt_Public {
 		$voucher_id = $_POST['voucher'];
 		$quiz_id 	= $_POST['quiz'];
 
-		// echo 'Voucher: ' . $voucher_id . '</br>';
-		// echo 'Quiz: ' . $quiz_id . '</br>';
+		$saved_user_name 		= get_post_meta( $voucher_id, 'ucqpt_costumer_name', true);
+		$saved_user_email 		= get_post_meta( $voucher_id, 'ucqpt_costumer_email', true);
+		$saved_user_cpf 		= get_post_meta( $voucher_id, 'ucqpt_costumer_cpf', true);
+		$saved_user_tel 		= get_post_meta( $voucher_id, 'ucqpt_costumer_tel', true);
 
-		# Tratamento e salvamento dos dados do usuário no voucher
-		$meta_value = $user_name . '||' . $user_email . '||' . $user_phone;
-		update_post_meta( $voucher_id, 'ucqpt_for_user_data', $meta_value );
-
-		// Dados para renderizar corretamente as perguntas
 		# Data quiz
 		$title_quiz = get_the_title( $quiz_id );
 		$desc_quiz 	= get_the_excerpt( $quiz_id );
@@ -490,7 +487,16 @@ class Uc_Qpt_Public {
 		$meta_ids	= get_post_meta($quiz_id, 'quiz_questions_ids', true);
 		$idsarr 	= explode(',', $meta_ids);
 
-		require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-quiz.php';
+		if ( strtolower($saved_user_name) == strtolower($user_name) || $saved_user_email == $user_email || $saved_user_tel == $user_phone ) :
+
+			require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-quiz.php';
+
+		else: 
+
+			echo 'Dados inválidos. Tente novamente.';
+
+		endif;
+
 		die();
 	}
 }

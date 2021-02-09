@@ -104,8 +104,6 @@ function autenticateVoucher(ajaxUrl)
 		console.log('Requisição finalizada');
 		jQuery('.entry-content').html(res);
 	});
-
-	console.log(voucherCode.length);
 }
 
 function submitUserData(ajaxUrl)
