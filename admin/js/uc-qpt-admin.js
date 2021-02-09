@@ -107,8 +107,19 @@ function addTplQuestion(ajaxUrl)
 {
 	var template = `<div id="" class="uk-card uk-card-default uk-width-1-1 uk-margin-small-bottom">
 						<!-- Title new question -->
-						<div class="uk-card-header">
-							<h3 class="">Nova pergunta</h3>
+						<div class="uk-card-header uk-flex uk-flex-between">
+							<div class="uk-flex uk-flex-middle" style="width: 80%;">
+								<h4 class="" style="margin:0;">Nova pergunta</h4>
+							</div>
+							<div class="uk-flex uk-flex-column ucqpt-actions" style="display: none;">
+								<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+									<label><input class="uk-checkbox" type="checkbox" data-value="yes" onclick="setShowHide('${ajaxUrl}', jQuery(this))"> Desativar pergunta</label>
+								</div>
+								<div>
+									<span class="" uk-icon="file-edit" uk-tooltip="Indisponível no momento"></span>
+									<span class="" uk-icon="close" uk-tooltip="Indisponível no momento"></span>
+								</div>
+							</div>
 						</div>
 						
 						<!-- Wrapper body -->
