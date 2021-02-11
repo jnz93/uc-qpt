@@ -58,6 +58,9 @@ class Uc_Qpt_Admin {
 		// Create custom post type
 		add_action('init', array($this, 'create_custom_post_types'));
 
+		// Redirect to admin plugin page after login on wp admin
+		add_filter( 'login_redirect', array( $this, 'ucqpt_admin_default_page' ) );
+
 		// Ajax actions
 		add_action('wp_ajax_ucqpt_create_new_quiz', array($this, 'ucqpt_create_new_quiz_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_draft_quiz', array($this, 'ucqpt_create_draft_quiz_by_ajax')); // executed when logged in
@@ -125,7 +128,7 @@ class Uc_Qpt_Admin {
 		$page_title = 'Quiz Personality Test';
 		$menu_title = 'QPT - Quiz';
 		$menu_slug 	= 'qpt-admin';
-		$capability = 10;
+		$capability = '0';
 		$icon_url 	= 'dashicons-editor-spellcheck';
 		$position 	= 20;
 
@@ -540,5 +543,16 @@ class Uc_Qpt_Admin {
 		endif;
 
 		die();
+	}
+
+	/**
+	 * Redirect to plugin admin page after login on admin wp
+	 * 
+	 * @since 1.2.0
+	 */
+	public function ucqpt_admin_default_page() {
+		
+		return get_admin_url() . 'admin.php?page=qpt-admin';
+
 	}
 }
