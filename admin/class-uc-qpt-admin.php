@@ -68,6 +68,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_register_company', array($this, 'ucqpt_register_company_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_generate_voucher_code', array($this, 'ucqpt_generate_voucher_code_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_voucher', array($this, 'ucqpt_create_voucher_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_switch_show_question', array($this, 'ucqpt_switch_show_question_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -398,6 +399,7 @@ class Uc_Qpt_Admin {
 			'post_status'	=> 'publish'
 		);
 		$question_id = wp_insert_post( $postarr );
+
 		if ( !is_wp_error( $question_id ) ) :
 
 			foreach ($answers as $answer) :
@@ -427,8 +429,14 @@ class Uc_Qpt_Admin {
 				$new_questions_ids = $question_id;
 			endif;
 
+			# show question default = yes
+			update_post_meta( $question_id, '_ucqpt_show_question', 'yes' ); # yes = mostra / no = não mostra
+
 			// Update post meta
 			update_post_meta( $quiz_id, 'quiz_questions_ids', $new_questions_ids );
+
+			echo $question_id;
+			die();
 		endif;
 	}
 
@@ -550,9 +558,31 @@ class Uc_Qpt_Admin {
 	 * 
 	 * @since 1.2.0
 	 */
-	public function ucqpt_admin_default_page() {
+	public function ucqpt_admin_default_page() 
+	{
 		
 		return get_admin_url() . 'admin.php?page=qpt-admin';
 
+	}
+
+	
+	/**
+	 * Switcher: show or hide question on quiz
+	 * 
+	 * @since 1.2.0
+	 */
+	public function ucqpt_switch_show_question_by_ajax()
+	{
+		$post_id	= $_POST['qId'];
+		$show 		= $_POST['show'];
+
+		if ( empty( $show ) || empty($post_id) ) :
+			die('Valor inválido!');
+		endif;
+
+		update_post_meta( $post_id, '_ucqpt_show_question', $show ); # yes = mostra / no = não mostra
+
+		echo 'success';
+		die();
 	}
 }

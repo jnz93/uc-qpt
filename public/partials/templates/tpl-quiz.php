@@ -37,37 +37,40 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
             # Data question
             $title_question = get_the_title( $id );
             $desc_question 	= get_the_content( $id );
+            $show_question  = get_post_meta( $id, '_ucqpt_show_question', true );
 
-            # Answers
-            $args = array(
-                'post_type'		=> 'uc_answer',
-                'post_parent'	=> $id,
-                'posts_per_page'=> -1,
-            );
-            $answers = get_posts( $args );
+            if ( $show_question != 'no' ) :
+                # Answers
+                $args = array(
+                    'post_type'		=> 'uc_answer',
+                    'post_parent'	=> $id,
+                    'posts_per_page'=> -1,
+                );
+                $answers = get_posts( $args );
 
-            # Front-end
-            $question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4>';
-            
-            if ( !empty($answers) ) :
-                $letters = array('a)', 'b)', 'c)', 'd)', 'e)', 'f)');
-                $pos = 0;
-                $options = '<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">';
-                foreach ( $answers as $answer ) :
-                    $options .= '<div class="uk-width-1-1" uk-grid>
-                                    <label class="uk-width-1-1@s">
-                                        <input class="uk-radio" type="checkbox" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'
-                                        <input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso">
-                                    </label>
-                                </div>';
-                    $pos++;
-                endforeach;
-                $options .= '</div>';
+                # Front-end
+                $question .= '<div class="wrapper-question" data-id="'. $id .'"><h4 id=" class="">'. $number .' - '. $title_question .'</h4>';
+                
+                if ( !empty($answers) ) :
+                    $letters = array('a)', 'b)', 'c)', 'd)', 'e)', 'f)');
+                    $pos = 0;
+                    $options = '<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">';
+                    foreach ( $answers as $answer ) :
+                        $options .= '<div class="uk-width-1-1" uk-grid>
+                                        <label class="uk-width-1-1@s">
+                                            <input class="uk-radio" type="checkbox" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'
+                                            <input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso">
+                                        </label>
+                                    </div>';
+                        $pos++;
+                    endforeach;
+                    $options .= '</div>';
+                endif;
+
+                $question .= $options;
+                $question .= '</div>';
+                $number++;
             endif;
-
-            $question .= $options;
-            $question .= '</div>';
-            $number++;
         endforeach;
         echo $quizContent;
         echo $caution;

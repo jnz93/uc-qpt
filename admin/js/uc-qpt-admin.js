@@ -230,7 +230,7 @@ function saveQuestionAndAnswer(ajaxUrl, el)
 {
 	'use strict';
 	var wrapperQuestion		= el.parent().siblings('.wrapper-question'),
-		headerTitle 		= el.parent().siblings('.uk-card-header').children('h3');
+		headerTitle 		= el.parent().siblings('.uk-card-header').find('h4');
 
 	// console.log(wrapperQuestion);
 	var questionTitle 		= wrapperQuestion.find('.question-title').val(),
@@ -258,12 +258,12 @@ function saveQuestionAndAnswer(ajaxUrl, el)
 			answers: newAnswers,
 			quizId: quizId
 		},
-		success: function (res) {
-			console.log(res);
-		}
-	}).done(function(){
-		console.log(el.parent().parent());
-		el.parent().parent().css({'overflow': 'hidden', 'height' : '75px'});
+	}).done(function(res){
+		el.parent().parent('.uk-card').attr('data-question-id', res);
+		el.parent().siblings('.uk-card-body').hide();
+		el.parent().hide();
+		el.parent().siblings('.uk-card-header').find('.ucqpt-actions').show();
+
 		headerTitle.text(questionTitle);
 	});
 }
@@ -398,4 +398,41 @@ function createNewVoucher(ajaxUrl)
 			document.getElementById('form-voucher').reset();
 		}
 	});
+}
+
+function setShowHide(ajaxUrl, el)
+{
+	
+	var questionId = el.parent().parent().parent().parent().parent('.uk-card').attr('data-question-id');
+	var showQuestion = '';
+
+	if( el.is(':checked') ) {
+		showQuestion = 'no';
+	} else {
+		showQuestion = 'yes';
+	}
+	
+	var dataSend = {
+		action: 'ucqpt_switch_show_question',
+		qId: questionId,
+		show: showQuestion
+	};
+
+	jQuery.ajax({
+		url: ajaxUrl,
+		method: 'POST',
+		data: dataSend
+	}).done(function(res)
+	{
+		if ( res == 'success' ) {
+			if ( showQuestion == 'yes' ) {
+				UIkit.notification("<span uk-icon='icon: check'></span> A pergunta foi Habilitada!", {pos: 'bottom-center'});
+			} else {
+				UIkit.notification("<span uk-icon='icon: ban'></span> A pergunta foi Desabilitada!", {pos: 'bottom-center'});
+			}
+		} else {
+			UIkit.notification("<span uk-icon='icon: close'></span> Houve um erro. Tente novamente", {pos: 'bottom-center'});
+		}
+	});
+	
 }
