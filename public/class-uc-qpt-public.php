@@ -499,6 +499,24 @@ class Uc_Qpt_Public {
 
 		die();
 	}
+
+	/**
+	 * Extract PDF content
+	 * 
+	 * @since v1.2.0
+	 */
+	public function uqpt_extract_pdf_content()
+	{
+		// Include Composer autoloader if not already done.
+		// include 'vendor/autoload.php';
+		
+		// Parse pdf file and build necessary objects.
+		$parser = new Smalot\PdfParser\Parser();
+		$pdf    = $parser->parseFile('http://localhost/wp/wp-content/uploads/2021/02/Relatorio_Estilos-psicologicos_AP_Modelo_2.pdf');
+		
+		$text = $pdf->getText();
+		echo $text;
+	}
 }
 
 /**
