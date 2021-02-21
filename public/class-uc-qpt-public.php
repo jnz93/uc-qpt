@@ -225,39 +225,36 @@ class Uc_Qpt_Public {
 				endif;
 			
 			endforeach;
-
-			// Análise das pontuações e definição de pontos fortes e fracos
-			$strength_points 	= array();
-			$weak_points 		= array();
-			$line_of_cut 		= 30;
 			
-			# Produção do resultado
-			if ( $total_afetivo >= $line_of_cut ) :
-				$strength_points[] = 'Afetivo';
-			else :
-				$weak_points[] = 'Afetivo';
-			endif;
+			# Tratamento para encotrar os maiores e menores
+			$perfis 		= array( 'Afetivo' => $total_afetivo, 'Pragmático' => $total_pragmatico, 'Racional' => $total_racional, 'Visionário' => $total_visionario );
+			$result_perfis 	= array( 
+				$total_afetivo		=> 'Afetivo', 
+				$total_pragmatico 	=> 'Pragmático', 
+				$total_racional 	=> 'Racional', 
+				$total_visionario 	=> 'Visionário'
+			);
+			ksort($result_perfis);
+			$chunk_perfis = array_chunk($result_perfis, 2, true);
 
-			if ( $total_pragmatico >= $line_of_cut ) :
-				$strength_points[] = 'Pragmático';
-			else :
-				$weak_points[] = 'Pragmático';
-			endif;
+			// Pontos Fracos
+			rsort($chunk_perfis[0]);
+			// $weak_points 		= $chunk_perfis[0];
+			$weak_points 		= $chunk_perfis[0];
+			$weak_points_str 	= '';
+			foreach ( $weak_points as $key => $value ) :
+				$weak_points_str .= $value . '/';
+			endforeach;
+			$weak_points_str = substr($weak_points_str, 0, -1);
 
-			if ( $total_racional >= $line_of_cut ) :
-				$strength_points[] = 'Racional';
-			else :
-				$weak_points[] = 'Racional';
-			endif;
-
-			if ( $total_visionario >= $line_of_cut ) :
-				$strength_points[] = 'Visionário';
-			else :
-				$weak_points[] = 'Visionário';
-			endif;
-
-			$strength_points_str 	= implode(', ', $strength_points);
-			$weak_points_str 		= implode(', ', $weak_points);
+			# Pontos Fortes
+			rsort($chunk_perfis[1]);
+			$strength_points 	= $chunk_perfis[1];
+			$strength_points_str = '';
+			foreach ( $strength_points as $key => $value ) :
+				$strength_points_str .= $value . '/';
+			endforeach;
+			$strength_points_str = substr($strength_points_str, 0, -1);
 
 			# Tratamento dados do resultado do quiz para salvar no voucher
 			$key_voucher_result 		= 'ucqpt_test_result_data';
@@ -281,18 +278,31 @@ class Uc_Qpt_Public {
 			# Salvar id do voucher no quiz(id)
 			update_post_meta( $quiz_id, $key_voucher_id, $value_voucher_ids );
 
+			# Descrição e textos
+			$result_description = 'Os pontos fortes são representados pelas funções cognitivas principal e auxiliar (es) (uma ou duas funções auxiliares). O estilo é o resultado da combinação dos pontos fortes ou aptidões em que podemos atuar naturalmente e desenvolver nossos talentos. Os pontos fracos serão representados por áreas que não possuímos aptidões para atuar. O estilo não muda ao longo da vida, o desafio é conhecê-lo e gerir melhor suas forças, riscos e fraquezas.';
+			$persona_afetiva	= array( 'Afetiva', 'Padrão cognitivo com aptidão para relacionamento com as pessoas. Sua energia psíquica busca a empatia e a participação das pessoas. Perfil Afetivo visa harmonizar e integrar as pessoas.' );
+			$persona_racional 	= array( 'Racional', 'Padrão cognitivo com aptidão para dados e fatos e senso de realidade. Sua energia psíquica busca sistematizar, organizar e padronizar ambientes e relações. Perfil lógico e analítico traz precisão e controle ao meio.' );
+			$persona_pragmatico = array( 'Pragmático', 'Padrão cognitivo com aptidão para ação, foco e resultados. Sua energia psíquica busca fazer o que precisa ser feito. Perfil prático, decidido e realizador torna o ambiente produtivo.' );
+			$persona_visionario = array( 'Visionário', 'Padrão cognitivo com aptidão para ideias, conceitos e oportunidades. Sua energia psíquica busca mudar e inovar seu campo de percepção. Perfil reflexivo busca trazer estratégia e renovação para o meio.' );
+	
+			# Linkando o doc para donwload
+			$name_archive = strtolower($strength_points_str);
+			$name_archive = str_replace('/', '-', $name_archive);
+			$name_archive = $name_archive . '.pdf';
+			$path_archive = plugin_dir_url( __FILE__ ) . 'reports/'.$name_archive;
+
 			# Imprimindo o Resultado
-			$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-2">
+			$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
 						<h3 class="uk-card-title">Resultado</h3>
 						<ul class="uk-list">
 							<li>Pontos Fortes: '. $strength_points_str.'</li>
 							<li>Pontos Fracos: '. $weak_points_str .'</li>
-							<li>Total: '. $total_points .'</li>
+							<li>Um e-mail foi enviado para você com o resultado completo!</li>
 						</ul>
 					</div>';
+				echo $result;
 
-			echo $result;
-
+				wp_mail( 'box@unitycode.tech', 'Resultado teste de perfil', 'Baixe o seu resultado', array(), $path_archive );
 			die();
 
 		else :
@@ -433,17 +443,17 @@ class Uc_Qpt_Public {
 			endforeach;
 
 			if ( $voucher_exists ) :
-
-				echo $voucher_code . ' Válido! </br>';
 				
 				if ( $voucher_used ) :
 
-					echo 'Voucher já foi utilizado. </br>';
-					echo 'Resultado: </br>';
-					
-					echo '<pre>';
-					print_r($data_voucher);
-					echo '</pre>';
+					$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
+						<h3 class="uk-card-title">Opa, algo deu errado!</h3>
+						<ul class="uk-list">
+							<p class="">Este voucher('. $voucher_code .') já foi utilizado. Por favor, verifique seu e-mail para ver o resultado.</p>
+						</ul>
+					</div>';
+
+				echo $result;
 
 				else :
 
@@ -500,10 +510,3 @@ class Uc_Qpt_Public {
 		die();
 	}
 }
-
-/**
- * O que falta agora é salvar os dados do teste no voucher e o id do voucher no teste na submissão do mesmo pelo usuário.
- * Também precisa dar uma ajeitada na tela de cadastro
- * Esconder as abas de perguntas, testes, etc.. do menu
- * Mostrar abas com testes, vouchers e empresas na tela do plugin
- */
