@@ -37,11 +37,13 @@
         <li><a href="#">Testes</a></li>
         <li><a href="#">Perguntas/Respostas</a></li>
         <li><a href="#">Vouchers</a></li>
+        <li><a href="#">Empresas</a></li>
     </ul>
     <ul class="uk-switcher uk-margin">
         <li><?php require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-list-all-quizes.php'; ?></li>
         <li><?php require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-list-questions.php'; ?></li>
         <li><?php require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-list-vouchers.php'; ?></li>
+        <li><?php require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-list-companies.php'; ?></li>
     </ul>
 
     <?php    
