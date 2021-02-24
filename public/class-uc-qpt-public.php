@@ -175,6 +175,8 @@ class Uc_Qpt_Public {
 		$quiz_id 	= $_POST['quizId'];
 		$voucher_id = $_POST['voucherId'];
 
+		$voucher_email = get_post_meta( $voucher_id, 'ucqpt_costumer_email', true );
+
 		if ( !empty($data) ) :
 
 			# Iniciação das variaveis de contagem
@@ -226,35 +228,38 @@ class Uc_Qpt_Public {
 			
 			endforeach;
 			
-			# Tratamento para encotrar os maiores e menores
-			$perfis 		= array( 'Afetivo' => $total_afetivo, 'Pragmático' => $total_pragmatico, 'Racional' => $total_racional, 'Visionário' => $total_visionario );
-			$result_perfis 	= array( 
-				$total_afetivo		=> 'Afetivo', 
-				$total_pragmatico 	=> 'Pragmático', 
-				$total_racional 	=> 'Racional', 
-				$total_visionario 	=> 'Visionário'
-			);
-			ksort($result_perfis);
-			$chunk_perfis = array_chunk($result_perfis, 2, true);
+			// Análise das pontuações e definição de pontos fortes e fracos
+			$strength_points 	= array();
+			$weak_points 		= array();
+			$line_of_cut 		= 80;
+			
+			# Produção do resultado
+			if ( $total_afetivo >= $line_of_cut ) :
+				$strength_points[] = 'Afetivo';
+			else :
+				$weak_points[] = 'Afetivo';
+			endif;
 
-			// Pontos Fracos
-			rsort($chunk_perfis[0]);
-			// $weak_points 		= $chunk_perfis[0];
-			$weak_points 		= $chunk_perfis[0];
-			$weak_points_str 	= '';
-			foreach ( $weak_points as $key => $value ) :
-				$weak_points_str .= $value . '/';
-			endforeach;
-			$weak_points_str = substr($weak_points_str, 0, -1);
+			if ( $total_pragmatico >= $line_of_cut ) :
+				$strength_points[] = 'Pragmático';
+			else :
+				$weak_points[] = 'Pragmático';
+			endif;
 
-			# Pontos Fortes
-			rsort($chunk_perfis[1]);
-			$strength_points 	= $chunk_perfis[1];
-			$strength_points_str = '';
-			foreach ( $strength_points as $key => $value ) :
-				$strength_points_str .= $value . '/';
-			endforeach;
-			$strength_points_str = substr($strength_points_str, 0, -1);
+			if ( $total_racional >= $line_of_cut ) :
+				$strength_points[] = 'Racional';
+			else :
+				$weak_points[] = 'Racional';
+			endif;
+
+			if ( $total_visionario >= $line_of_cut ) :
+				$strength_points[] = 'Visionário';
+			else :
+				$weak_points[] = 'Visionário';
+			endif;
+
+			$strength_points_str 	= implode('/', $strength_points);
+			$weak_points_str 		= implode('/', $weak_points);
 
 			# Tratamento dados do resultado do quiz para salvar no voucher
 			$key_voucher_result 		= 'ucqpt_test_result_data';
@@ -297,12 +302,14 @@ class Uc_Qpt_Public {
 						<ul class="uk-list">
 							<li>Pontos Fortes: '. $strength_points_str.'</li>
 							<li>Pontos Fracos: '. $weak_points_str .'</li>
-							<li>Um e-mail foi enviado para você com o resultado completo!</li>
+							<li>Um e-mail foi enviado para '. $voucher_email .' com o resultado completo!</li>
 						</ul>
 					</div>';
 				echo $result;
 
-				wp_mail( 'box@unitycode.tech', 'Resultado teste de perfil', 'Baixe o seu resultado', array(), $path_archive );
+
+			echo $path_archive;			
+			wp_mail( $voucher_email, 'Resultado teste de perfil', 'Baixe o seu resultado', array(), $path_archive );
 			die();
 
 		else :
