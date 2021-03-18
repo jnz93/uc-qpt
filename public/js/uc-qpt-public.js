@@ -139,3 +139,34 @@ function submitUserData(ajaxUrl)
 	});
 
 }
+
+function filterWeights(el)
+{
+	parentSiblings = el.parent().siblings();
+	selectedValue = el.val();
+
+	parentSiblings.each(function(){
+		options = jQuery(this).find('option');
+
+		options.each(function (){
+			optVal = jQuery(this).val();
+			
+			if ( optVal == selectedValue ) {
+				jQuery(this).hide();
+			}
+		});
+	});
+}
+
+function resetAnswer(el)
+{
+	siblings = el.siblings();
+
+	siblings.each(function() {
+		options = jQuery(this).find('option');
+
+		options.each(function() {
+			jQuery(this).show();
+		});
+	});
+}

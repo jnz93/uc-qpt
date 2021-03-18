@@ -56,15 +56,21 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                     $pos = 0;
                     $options = '<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">';
                     foreach ( $answers as $answer ) :
-                        $options .= '<div class="uk-width-1-1" uk-grid>
+                        $options .= '<form class="uk-width-1-1" uk-grid>
                                         <label class="uk-width-1-1@s">
                                             <input class="uk-radio" type="checkbox" name="group-'. $id .'" data-id="'. $answer->ID .'"> '. ucfirst($letters[$pos]).' '. $answer->post_title .'
-                                            <input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso">
-                                        </label>
-                                    </div>';
+                                            <input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso" style="display: none;">
+                                            <select name="uk-input uk-form-width-small" id="" class="" onChange="filterWeights(jQuery(this))">
+                                                <option value="0" class="" selected>Selecione o peso</option>
+                                                <option value="1" class="">1</option>
+                                                <option value="2" class="">2</option>
+                                                <option value="4" class="">4</option>
+                                                <option value="6" class="">6</option>
+                                            </select>
+                                        </label>';
                         $pos++;
                     endforeach;
-                    $options .= '</div>';
+                    $options .= '<button type="reset" class="uk-button uk-button-default" onclick="resetAnswer(jQuery(this))">Resetar pergunta</button></form>';
                 endif;
 
                 $question .= $options;
