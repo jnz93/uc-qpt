@@ -583,8 +583,12 @@ class Uc_Qpt_Admin {
 	 */
 	public function ucqpt_admin_default_page() 
 	{
-		
-		return get_admin_url() . 'admin.php?page=mindflow-admin';
+
+		if ( current_user_can( 'activate_plugins' ) || user_can( get_current_user_id(), 'activate_plugins' ) ) :
+			return get_admin_url() . 'admin.php?page=mindflow-admin';
+		else :
+			return get_admin_url() . 'admin.php?page=mindflow-business';
+		endif;
 
 	}
 
