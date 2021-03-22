@@ -130,7 +130,7 @@ class Uc_Qpt_Admin {
 		$page_title = 'MindFlow Inventário';
 		$menu_title = 'MindFlow Admin';
 		$menu_slug 	= 'mindflow-admin';
-		$capability = '0';
+		$capability = '5';
 		$icon_url 	= 'dashicons-editor-spellcheck';
 		$position 	= 20;
 
