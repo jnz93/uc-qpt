@@ -126,14 +126,25 @@ class Uc_Qpt_Admin {
 	 */
 	public function create_plugin_menu()
 	{
-		$page_title = 'Quiz Personality Test';
-		$menu_title = 'QPT - Quiz';
-		$menu_slug 	= 'qpt-admin';
+		// Admin page
+		$page_title = 'MindFlow Inventário';
+		$menu_title = 'MindFlow Admin';
+		$menu_slug 	= 'mindflow-admin';
 		$capability = '0';
 		$icon_url 	= 'dashicons-editor-spellcheck';
 		$position 	= 20;
 
-		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this, 'construct_plugin_page'), $icon_url, $position);
+		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this, 'construct_plugin_page_admin'), $icon_url, $position);
+
+		// Contributor page
+		$page_title = 'MindFlow Vouchers';
+		$menu_title = 'MindFlow Empresas';
+		$menu_slug 	= 'mindflow-business';
+		$capability = '0';
+		$icon_url 	= 'dashicons-list-view';
+		$position 	= 21;
+
+		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this, 'construct_plugin_page_business'), $icon_url, $position);
 	}
 
 	/**
@@ -141,7 +152,7 @@ class Uc_Qpt_Admin {
 	 * 
 	 * @since 1.0.0
 	 */
-	public function construct_plugin_page()
+	public function construct_plugin_page_admin()
 	{
 		$buttons = '<p uk-margin>
 						<button class="uk-button uk-button-default uk-button-large" uk-toggle="target: #new-quiz">Novo Teste de Personalidade</button>
@@ -171,6 +182,18 @@ class Uc_Qpt_Admin {
 			require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-new-quiz.php';
 			require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-register-company.php';
 			require_once plugin_dir_path( __FILE__ ) . 'partials/templates/tpl-create-voucher.php';
+		echo '</div>';
+	}
+
+	/**
+	 * Construct page admin for business user
+	 * 
+	 * @since 1.3.0
+	 */
+	public function construct_plugin_page_business()
+	{
+		echo '<div class="uk-container">';
+			require_once plugin_dir_path( __FILE__ ) . 'partials/uc-qpt-business-display.php';
 		echo '</div>';
 	}
 
@@ -561,7 +584,7 @@ class Uc_Qpt_Admin {
 	public function ucqpt_admin_default_page() 
 	{
 		
-		return get_admin_url() . 'admin.php?page=qpt-admin';
+		return get_admin_url() . 'admin.php?page=mindflow-admin';
 
 	}
 
