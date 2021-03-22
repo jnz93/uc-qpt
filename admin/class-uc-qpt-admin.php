@@ -468,6 +468,8 @@ class Uc_Qpt_Admin {
 			update_user_meta( $user_id, 'ucqpt_company_doc', $company_cnpj );
 			update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
 
+			$this->ucqpt_create_vouchers_by_qty( $user_id, $company_vouchers );
+
 			die('success');
 		else :
 			die('error');
@@ -582,5 +584,47 @@ class Uc_Qpt_Admin {
 
 		echo 'success';
 		die();
+	}
+
+	/**
+	 * Método para criar vouchers passando um número de itens
+	 * 
+	 * @param $cia_id = id da empresa
+	 * @param $v_qty = quantidade de vouchers
+	 * @since 1.3.0
+	 */
+	public function ucqpt_create_vouchers_by_qty( $cia_id, $qty )
+	{
+		if ( empty( $qty ) || empty( $cia_id ) )
+			return;
+
+		$str_vouchers = '';
+		for ( $i = 0; $i < $qty; $i++ ) :
+			$voucher_code = strtoupper(wp_generate_password( 8, false, false ));
+
+			// Criando o post
+			$postarr = array(
+				'post_title'    => $voucher_code,
+				'post_status'   => 'publish',
+				'post_type'		=> 'uc_voucher'
+			);
+			$voucher_id = wp_insert_post( $postarr );
+
+			update_post_meta( $voucher_id, 'ucqpt_voucher_code', $voucher_code ); # Salvando o voucher code
+			update_post_meta( $voucher_id, 'ucqpt_company_id', $cia_id ); # Salvando o ID do usuário(empresa) no voucher
+			
+
+			// Update no titulo
+			$new_title 		= $voucher_code . '-' . $voucher_id;
+			$data_update 	= array(
+				'ID' 			=> $voucher_id,
+				'post_title' 	=> $new_title,
+			);
+			wp_update_post( $data_update );
+
+			$str_vouchers .= $str_vouchers . ',' . $new_title;
+		endfor;
+		$key_voucher	= 'ucqpt_company_registered_vouchers';
+		update_user_meta( $cia_id, $key_voucher, $str_vouchers ); # Salvando a string de vouchers no usuário(empresa)
 	}
 }
