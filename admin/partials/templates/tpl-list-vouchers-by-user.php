@@ -11,7 +11,7 @@
  * @package    Uc_Qpt
  * @subpackage Uc_Qpt/admin/partials/templates/
  */
-
+$ajax_url 	= admin_url( 'admin-ajax.php' );
 $args = array(
     'post_type'         => 'uc_voucher',
     'author'            => $user_id,
@@ -39,13 +39,14 @@ if ( $vouchers->have_posts() ) :
         while ( $vouchers->have_posts() ) :
             $vouchers->the_post();
             $post_id            = get_the_ID();
+            $v_code             = get_the_title( );
             $v_is_used          = get_post_meta( $post_id, 'ucqpt_is_used', true );
             $v_result_test_data = get_post_meta( $post_id, 'ucqpt_result_test_data', true );
             ?>
-            <tr>
-                <td><?php the_title(); ?></td>
+            <tr data-id="<?php echo $post_id; ?>">
+                <td><?php echo $v_code; ?></td>
                 <td><?php echo $v_is_used == 'yes' ? 'Sim <span class="uk-margin-small-left" uk-icon="file-text" uk-tooltip="Abrir Resultado"></span>' : 'Não'; ?></td>
-                <td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher"></span> <span uk-icon="ban"uk-tooltip="Excluir voucher"></span></td>
+                <td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>')"></span> <span uk-icon="ban"uk-tooltip="Excluir voucher"></span></td>
             </tr>
             <?php
         endwhile;
@@ -55,3 +56,55 @@ if ( $vouchers->have_posts() ) :
     <?php
 endif;
 ?>
+
+<!-- Modal para edição -->
+<div id="edit-voucher" class="uk-modal-container" uk-modal data-vocher="">
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header uk-flex uk-flex-between">
+            <div id="modal-title" class="">
+                <h2 class="uk-modal-title"></h2>
+                <p class=""></p>
+            </div>
+        </div>
+        <div class="uk-modal-body">
+            <form id="form-voucher" class="uk-grid-small" uk-grid>
+                
+                <p class="uk-width-1-1 uk-text-large">Dados do usuário</p>
+
+                <div class="uk-width-1-2">
+                    <label class="uk-form-label" for="ucqpt_customer_name">Nome Completo</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="ucqpt_customer_name" type="text" placeholder="Nome completo">
+                    </div>
+                </div> <!-- /end customer_name -->
+                
+                <div class="uk-width-1-2">
+                    <label class="uk-form-label" for="ucqpt_customer_email">E-mail</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="ucqpt_customer_email" type="email" placeholder="email@domain.com">
+                    </div>
+                </div> <!-- /end customer_email -->
+
+                <div class="uk-width-1-2">
+                    <label class="uk-form-label" for="ucqpt_customer_cpf">CPF</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="ucqpt_customer_cpf" type="text" placeholder="000.000.000-00">
+                    </div>
+                </div> <!-- /end customer_cpf -->
+
+                <div class="uk-width-1-2">
+                    <label class="uk-form-label" for="ucqpt_customer_tel">Telefone</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="ucqpt_customer_tel" type="text" placeholder="(DDD) 0 0000-0000">
+                    </div>
+                </div> <!-- /end customer_tel -->
+
+                <div class="">
+                    <button class="uk-button uk-button-primary" type="button" onclick="updateVoucherUserData('<?php echo $ajax_url; ?>')">Atualizar dados</button>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+        </div>
+    </div>

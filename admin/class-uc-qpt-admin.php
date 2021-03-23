@@ -69,6 +69,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_generate_voucher_code', array($this, 'ucqpt_generate_voucher_code_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_voucher', array($this, 'ucqpt_create_voucher_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_switch_show_question', array($this, 'ucqpt_switch_show_question_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_update_voucher_data', array($this, 'ucqpt_update_voucher_data_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -633,7 +634,8 @@ class Uc_Qpt_Admin {
 			$postarr = array(
 				'post_title'    => $voucher_code,
 				'post_status'   => 'publish',
-				'post_type'		=> 'uc_voucher'
+				'post_type'		=> 'uc_voucher',
+				'post_author'	=> $cia_id
 			);
 			$voucher_id = wp_insert_post( $postarr );
 
@@ -653,5 +655,30 @@ class Uc_Qpt_Admin {
 		endfor;
 		$key_voucher	= 'ucqpt_company_registered_vouchers';
 		update_user_meta( $cia_id, $key_voucher, $str_vouchers ); # Salvando a string de vouchers no usuário(empresa)
+	}
+
+	/**
+	 * Método para fazer update nos dados do usuário no voucher
+	 * 
+	 */
+	public function ucqpt_update_voucher_data_by_ajax()
+	{
+		$post_id	= $_POST['voucherId'];
+		$user_name 	= $_POST['userName'];
+		$user_email = $_POST['userEmail'];
+		$user_tel 	= $_POST['userTel'];
+		$user_doc 	= $_POST['userDoc'];
+
+		if ( empty( $user_name ) || empty($post_id) ) :
+			die('Dados inválido!');
+		endif;
+
+		// Salvar dados do consumidor
+		update_post_meta( $post_id, 'ucqpt_costumer_name', $user_name );
+		update_post_meta( $post_id, 'ucqpt_costumer_email', $user_email );
+		update_post_meta( $post_id, 'ucqpt_costumer_cpf', $user_doc );
+		update_post_meta( $post_id, 'ucqpt_costumer_tel', $user_tel );
+
+		die();
 	}
 }
