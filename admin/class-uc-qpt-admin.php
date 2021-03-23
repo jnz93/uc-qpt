@@ -70,6 +70,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_create_voucher', array($this, 'ucqpt_create_voucher_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_switch_show_question', array($this, 'ucqpt_switch_show_question_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_update_voucher_data', array($this, 'ucqpt_update_voucher_data_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_get_used_voucher_data', array($this, 'ucqpt_get_used_voucher_data_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -679,6 +680,86 @@ class Uc_Qpt_Admin {
 		update_post_meta( $post_id, 'ucqpt_costumer_cpf', $user_doc );
 		update_post_meta( $post_id, 'ucqpt_costumer_tel', $user_tel );
 
+		die();
+	}
+
+	/**
+	 * Get dados do voucher utilizado
+	 * 
+	 * @since 1.3.0
+	 */
+	public function ucqpt_get_used_voucher_data_by_ajax()
+	{
+		$voucher_id = $_POST['voucherId'];
+
+		if ( empty( $voucher_id ) )
+			return;
+		
+		$user_name 		= get_post_meta( $voucher_id, 'ucqpt_costumer_name', true );
+		$user_email 	= get_post_meta( $voucher_id, 'ucqpt_costumer_email', true );
+		$user_cpf 		= get_post_meta( $voucher_id, 'ucqpt_costumer_cpf', true );
+		$user_tel 		= get_post_meta( $voucher_id, 'ucqpt_costumer_tel', true );
+		$data_result 	= get_post_meta( $voucher_id, 'ucqpt_test_result_data', true );
+
+		$result_arr = explode( '|', $data_result );
+
+		// Dados do usuário
+		$user_data = '<ul class="uk-list uk-list-striped">
+						<li>Nome: '. $user_name .'</li>
+						<li>E-mail: '. $user_email .'</li>
+						<li>Telefone: '. $user_tel .'</li>
+						<li>CPF: '. $user_cpf .'</li>
+					</ul>';
+
+		$sanitazed_data = array();
+		foreach ( $result_arr as $r ) :
+			$r_arr = explode( ':', $r );
+
+			$sanitazed_data[] = $r_arr[1];
+		endforeach;
+		$result = '<table class="uk-table uk-table-striped">
+						<thead>
+							<tr>
+								<th>Dados</th>
+								<th>Pontuação</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Forças</td>
+								<td>'. $sanitazed_data[1] .'</td>
+							</tr>
+							<tr>
+								<td>Fraquezas</td>
+								<td>'. $sanitazed_data[2] .'</td>
+							</tr>
+							<tr>
+								<td>Total Afetivo</td>
+								<td>'. $sanitazed_data[3] .'</td>
+							</tr>
+							<tr>
+								<td>Total Pragmático</td>
+								<td>'. $sanitazed_data[4] .'</td>
+							</tr>
+							<tr>
+								<td>Total Racional</td>
+								<td>'. $sanitazed_data[5] .'</td>
+							</tr>
+							<tr>
+								<td>Total Visionário</td>
+								<td>'. $sanitazed_data[7] .'</td>
+							</tr>
+						</tbody>
+					</table>';
+
+		echo '<ul class="uk-subnav uk-subnav-pill" uk-switcher>
+					<li><a href="#">Dados do usuário</a></li>
+					<li><a href="#">Resultado</a></li>
+				</ul>
+				<ul class="uk-switcher uk-margin">
+					<li>'. $user_data .'</li>
+					<li>'. $result .'</li>
+				</ul>';
 		die();
 	}
 }

@@ -451,6 +451,39 @@ function setVoucherIdOnModal(voucherId, voucherCode)
 }
 
 /**
+ * Setar voucher id no modal de resultado
+ * @param {*} voucherId
+ * @param {*} voucherCode 
+ */
+function setVoucherIdOnResultModal(voucherId, voucherCode, ajaxUrl)
+{
+	'use strict';
+
+	jQuery('#result-voucher').attr('data-voucher', voucherId);
+	jQuery('#result-voucher').find('.uk-modal-title').text('Voucher: ' + voucherCode);
+
+	var dataSend = {
+		action: 'ucqpt_get_used_voucher_data',
+		voucherId: voucherId,
+	};
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: dataSend
+	})
+	.done( function (res) {
+		if (res == 'error') {
+			console.log(res);
+		} else {
+			// UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Os dados foram salvos com sucesso!', pos: 'bottom-center', status:'success' });
+			// document.getElementById('edit-voucher').reset();
+			jQuery('#result-voucher').find('.result').html(res);
+		}
+	});
+}
+
+/**
  * Salvar dados do usuário no voucher via painel da empresa
  * @param {*} ajaxUrl 
  * 

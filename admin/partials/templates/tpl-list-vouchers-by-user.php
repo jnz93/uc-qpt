@@ -45,8 +45,14 @@ if ( $vouchers->have_posts() ) :
             ?>
             <tr data-id="<?php echo $post_id; ?>">
                 <td><?php echo $v_code; ?></td>
-                <td><?php echo $v_is_used == 'yes' ? 'Sim <span class="uk-margin-small-left" uk-icon="file-text" uk-tooltip="Abrir Resultado"></span>' : 'Não'; ?></td>
-                <td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>')"></span> <span uk-icon="ban"uk-tooltip="Excluir voucher"></span></td>
+                <td>
+                    <?php if ( $v_is_used == 'yes') : ?>
+                        Sim <span class="uk-margin-small-left" uk-icon="file-text" uk-tooltip="Abrir Resultado" uk-toggle="target: #result-voucher" onclick="setVoucherIdOnResultModal('<?php echo $post_id ?>', '<?php echo $v_code; ?>', '<?php echo $ajax_url; ?>')"></span>
+                    <?php else : ?>
+                        Não
+                    <?php endif; ?>
+                </td>
+                <td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>')"></span> <span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span></td>
             </tr>
             <?php
         endwhile;
@@ -108,3 +114,18 @@ endif;
         <div class="uk-modal-footer uk-text-right">
         </div>
     </div>
+</div>
+
+
+<!-- This is the modal -->
+<div id="result-voucher" uk-modal data-voucher="">
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title"></h2>
+        <p class="result"></p>
+        <p class="uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Fechar</button>
+        </p>
+    </div>
+</div>
+
+<!-- <span class="uk-margin-small-left" uk-icon="file-text" uk-tooltip="Abrir Resultado" uk-toggle="target: #result-voucher" onclick="setVoucherIdOnResultModal($post_id, $v_code)"></span> -->
