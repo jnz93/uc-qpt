@@ -41,7 +41,7 @@ $ajax_url = admin_url('admin-ajax.php');
                     </div>
                 </div>
                 <div class="">
-                    <button class="uk-button uk-button-primary" type="button" onclick="createNewQuiz('<?php echo $ajax_url; ?>')">Publicar teste</button>
+                    <button class="uk-button uk-button-primary" type="button" onclick="createNewQuiz(jQuery(this), '<?php echo $ajax_url; ?>')">Publicar teste</button>
                 </div>
             </form>
 

@@ -62,14 +62,15 @@ function createDraftQuiz(ajaxUrl)
  * @param {*} ajaxUrl 
  * @since 1.0.0
  */
-function createNewQuiz(ajaxUrl)
+function createNewQuiz(el, ajaxUrl)
 {
 	'use strict';
 	var quizName = jQuery('#ucqpt_test_name').val(),
 		quizDescription = jQuery('#ucqpt_test_description').val();
 
 	var dataToSend = quizName + '||' + quizDescription;
-
+	var bodyEl = el.parents('.uk-modal-body');
+	
 	jQuery.ajax({
 		type: 'POST',
 		url: ajaxUrl,
@@ -80,18 +81,18 @@ function createNewQuiz(ajaxUrl)
 		beforeSend: function()
 		{
 			// Esconder inputs
-			jQuery('.uk-modal-body').children('form').fadeOut();
+			bodyEl.children('form').fadeOut();
 			// Add loading
-			jQuery('.uk-modal-body').append('<div id="spinner" uk-spinner></div>');
+			bodyEl.append('<div id="spinner" uk-spinner></div>');
 		},
 	}).done(function(res) {
-		jQuery('.uk-modal-body').find('#spinner').hide();
-		jQuery('.uk-modal-body').children('.wrapper-new-question').fadeIn();
+		bodyEl.find('#spinner').hide();
+		bodyEl.children('.wrapper-new-question').fadeIn();
 
 		// mostrar título, descrição e botão atualizar teste
-		jQuery('.uk-modal-title').text(quizName);
-		jQuery('.uk-modal-title').siblings('p').text(quizDescription);
-		jQuery('.uk-modal-title').siblings('p').after(res);
+		bodyEl.find('.uk-modal-title').text(quizName);
+		bodyEl.find('.uk-modal-title').siblings('p').text(quizDescription);
+		bodyEl.find('.uk-modal-title').siblings('p').after(res);
 		jQuery('#test-update').fadeIn();
 
 		UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> <b>'+ quizName +'</b> criado com sucesso!', status: 'success', pos: 'bottom-center'});
