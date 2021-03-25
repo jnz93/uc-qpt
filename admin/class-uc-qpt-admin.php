@@ -59,7 +59,7 @@ class Uc_Qpt_Admin {
 		add_action('init', array($this, 'create_custom_post_types'));
 
 		// Redirect to admin plugin page after login on wp admin
-		add_filter( 'login_redirect', array( $this, 'ucqpt_admin_default_page' ) );
+		add_filter( 'login_redirect', array( $this, 'ucqpt_admin_default_page' ), 10, 3 );
 
 		// Ajax actions
 		add_action('wp_ajax_ucqpt_create_new_quiz', array($this, 'ucqpt_create_new_quiz_by_ajax')); // executed when logged in
@@ -583,15 +583,23 @@ class Uc_Qpt_Admin {
 	 * 
 	 * @since 1.2.0
 	 */
-	public function ucqpt_admin_default_page() 
+	public function ucqpt_admin_default_page($redirect_to, $request, $user) 
 	{
 
-		if ( current_user_can( 'activate_plugins' ) || user_can( get_current_user_id(), 'activate_plugins' ) ) :
-			return get_admin_url() . 'admin.php?page=mindflow-admin';
-		else :
-			return get_admin_url() . 'admin.php?page=mindflow-business';
+		if ( isset( $user->roles ) && is_array( $user->roles ) ) :
+
+			if ( in_array( 'administrator', $user->roles ) ) :
+
+				$redirect_to = get_admin_url() . 'admin.php?page=mindflow-admin';
+
+			elseif ( in_array( 'contributor', $user->roles ) ) :
+
+				$redirect_to = get_admin_url() . 'admin.php?page=mindflow-business';
+
+			endif;
 		endif;
 
+		return $redirect_to;
 	}
 
 	
