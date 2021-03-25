@@ -36,12 +36,12 @@
 })( jQuery );
 
 
-function submitAnswers(el, quizId, voucherId, ajaxUrl)
+function submitAnswers(wrapperQuestion, quizId, voucherId, ajaxUrl)
 {
 	var checkedAnswers 	= [];
-	el.each(function (index)
+	wrapperQuestion.each(function (index)
 	{
-		// Coletando as respostas marcadas
+		// Collect checked answers data
 		var qId = jQuery(this).attr('data-id');
 		jQuery(this).find('input[type=checkbox]').each(function (index)
 		{
@@ -49,7 +49,7 @@ function submitAnswers(el, quizId, voucherId, ajaxUrl)
 			if (currAnswer.is(':checked')) {
 
 				var answerId = currAnswer.attr('data-id'),
-					weight = currAnswer.siblings('input[type=number]').val()
+					weight = currAnswer.siblings('select').val()
 					data = qId + ":" + answerId + ":" + weight;
 
 				checkedAnswers.push(data);
