@@ -22,9 +22,6 @@ $ajax_url = admin_url('admin-ajax.php');
                 <h2 class="uk-modal-title">Novo teste</h2>
                 <p class=""></p>
             </div>
-            <div id="test-update" class="" style="margin-top: 25px; margin-right: 25px; display: none">
-                <button class="uk-button uk-button-primary" type="button" onclick="createNewQuiz('<?php echo $ajax_url; ?>')">Atualizar Teste</button>
-            </div>
         </div>
         <div class="uk-modal-body">
             <form class="uk-grid-small" uk-grid>
