@@ -521,7 +521,8 @@ function setVoucherIdOnResultModal(voucherId, voucherCode, ajaxUrl)
 			console.log(res);
 		} else {
 			UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Os dados foram salvos com sucesso!', pos: 'bottom-center', status:'success' });
-			document.getElementById('edit-voucher').reset();
+			UIkit.modal('#edit-voucher').hide();
+			document.getElementById('form-voucher').reset();
 		}
 	});
  }
