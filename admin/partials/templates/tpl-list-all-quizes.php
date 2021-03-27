@@ -20,10 +20,6 @@ $args = array(
 );
 $query = new WP_Query($args);
 
-# Testando resultados registrados no voucher
-$v_is_used = get_post_meta( 920, 'ucqpt_is_used', true );
-$v_result_test_data = get_post_meta( 920, 'ucqpt_result_test_data', true );
-
 ?>
 
 <?php 
@@ -32,9 +28,10 @@ if ( $query->have_posts() ) :
     <table class="uk-table uk-table-striped">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>Perguntas</th>
-                <th>Resultados</th>
+                <th class="">Inventário(s)</th>
+                <th class="">Shortcode <span class="uk-margin-small-left" uk-icon="icon: question" uk-tooltip="title: Utilize o shortcode em posts, páginas ou widgets; pos: top"></span></th>
+                <th class="">Pergunta(s) <span class="uk-margin-small-left" uk-icon="icon: question" uk-tooltip="title: Total de perguntas nesse inventário; pos: top"></span></th>
+                <th class="">Resultado(s) <span class="uk-margin-small-left" uk-icon="icon: question" uk-tooltip="title: Quantas vezes o inventário foi submetido; pos: top"></span></th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +46,7 @@ if ( $query->have_posts() ) :
             ?>
             <tr>
                 <td><?php the_title(); ?></td>
+                <td>[shortcode]</td>
                 <td><?php echo $questions_total; ?></td>
                 <td>0</td>
             </tr>

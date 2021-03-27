@@ -28,7 +28,7 @@ if ( ! empty( $companies ) ) :
     <table class="uk-table uk-table-striped">
         <thead>
             <tr>
-                <th>Empresa</th>
+                <th>Empresa(s)</th>
                 <th>Vouchers Disponíveis</th>
                 <th>Vouchers Utilizados</th>
                 <th>Vouchers Restantes</th>

@@ -20,10 +20,6 @@ $args = array(
 );
 $query = new WP_Query($args);
 
-# Testando resultados registrados no voucher
-$v_is_used = get_post_meta( 920, 'ucqpt_is_used', true );
-$v_result_test_data = get_post_meta( 920, 'ucqpt_result_test_data', true );
-
 ?>
 
 <?php 
@@ -32,9 +28,7 @@ if ( $query->have_posts() ) :
     <table class="uk-table uk-table-striped">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>Perguntas</th>
-                <th>Resultados</th>
+                <th>Questões</th>
             </tr>
         </thead>
         <tbody>
@@ -49,8 +43,6 @@ if ( $query->have_posts() ) :
             ?>
             <tr>
                 <td><?php the_title(); ?></td>
-                <td><?php echo $questions_total; ?></td>
-                <td>0</td>
             </tr>
             <?php
         endwhile;
