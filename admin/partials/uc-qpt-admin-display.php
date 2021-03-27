@@ -20,13 +20,13 @@
         <h1 class="uk-heading-bullet">Bem Vindo(a) - </h1>
             <ul class="uk-navbar-nav uk-flex uk-flex-middle">
                 <li class="">
-                    <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #new-quiz">Adicionar Teste de Personalidade</button></a>
+                    <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #new-quiz">Adicionar Inventário</button></a>
                 </li>
                 <li class="">
-                    <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-company">Adicionar Empresa</button></a>
+                    <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-company">Cadastrar Empresa</button></a>
                 </li>
                 <li class="">
-                    <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-voucher">Adicionar Voucher</button></a>
+                    <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-voucher">Cadastrar Voucher</button></a>
                 </li>
             </ul>
 

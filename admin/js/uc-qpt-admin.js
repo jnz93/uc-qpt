@@ -288,16 +288,18 @@ function submitCompanyData(ajaxUrl)
 {
 	'use strict';
 
-	var companyName 	= document.getElementById('ucqpt_company_name').value,
-		companyEmail 	= document.getElementById('ucqpt_company_email').value,
-		companyTel 		= document.getElementById('ucqpt_company_phone').value,
-		companyCnpj 	= document.getElementById('ucqpt_company_cnpj').value,
-		companyVouchers = document.getElementById('ucqpt_company_vouchers').value;
+	var companyName 	= jQuery('#ucqpt_company_name').val(),
+		companyEmail 	= jQuery('#ucqpt_company_email').val(),
+		companyPass		= jQuery('#ucqpt_company_pass').val(),
+		companyTel 		= jQuery('#ucqpt_company_phone').val(),
+		companyCnpj 	= jQuery('#ucqpt_company_cnpj').val(),
+		companyVouchers = jQuery('#ucqpt_company_vouchers').val();
 
 	var dataToSend = {
 		action: 'ucqpt_register_company',
 		name: companyName,
 		email: companyEmail,
+		pass: companyPass,
 		tel: companyTel,
 		cnpj: companyCnpj,
 		vouchers: companyVouchers

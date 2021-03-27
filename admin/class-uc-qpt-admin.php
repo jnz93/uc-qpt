@@ -472,6 +472,7 @@ class Uc_Qpt_Admin {
 	{
 		$company_name 		= $_POST['name'];
 		$company_email 		= $_POST['email'];
+		$company_pass 		= $_POST['pass'];
 		$company_tel 		= $_POST['tel'];
 		$company_cnpj 		= $_POST['cnpj'];
 		$company_vouchers 	= $_POST['vouchers'];
@@ -484,6 +485,7 @@ class Uc_Qpt_Admin {
 			'user_login'            => $company_name,   //(string) The user's login username.
 			'user_nicename'         => $company_name,   //(string) The URL-friendly user name.
 			'user_email'            => $company_email,  //(string) The user email address.
+			'user_pass'				=> $company_pass,	//(string) The password
 			'role'                  => 'contributor',   //(string) User's role.
 		);
 		$user_id = wp_insert_user( $user_data );

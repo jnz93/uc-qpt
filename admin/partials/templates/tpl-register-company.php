@@ -17,22 +17,28 @@
         <button class="uk-modal-close-default" type="button" uk-close></button>
         <div class="uk-modal-header uk-flex uk-flex-between">
             <div id="modal-title" class="">
-                <h2 class="uk-modal-title">Registrar Empresa</h2>
+                <h2 class="uk-modal-title">Cadastrar Empresa</h2>
                 <p class=""></p>
             </div>
         </div>
         <div class="uk-modal-body">
             <form id="form-company" class="uk-grid-small" uk-grid>
-                <div class="uk-width-1-2">
-                    <label class="uk-form-label" for="ucqpt_company_name">Nome da Empresa</label>
+                <div class="uk-width-1-3">
+                    <label class="uk-form-label" for="ucqpt_company_name">Usuário</label>
                     <div class="uk-form-controls">
-                        <input class="uk-input" id="ucqpt_company_name" type="text" placeholder="Adicione o nome da empresa">
+                        <input class="uk-input" id="ucqpt_company_name" type="text" placeholder="Nome da empresa ou usuário">
                     </div>
                 </div>
-                <div class="uk-width-1-2">
+                <div class="uk-width-1-3">
                     <label class="uk-form-label" for="ucqpt_company_email">E-mail</label>
                     <div class="uk-form-controls">
                         <input class="uk-input" id="ucqpt_company_email" type="email" placeholder="Ex: email@empresa.com.br">
+                    </div>
+                </div>
+                <div class="uk-width-1-3">
+                    <label class="uk-form-label" for="ucqpt_company_pass">Senha</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="ucqpt_company_pass" type="password" placeholder="****">
                     </div>
                 </div>
                 <div class="uk-width-1-3">
