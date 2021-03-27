@@ -12,6 +12,12 @@
  * @subpackage Uc_Qpt/admin/partials/templates
  */
 ?>
+<script>
+jQuery(document).ready(function (){
+    jQuery('#ucqpt_company_cnpj').mask('00.000.000/0000-00');
+    jQuery('#ucqpt_company_phone').mask('(00) 0 0000-0000');
+});
+</script>
 <div id="register-company" class="uk-modal-container" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close></button>
