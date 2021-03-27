@@ -490,13 +490,14 @@ class Uc_Qpt_Admin {
 			'role'                  => 'contributor',   //(string) User's role.
 		);
 		$user_id = wp_insert_user( $user_data );
-
+		// echo 'Id: ' . $user_id;
 		if ( !is_wp_error( $user_id ) ) :
 			update_user_meta( $user_id, 'ucqpt_company_tel', $company_tel );
 			update_user_meta( $user_id, 'ucqpt_company_doc', $company_cnpj );
 			update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
 
 			$this->ucqpt_create_vouchers_by_qty( $user_id, $company_vouchers );
+			$this->ucqpt_send_created_account_notification( $company_name, $company_pass, $company_email );
 
 			die('success');
 		else :
@@ -777,5 +778,47 @@ class Uc_Qpt_Admin {
 					<li>'. $result .'</li>
 				</ul>';
 		die();
+	}
+
+	/**
+	 * Enviar e-mail com dados de acesso ao usuário/empresa cadastrada
+	 * 
+	 * @param $login = usuario de acesso
+	 * @param $pass = senha de acesso
+	 * @param $email = email do cliente
+	 * @since 1.3.2
+	 */
+	public function ucqpt_send_created_account_notification( $login, $pass, $email )
+	{
+		$url_panel 		= admin_url( );
+		$to 			= $email;
+		$subject 		= 'Mindflow - Cadastro na plataforma';
+		$headers 		= array('Content-Type: text/html; charset=UTF-8');
+		$message 		= '<h2>Dados de acesso</h2>
+							<table>
+								<thead>
+									<tr>
+										<th>Desc.</th>
+										<th>Dado</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Login</td>
+										<td>'. $login .'</td>
+									</tr>
+									<tr>
+										<td>Senha</td>
+										<td>'. $pass .'</td>
+									</tr>
+									<tr>
+										<td>Endereço do painel</td>
+										<td>'. $url_panel .'</td>
+									</tr>
+								</tbody>
+							</table>';
+		
+
+		wp_mail( $to, $subject, $message, $headers );
 	}
 }
