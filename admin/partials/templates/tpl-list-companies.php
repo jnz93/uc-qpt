@@ -29,7 +29,7 @@ if ( ! empty( $companies ) ) :
         <thead>
             <tr>
                 <th>Empresa</th>
-                <th>Vouchers</th>
+                <th>Vouchers Disponíveis</th>
                 <th>Vouchers Utilizados</th>
                 <th>Vouchers Restantes</th>
             </tr>
@@ -43,8 +43,9 @@ if ( ! empty( $companies ) ) :
             $company_vouchers       = get_user_meta( $company_id, 'ucqpt_company_vouchers', true );
             $company_used_vouchers  = get_user_meta( $company_id, 'ucqpt_company_registered_vouchers', true );
             $company_used_vouchers  = explode( ',', $company_used_vouchers );
+            $company_used_vouchers  = array_filter($company_used_vouchers);
             $company_used_vouchers  = count( $company_used_vouchers );
-            $remaining_vouchers     = intval($company_vouchers) - $company_used_vouchers;
+            $remaining_vouchers     = intval($company_vouchers) - intval($company_used_vouchers);
             ?>
             <tr>
                 <td><?php echo $company_name; ?></td>

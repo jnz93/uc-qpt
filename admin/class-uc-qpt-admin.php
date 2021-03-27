@@ -483,7 +483,7 @@ class Uc_Qpt_Admin {
 		$user_data = array(
 			'user_login'            => $company_name,   //(string) The user's login username.
 			'user_nicename'         => $company_name,   //(string) The URL-friendly user name.
-			'user_email'            => $company_email,   //(string) The user email address.
+			'user_email'            => $company_email,  //(string) The user email address.
 			'role'                  => 'contributor',   //(string) User's role.
 		);
 		$user_id = wp_insert_user( $user_data );
@@ -632,11 +632,13 @@ class Uc_Qpt_Admin {
 	 */
 	public function ucqpt_create_vouchers_by_qty( $cia_id, $qty )
 	{
-		if ( empty( $qty ) || empty( $cia_id ) )
+		if ( empty( $cia_id ) || empty( $qty ) )
 			return;
 
-		$str_vouchers = '';
-		for ( $i = 0; $i < $qty; $i++ ) :
+		$voucher_qty 	= (int) $qty;
+		$str_vouchers 	= '';
+		
+		for ( $i = 0; $i < $voucher_qty; $i++ ) :
 			$voucher_code = strtoupper(wp_generate_password( 8, false, false ));
 
 			// Criando o post
@@ -648,19 +650,22 @@ class Uc_Qpt_Admin {
 			);
 			$voucher_id = wp_insert_post( $postarr );
 
-			update_post_meta( $voucher_id, 'ucqpt_voucher_code', $voucher_code ); # Salvando o voucher code
-			update_post_meta( $voucher_id, 'ucqpt_company_id', $cia_id ); # Salvando o ID do usuário(empresa) no voucher
-			
+			if ( !is_wp_error( $voucher_id ) ) :
+				update_post_meta( $voucher_id, 'ucqpt_voucher_code', $voucher_code ); # Salvando o voucher code
+				update_post_meta( $voucher_id, 'ucqpt_company_id', $cia_id ); # Salvando o ID do usuário(empresa) no voucher
+				
 
-			// Update no titulo
-			$new_title 		= $voucher_code . '-' . $voucher_id;
-			$data_update 	= array(
-				'ID' 			=> $voucher_id,
-				'post_title' 	=> $new_title,
-			);
-			wp_update_post( $data_update );
+				// Update no titulo
+				$new_title 		= $voucher_code . '-' . $voucher_id;
+				$data_update 	= array(
+					'ID' 			=> $voucher_id,
+					'post_title' 	=> $new_title,
+				);
+				wp_update_post( $data_update );
 
-			$str_vouchers .= $str_vouchers . ',' . $new_title;
+				$str_vouchers .= ',' . $new_title;
+		
+			endif;
 		endfor;
 		$key_voucher	= 'ucqpt_company_registered_vouchers';
 		update_user_meta( $cia_id, $key_voucher, $str_vouchers ); # Salvando a string de vouchers no usuário(empresa)
