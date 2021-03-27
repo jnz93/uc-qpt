@@ -62,7 +62,12 @@ if ( $vouchers->have_posts() ) :
     <?php
 endif;
 ?>
-
+<script>
+jQuery(document).ready(function (){
+    jQuery('#ucqpt_customer_cpf').mask('000.000.000-00');
+    jQuery('#ucqpt_customer_tel').mask('(00) 0 0000-0000');
+});
+</script>
 <!-- Modal para edição -->
 <div id="edit-voucher" class="uk-modal-container" uk-modal data-vocher="">
     <div class="uk-modal-dialog">
