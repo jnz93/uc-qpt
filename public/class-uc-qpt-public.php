@@ -308,7 +308,7 @@ class Uc_Qpt_Public {
 				echo $result;
 
 
-			echo $path_archive;			
+			// echo $path_archive;			
 			wp_mail( $voucher_email, 'Resultado teste de perfil', 'Baixe o seu resultado', array(), $path_archive );
 			die();
 
@@ -400,79 +400,65 @@ class Uc_Qpt_Public {
 	{
 		$voucher_code = $_POST['voucherCode'];
 		
-		$get_vouchers = wp_remote_get( get_site_url() . '/?rest_route=/wp/v2/uc_voucher' );
+		# Get and sanitize response
+		$get_voucher 	= wp_remote_get( get_site_url() . '/wp-json/wp/v2/search?search='. $voucher_code .'&post_type=uc_voucher' );
+		$voucher_data 	= wp_remote_retrieve_body($get_voucher);
+		$voucher_data 	= json_decode($voucher_data);
 
-		if ( ! is_wp_error( $get_vouchers ) ) :
+		if ( ! empty( $voucher_data ) ) :
 			
-			$vouchers = wp_remote_retrieve_body( $get_vouchers );
-			$vouchers = json_decode($vouchers);
-
-			/**
-			 * Data
-			 * id 
-			 * date 
-			 * link 
-			 * status 
-			 * title->rendered
-			 */
+			# Voucher Data
+			$v_id 			= $voucher_data[0]->id;
+			$v_title 		= $voucher_data[0]->title;
+			$v_url 			= $voucher_data[0]->url;
+			$v_status 		= get_post_status( $v_id );
+			$v_date 		= get_post_datetime( $v_id );
 			$data_voucher 	= array();
-			$voucher_exists = false;
 			$voucher_used 	= false;
 			$curr_date 		= new DateTime();
 			$today 			= $curr_date->format('d-M-Y H:i:s');
-			foreach ( $vouchers as $v ) :
+
+			$was_used 		= get_post_meta( $v_id, 'ucqpt_is_used', true );
+			$by_user 		= get_post_meta( $v_id, 'ucqpt_for_user_data', true );
+			$company_id 	= get_post_meta( $v_id, 'ucqpt_company_id', true);
+			$result_data 	= get_post_meta( $v_id, 'ucqpt_test_result_data', true );
+
+			$data_voucher['id'] 			= $v_id;
+			$data_voucher['company_id']		= $company_id;
+			$data_voucher['created_date']	= $v_date;
+			$data_voucher['utilized_date']	= $today;
+			$data_voucher['status'] 		= $v_status;
+			$data_voucher['link'] 			= $v_url;
+			$data_voucher['title'] 			= $v_title;
+			$data_voucher['utilized'] 		= $was_used;
+			$data_voucher['user_data']		= $by_user;
+			$data_voucher['result_data'] 	= $result_data;
+
+			if ( $was_used == 'yes' ) :
+				$voucher_used = true;
+			endif;
 			
-				if ( $v->title->rendered == $voucher_code ) :
-					// echo $v->title->rendered . '</br>';
-					$is_used 		= get_post_meta( $v->id, 'ucqpt_is_used', true );
-					$by_user 		= get_post_meta( $v->id, 'ucqpt_for_user_data', true );
-					$company_id 	= get_post_meta( $v->id, 'ucqpt_company_id', true);
-					$result_data 	= get_post_meta( $v->id, 'ucqpt_test_result_data', true );
+			if ( $voucher_used ) :
 
-					$data_voucher['id'] 			= $v->id;
-					$data_voucher['company_id']		= $company_id;
-					$data_voucher['created_date']	= $v->date;
-					$data_voucher['utilized_date']	= $today;
-					$data_voucher['status'] 		= $v->status;
-					$data_voucher['link'] 			= $v->link;
-					$data_voucher['title'] 			= $v->title->rendered;
-					$data_voucher['utilized'] 		= $is_used;
-					$data_voucher['user_data']		= $by_user;
-					$data_voucher['result_data'] 	= $result_data;
+				$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
+					<h3 class="uk-card-title">Ops! Algo deu errado.</h3>
+					<ul class="uk-list">
+						<p class="">Este voucher '. $voucher_code .' já foi utilizado.</p>
+					</ul>
+				</div>';
 
-					$voucher_exists = true;
-
-					if ( $is_used == 'yes' ) :
-						$voucher_used = true;
-					endif;
-				endif;
-			
-			endforeach;
-
-			if ( $voucher_exists ) :
-				
-				if ( $voucher_used ) :
-
-					$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
-						<h3 class="uk-card-title">Opa, algo deu errado!</h3>
-						<ul class="uk-list">
-							<p class="">Este voucher('. $voucher_code .') já foi utilizado. Por favor, verifique seu e-mail para ver o resultado.</p>
-						</ul>
-					</div>';
-
-				echo $result;
-
-				else :
-
-					require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-get-user-info.php';
-
-				endif;
+			echo $result;
 
 			else :
-				
-				echo $voucher_code . ' Inválido! </br>';
+
+				require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-get-user-info.php';
 
 			endif;
+
+		else :
+			
+			echo $voucher_code . ' Inválido! </br>';
+
 		endif;
 
 		die();
