@@ -32,9 +32,9 @@ input.invalid {
 
 /* Make circles that indicate the steps of the form: */
 .step {
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
+    height: 12px;
+    width: 12px;
+    margin: 0 4px;
     background-color: #bbbbbb;
     border: none;
     border-radius: 50%;
@@ -49,5 +49,5 @@ input.invalid {
 
 /* Mark the steps that are finished and valid: */
 .step.finish {
-    background-color: #4CAF50;
+    background-color: #07790a;
 }

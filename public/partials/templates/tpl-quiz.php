@@ -95,7 +95,13 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
             endif;
         endforeach;
         ?>
-
+        <ul class="uk-dotnav uk-flex uk-flex-center uk-margin-small-top">
+            <?php
+            foreach ($idsarr as $id) : ?>
+                <li class="step"></li>
+            <?php
+            endforeach; ?>
+        </ul>
         <!-- Control Buttons -->
         <div class="uk-flex uk-flex-between uk-margin-small-top">
             <button type="button" id="prevBtn" class="uk-button uk-button-secondary uk-button-small" onclick="nextPrev(-1)"><span uk-icon="arrow-left"></span> Anterior</button>
