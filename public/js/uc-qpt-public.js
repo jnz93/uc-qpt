@@ -146,7 +146,7 @@ function submitUserData(ajaxUrl)
 
 function filterWeights(el)
 {
-	parentSiblings = el.parent().siblings();
+	parentSiblings = el.parents('div').siblings().children('label');
 	selectedValue = el.val();
 
 	parentSiblings.each(function(){
