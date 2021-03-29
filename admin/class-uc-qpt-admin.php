@@ -639,8 +639,8 @@ class Uc_Qpt_Admin {
 		if ( empty( $cia_id ) || empty( $qty ) )
 			return;
 
-		$voucher_qty 	= (int) $qty;
-		$str_vouchers 	= '';
+		$voucher_qty 		= (int) $qty;
+		$str_vouchers_id 	= '';
 		
 		for ( $i = 0; $i < $voucher_qty; $i++ ) :
 			$voucher_code = strtoupper(wp_generate_password( 8, false, false ));
@@ -667,12 +667,13 @@ class Uc_Qpt_Admin {
 				);
 				wp_update_post( $data_update );
 
-				$str_vouchers .= ',' . $new_title;
+				$str_vouchers 		.= ',' . $new_title;
+				$str_vouchers_id 	.= ',' . $voucher_id;
 		
 			endif;
 		endfor;
-		$key_voucher	= 'ucqpt_company_registered_vouchers';
-		update_user_meta( $cia_id, $key_voucher, $str_vouchers ); # Salvando a string de vouchers no usuário(empresa)
+		$key_vouchers_id 	= 'ucqpt_company_vouchers_id';
+		update_user_meta( $cia_id, $key_vouchers_id, $str_vouchers_id ); # Salvando ids de vouchers criados no usuário(empresa)
 	}
 
 	/**

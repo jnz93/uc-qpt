@@ -29,7 +29,7 @@ if ( ! empty( $companies ) ) :
         <thead>
             <tr>
                 <th>Empresa(s)</th>
-                <th>Vouchers Disponíveis</th>
+                <th>Vouchers Total</th>
                 <th>Vouchers Utilizados</th>
                 <th>Vouchers Restantes</th>
             </tr>
@@ -38,19 +38,31 @@ if ( ! empty( $companies ) ) :
         <?php
         foreach ( $companies as $company ) :
 
-            $company_id             = $company->ID;
-            $company_name           = $company->display_name;
-            $company_vouchers       = get_user_meta( $company_id, 'ucqpt_company_vouchers', true );
-            $company_used_vouchers  = get_user_meta( $company_id, 'ucqpt_company_registered_vouchers', true );
-            $company_used_vouchers  = explode( ',', $company_used_vouchers );
-            $company_used_vouchers  = array_filter($company_used_vouchers);
-            $company_used_vouchers  = count( $company_used_vouchers );
-            $remaining_vouchers     = intval($company_vouchers) - intval($company_used_vouchers);
+            $company_id                 = $company->ID;
+            $company_name               = $company->display_name;
+            $company_vouchers           = get_user_meta( $company_id, 'ucqpt_company_vouchers', true );
+
+            // Verificar se o voucher foi utilizado
+            $vouchers_ids               = get_user_meta($company_id, 'ucqpt_company_vouchers_id', true);
+            $vouchers_ids               = explode(',', $vouchers_ids);
+            $vouchers_ids               = array_filter($vouchers_ids);
+            $total_used                 = 0;
+            
+            // Contagem dos vouchers utilizados
+            foreach ($vouchers_ids as $id) {
+                $was_used = get_post_meta($id, 'ucqpt_is_used', true);
+
+                if ( $was_used == 'yes' ) :
+                    $total_used++;
+                endif;
+            }
+
+            $remaining_vouchers         = intval($company_vouchers) - intval($total_used);
             ?>
             <tr>
                 <td><?php echo $company_name; ?></td>
                 <td><?php echo $company_vouchers; ?></td>
-                <td><?php echo $company_used_vouchers; ?></td>
+                <td><?php echo $total_used; ?></td>
                 <td><?php echo $remaining_vouchers; ?></td>
             </tr>
             <?php
