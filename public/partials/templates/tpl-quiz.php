@@ -15,6 +15,9 @@ $number = 1;
 $question = '';
 $ajax_url 	= admin_url( 'admin-ajax.php' );
 ?>
+<script>
+ showTab(currentTab);
+</script>
 <!-- # Wrapper perguntas e respostas -->
 <div class="wrapper-quiz" data-id="<?php echo $quiz_id ?>">
     <h2><?php echo $title_quiz ?></h2>

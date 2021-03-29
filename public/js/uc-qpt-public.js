@@ -247,7 +247,3 @@ function nextPrev(n) {
 	// Otherwise, display the correct tab:
 	showTab(currentTab);
 }
-
-jQuery(document).ready(function (){
-	showTab(currentTab); // Display the current tab
-});
