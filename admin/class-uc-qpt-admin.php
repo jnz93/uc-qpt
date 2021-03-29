@@ -832,7 +832,7 @@ class Uc_Qpt_Admin {
 	public function ucqpt_hide_menu_wordpress()
 	{
 		if ( is_admin() && current_user_can( 'contributor' ) ) :
-			wp_add_inline_style( 'hide', '#adminmenumain {display: none !important}' );
+			echo '<style>#adminmenumain{display: none !important}</style>';
 		endif;
 	}
 	
