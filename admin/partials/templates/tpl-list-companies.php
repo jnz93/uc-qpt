@@ -25,7 +25,7 @@ $companies = get_users( $args );
 <?php 
 if ( ! empty( $companies ) ) :
     ?>
-    <table class="uk-table uk-table-striped">
+    <table id="table-companies" class="uk-table uk-table-striped">
         <thead>
             <tr>
                 <th>Empresa(s)</th>

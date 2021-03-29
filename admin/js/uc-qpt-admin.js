@@ -320,6 +320,8 @@ function submitCompanyData(ajaxUrl)
 			UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Usuário registrado com sucesso!', pos: 'bottom-center', status:'success' })
 			UIkit.modal('#register-company').hide();
 			document.getElementById('form-company').reset();
+
+			jQuery('#table-companies').children('tbody').append('<tr><td>'+ companyName +'</td><td>'+ companyVouchers +'</td><td>0</td><td>'+ companyVouchers +'</td></tr>');
 		}
 	});
 
