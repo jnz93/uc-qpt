@@ -54,6 +54,7 @@ class Uc_Qpt_Admin {
 
 		// Menu admin item
 		add_action('admin_menu', array($this, 'create_plugin_menu'));
+		add_action('admin_enqueue_scripts', array($this, 'ucqpt_hide_menu_wordpress'));
 
 		// Create custom post type
 		add_action('init', array($this, 'create_custom_post_types'));
@@ -822,4 +823,17 @@ class Uc_Qpt_Admin {
 
 		wp_mail( $to, $subject, $message, $headers );
 	}
+
+	/**
+	 * Remover items do menu wordpress conforme o nível do usuário
+	 * 
+	 * @since 1.3.5
+	 */
+	public function ucqpt_hide_menu_wordpress()
+	{
+		if ( is_admin() && current_user_can( 'contributor' ) ) :
+			wp_add_inline_style( 'hide', '#adminmenumain {display: none !important}' );
+		endif;
+	}
+	
 }
