@@ -69,8 +69,8 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                             foreach ( $answers as $answer ) : ?>
                                 <form class="uk-width-1-1">
                                     <div class="" uk-grid>
-                                        <label class="uk-width-1-1@s">
-                                            <input class="uk-radio" type="checkbox" name="<?php echo 'group-'. $id;?>" data-id="<?php echo $answer->ID ?>"> <span class="uk-text-emphasis"><?php echo ucfirst($letters[$pos]).' '. $answer->post_title ?></span>
+                                        <label class="uk-width-1-1@s" onchange="validate_answers(jQuery(this))">
+                                            <span class="uk-text-emphasis" name="<?php echo 'group-'. $id;?>" data-id="<?php echo $answer->ID ?>"><?php echo ucfirst($letters[$pos]).' '. $answer->post_title ?></span>
                                             <input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso" style="display: none;">
                                             <select name="uk-text-emphasis" id="" class="uk-select uk-form-width-small" onChange="filterWeights(jQuery(this))" oninput="this.className = ''">
                                                 <option value="0" class="" selected>Peso</option>
