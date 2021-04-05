@@ -85,13 +85,12 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                                                 <span class="uk-alert-danger uk-flex uk-flex-center uk-justify-center uk-margin-small-left" uk-icon="close" style="width:40px; height: 40px; padding: 0; border-radius: 100%; opacity: 0;"></span>
                                             </div>
                                         </label> 
+                                        <div class="uk-divider-small uk-margin-small-top"></div>
                                     </div>
-                                    <div class="uk-divider-small uk-margin-small-top"></div>
                                     <?php
                                     $pos++;
                             endforeach; ?>
-                                    <div class="uk-divider-small uk-margin-small-top"></div>
-                                    <button type="reset" class="uk-button uk-button-default uk-margin-small-top" onclick="resetAnswer(jQuery(this))">Resetar respostas</button>
+                                    <button type="reset" class="uk-button uk-button-default uk-margin-small-top" onclick="resetAnswers(jQuery(this))">Resetar respostas</button>
                                 </form>
                             </div>
                             <?php

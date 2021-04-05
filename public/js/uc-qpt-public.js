@@ -162,17 +162,33 @@ function filterWeights(el)
 	});
 }
 
-function resetAnswer(el)
+function resetAnswers(el)
 {
 	siblings = el.siblings();
 
 	siblings.each(function() {
+		select 	= jQuery(this).find('select');
 		options = jQuery(this).find('option');
+		checkedIcons = jQuery(this).find('.uk-alert-success');
+		invalidIcons = jQuery(this).find('.uk-alert-danger');
 
-		options.each(function() {
+
+		select.each( function (i) {
+			jQuery(this).removeAttr('disabled');
+		});
+		options.each(function (i) {
 			jQuery(this).show();
 		});
+
+		checkedIcons.each(function (i) {
+			jQuery(this).css('opacity', '0');
+		});
+		invalidIcons.each(function (i) {
+			jQuery(this).css('opacity', '1');
+		})
 	});
+
+	jQuery('#wrapper-submit, #nextBtn').hide();
 }
 
 // Funções relativas ao step-by-step das perguntas
@@ -264,7 +280,8 @@ function validateAnswers(el)
 		invalidAnswers		= 0; 
 
 	currSelect.attr('disabled', true);
-	currEl.find('span.uk-alert-success').css({'opacity': '1'});
+	currEl.find('span.uk-alert-success').css('opacity', '1');
+	currEl.find('span.uk-alert-danger').css('opacity', '0');
 	
 	siblings.each( function ( i ) {
 		
