@@ -72,13 +72,21 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                                         <label class="uk-width-1-1@s" onchange="validate_answers(jQuery(this))">
                                             <span class="uk-text-emphasis" name="<?php echo 'group-'. $id;?>" data-id="<?php echo $answer->ID ?>"><?php echo ucfirst($letters[$pos]).' '. $answer->post_title ?></span>
                                             <input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso" style="display: none;">
-                                            <select name="uk-text-emphasis" id="" class="uk-select uk-form-width-small" onChange="filterWeights(jQuery(this))" oninput="this.className = ''">
+                                            <!-- <select name="uk-text-emphasis" id="" class="uk-select uk-form-width-small" onChange="filterWeights(jQuery(this))" oninput="this.className = ''">
                                                 <option value="0" class="" selected>Peso</option>
                                                 <option value="1" class="">1</option>
                                                 <option value="2" class="">2</option>
                                                 <option value="4" class="">4</option>
                                                 <option value="6" class="">6</option>
-                                            </select>
+                                            </select> -->
+
+                                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                                <span>Peso:</span>
+                                                <span><input class="uk-radio" type="radio" name="weight-1"> 1</span>
+                                                <span><input class="uk-radio" type="radio" name="weight-2"> 2</span>
+                                                <span><input class="uk-radio" type="radio" name="weight-4"> 4</span>
+                                                <span><input class="uk-radio" type="radio" name="weight-6"> 6</span>
+                                            </div>
                                         </label> 
                                     </div>
                                     <?php
