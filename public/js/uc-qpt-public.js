@@ -246,4 +246,47 @@ function nextPrev(n) {
 	}
 	// Otherwise, display the correct tab:
 	showTab(currentTab);
+	jQuery('#nextBtn').hide();
+}
+
+/**
+ * 
+ * @param {*} el = clicked label 
+ */
+function validateAnswers(el)
+{
+	'use strict';
+	var currEl 				= el,
+		currSelect 			= el.find('select'),
+		siblings 			= currEl.parent().siblings('.uk-grid'),
+		tabs				= jQuery('.tab'),
+		totalTabs 			= tabs.length -1,
+		invalidAnswers		= 0; 
+
+	currSelect.attr('disabled', true);
+	currEl.find('span.uk-alert-success').css({'opacity': '1'});
+	
+	siblings.each( function ( i ) {
+		
+		var currSelect = jQuery(this).find('select');
+
+		if ( currSelect.val() == 0 ) {
+			invalidAnswers++;
+		}
+	});
+
+	// Esconder ou mostrar os botões
+	if ( invalidAnswers == 0 ) {
+
+		if (currentTab > 0 && currentTab < totalTabs ) {
+			jQuery('#prevBtn, #nextBtn').show();
+		} else if ( currentTab == totalTabs ) {
+			jQuery('#prevBtn, #wrapper-submit').show();
+		} else {
+			jQuery('#nextBtn').show();
+		}
+
+	} else {
+		jQuery('#nextBtn').hide();
+	}
 }

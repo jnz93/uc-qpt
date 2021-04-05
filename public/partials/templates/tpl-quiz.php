@@ -69,26 +69,24 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                             foreach ( $answers as $answer ) : ?>
                                 <form class="uk-width-1-1">
                                     <div class="" uk-grid>
-                                        <label class="uk-width-1-1@s" onchange="validate_answers(jQuery(this))">
+                                        <label class="uk-width-1-1@s" onchange="validateAnswers(jQuery(this))">
                                             <span class="uk-text-emphasis" name="<?php echo 'group-'. $id;?>" data-id="<?php echo $answer->ID ?>"><?php echo ucfirst($letters[$pos]).' '. $answer->post_title ?></span>
-                                            <input class="uk-input uk-form-width-small" type="number" id="" placeholder="Peso" style="display: none;">
-                                            <!-- <select name="uk-text-emphasis" id="" class="uk-select uk-form-width-small" onChange="filterWeights(jQuery(this))" oninput="this.className = ''">
-                                                <option value="0" class="" selected>Peso</option>
-                                                <option value="1" class="">1</option>
-                                                <option value="2" class="">2</option>
-                                                <option value="4" class="">4</option>
-                                                <option value="6" class="">6</option>
-                                            </select> -->
-
+                                            
                                             <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                                <span>Peso:</span>
-                                                <span><input class="uk-radio" type="radio" name="weight-1"> 1</span>
-                                                <span><input class="uk-radio" type="radio" name="weight-2"> 2</span>
-                                                <span><input class="uk-radio" type="radio" name="weight-4"> 4</span>
-                                                <span><input class="uk-radio" type="radio" name="weight-6"> 6</span>
+                                                <span class="uk-margin-small-right">Peso:</span>
+                                                <select name="uk-text-emphasis" id="" class="uk-select uk-form-width-small" onChange="filterWeights(jQuery(this))" oninput="this.className = ''">
+                                                    <option value="0" class="" selected>Selecione</option>
+                                                    <option value="1" class="">1</option>
+                                                    <option value="2" class="">2</option>
+                                                    <option value="4" class="">4</option>
+                                                    <option value="6" class="">6</option>
+                                                </select>
+                                                <span class="uk-alert-success uk-flex uk-flex-center uk-justify-center uk-margin-small-left" uk-icon="check" style="width:40px; height: 40px; padding: 0; border-radius: 100%; opacity: 0;"></span>
+                                                <span class="uk-alert-danger uk-flex uk-flex-center uk-justify-center uk-margin-small-left" uk-icon="close" style="width:40px; height: 40px; padding: 0; border-radius: 100%; opacity: 0;"></span>
                                             </div>
                                         </label> 
                                     </div>
+                                    <div class="uk-divider-small uk-margin-small-top"></div>
                                     <?php
                                     $pos++;
                             endforeach; ?>
@@ -115,11 +113,15 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
         </ul>
         <!-- Control Buttons -->
         <div class="uk-flex uk-flex-between uk-margin-small-top">
-            <button type="button" id="prevBtn" class="uk-button uk-button-secondary uk-button-small" onclick="nextPrev(-1)"><span uk-icon="arrow-left"></span> Anterior</button>
-            <button type="button" id="nextBtn" class="uk-button uk-button-secondary uk-button-small" onclick="nextPrev(1)">Próxima <span uk-icon="arrow-right"></span></button>
+            <button type="button" id="prevBtn" class="uk-button uk-button-secondary uk-button-small" onclick="nextPrev(-1)" style="display:none;"><span uk-icon="arrow-left"></span> Anterior</button>
+            <button type="button" id="nextBtn" class="uk-button uk-button-secondary uk-button-small" onclick="nextPrev(1)" style="display:none;">Próxima <span uk-icon="arrow-right"></span></button>
         </div>
     </div>
-    <div class="uk-flex uk-flex-center">
+    <div id="wrapper-submit" class="uk-flex uk-flex-center" style="display: none;">
         <button class="uk-button uk-button-primary" type="button" onclick="submitAnswers(jQuery('.wrapper-question'), '<?php echo $quiz_id; ?>', '<?php echo $voucher_id ?>', '<?php echo $ajax_url; ?>')">Responder Quiz</button>
     </div>
 </div>
+
+<script>
+    showTab(currentTab);
+</script>
