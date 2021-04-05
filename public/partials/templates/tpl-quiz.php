@@ -15,9 +15,6 @@ $number = 1;
 $question = '';
 $ajax_url 	= admin_url( 'admin-ajax.php' );
 ?>
-<script>
- showTab(currentTab);
-</script>
 <!-- # Wrapper perguntas e respostas -->
 <div class="wrapper-quiz" data-id="<?php echo $quiz_id ?>">
     <h2><?php echo $title_quiz ?></h2>
@@ -70,7 +67,7 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                                 <form class="uk-width-1-1">
                                     <div class="" uk-grid>
                                         <label class="uk-width-1-1@s" onchange="validateAnswers(jQuery(this))">
-                                            <span class="uk-text-emphasis" name="<?php echo 'group-'. $id;?>" data-id="<?php echo $answer->ID ?>"><?php echo ucfirst($letters[$pos]).' '. $answer->post_title ?></span>
+                                            <span class="uk-text-emphasis answer" name="<?php echo 'group-'. $id;?>" data-id="<?php echo $answer->ID ?>"><?php echo ucfirst($letters[$pos]).' '. $answer->post_title ?></span>
                                             
                                             <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
                                                 <span class="uk-margin-small-right">Peso:</span>

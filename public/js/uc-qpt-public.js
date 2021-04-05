@@ -43,37 +43,33 @@ function submitAnswers(wrapperQuestion, quizId, voucherId, ajaxUrl)
 	{
 		// Collect checked answers data
 		var qId = jQuery(this).attr('data-id');
-		jQuery(this).find('input[type=checkbox]').each(function (index)
-		{
-			var currAnswer = jQuery(this);
-			if (currAnswer.is(':checked')) {
 
-				var answerId = currAnswer.attr('data-id'),
-					weight = currAnswer.siblings('select').val()
-					data = qId + ":" + answerId + ":" + weight;
+		var answer 	= jQuery(this).find('span.answer');
+
+		answer.each( function (i) {
+
+			var	answerId 	= jQuery(this).attr('data-id'),
+				weight 		= jQuery(this).siblings().find('select').val(),
+				data 		= qId + ":" + answerId + ":" + weight;
 
 				checkedAnswers.push(data);
-				
-			};
+		})
+	});
+
+	if (checkedAnswers) {
+		jQuery.ajax({
+			type: 'POST',
+			url: ajaxUrl,
+			data: {
+				action: 'ucqpt_submit_quiz',
+				data: checkedAnswers,
+				quizId: quizId,
+				voucherId: voucherId
+			},
+		}).done(function(res){
+			jQuery('.wrapper-result').html(res);
 		});
-	});
-	console.log(checkedAnswers);
-	
-	// if (false) {
-	jQuery.ajax({
-		type: 'POST',
-		url: ajaxUrl,
-		data: {
-			action: 'ucqpt_submit_quiz',
-			data: checkedAnswers,
-			quizId: quizId,
-			voucherId: voucherId
-		},
-	}).done(function(res){
-		console.log(res);
-		jQuery('.wrapper-result').html(res);
-	});
-	// }
+	}
 }
 
 
@@ -100,12 +96,8 @@ function autenticateVoucher(ajaxUrl)
 		url: ajaxUrl,
 		type: 'POST',
 		data: dataSend,
-		beforeSend: function() {
-			console.log('Autenticando...');
-		},
 	})
 	.done( function(res) {
-		console.log('Requisição finalizada');
 		jQuery('.entry-content').html(res);
 	});
 }
@@ -198,17 +190,17 @@ function showTab(n) {
 	var x = document.getElementsByClassName("tab");
 	x[n].style.display = "block";
 	// ... and fix the Previous/Next buttons:
-	if (n == 0) {
-		document.getElementById("prevBtn").style.display = "none";
-	} else {
-		document.getElementById("prevBtn").style.display = "inline";
-	}
-	if (n == (x.length - 1)) {
-		// document.getElementById("nextBtn").innerHTML = "Submit";
-		document.getElementById("nextBtn").style.display = "none";
-	} else {
-		document.getElementById("nextBtn").style.display = "inline";
-	}
+	// if (n == 0) {
+	// 	document.getElementById("prevBtn").style.display = "none";
+	// } else {
+	// 	document.getElementById("prevBtn").style.display = "inline";
+	// }
+	// if (n == (x.length - 1)) {
+	// 	// document.getElementById("nextBtn").innerHTML = "Submit";
+	// 	document.getElementById("nextBtn").style.display = "none";
+	// } else {
+	// 	document.getElementById("nextBtn").style.display = "inline";
+	// }
 	// ... and run a function that displays the correct step indicator:
 	fixStepIndicator(n)
 }
