@@ -69,7 +69,8 @@ function createNewQuiz(el, ajaxUrl)
 		quizDescription = jQuery('#ucqpt_test_description').val();
 
 	var dataToSend = quizName + '||' + quizDescription;
-	var bodyEl = el.parents('.uk-modal-body');
+	var bodyEl = el.parents('.uk-modal-body'),
+		tplQuiz = jQuery('#new-quiz');
 	
 	jQuery.ajax({
 		type: 'POST',
@@ -86,13 +87,14 @@ function createNewQuiz(el, ajaxUrl)
 			bodyEl.append('<div id="spinner" uk-spinner></div>');
 		},
 	}).done(function(res) {
+		tplQuiz.attr('data-id', res); // Adiciona o ID do post no template do quiz
+
 		bodyEl.find('#spinner').hide();
 		bodyEl.children('.wrapper-new-question').fadeIn();
 
 		// mostrar título, descrição e botão atualizar teste
-		bodyEl.find('.uk-modal-title').text(quizName);
-		bodyEl.find('.uk-modal-title').siblings('p').text(quizDescription);
-		bodyEl.find('.uk-modal-title').siblings('p').after(res);
+		tplQuiz.find('.uk-modal-title').text(quizName);
+		tplQuiz.find('.uk-modal-title').siblings('p').text(quizDescription);
 		jQuery('#test-update').fadeIn();
 
 		UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> <b>'+ quizName +'</b> criado com sucesso!', status: 'success', pos: 'bottom-center'});
@@ -248,7 +250,7 @@ function saveQuestionAndAnswer(ajaxUrl, el)
 	var newQuestion 		= questionTitle,
 		newAnswers 			= answerOne + '>>' + perfilOne + '||' + answerTwo + '>>' + perfilTwo +  '||' + answerThree + '>>' + perfilThree + '||' + answerFour + '>>' + perfilFour;
 
-	var quizId 				= jQuery('#quiz-id').text();
+	var quizId 				= jQuery('#new-quiz').attr('data-id');
 
 	jQuery.ajax({
 		type: 'POST',
