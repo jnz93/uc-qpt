@@ -29,7 +29,7 @@ if ( $vouchers->have_posts() ) :
     <table class="uk-table uk-table-striped">
         <thead>
             <tr>
-                <th>Nome</th>
+                <th>Código</th>
                 <th>Utilizado</th>
                 <th>Ações</th>
             </tr>

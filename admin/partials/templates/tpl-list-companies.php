@@ -38,12 +38,12 @@ if ( ! empty( $companies ) ) :
         <?php
         foreach ( $companies as $company ) :
 
-            $company_id                 = $company->ID;
+            $user_id                 = $company->ID;
             $company_name               = $company->display_name;
-            $company_vouchers           = get_user_meta( $company_id, 'ucqpt_company_vouchers', true );
+            $company_vouchers           = get_user_meta( $user_id, 'ucqpt_company_vouchers', true );
 
             // Verificar se o voucher foi utilizado
-            $vouchers_ids               = get_user_meta($company_id, 'ucqpt_company_vouchers_id', true);
+            $vouchers_ids               = get_user_meta($user_id, 'ucqpt_company_vouchers_id', true);
             $vouchers_ids               = explode(',', $vouchers_ids);
             $vouchers_ids               = array_filter($vouchers_ids);
             $total_used                 = 0;
@@ -59,7 +59,7 @@ if ( ! empty( $companies ) ) :
 
             $remaining_vouchers         = intval($company_vouchers) - intval($total_used);
             ?>
-            <tr>
+            <tr uk-toggle="target: #company-data-<?php echo $user_id ?>" data-id="<?php echo $user_id; ?>">
                 <td><?php echo $company_name; ?></td>
                 <td><?php echo $company_vouchers; ?></td>
                 <td><?php echo $total_used; ?></td>
@@ -70,6 +70,50 @@ if ( ! empty( $companies ) ) :
         ?>
         </tbody>
     </table>
+
+    <!-- Modais -->
     <?php
+    foreach ( $companies as $company ) :
+        $user_id                    = $company->ID;
+        $company_name               = $company->display_name;
+        $company_email              = $company->user_email;
+        $company_vouchers           = get_user_meta( $user_id, 'ucqpt_company_vouchers', true );
+        $company_tel                = get_user_meta( $user_id, 'ucqpt_company_tel', true );
+        $company_doc                = get_user_meta( $user_id, 'ucqpt_company_doc', true );
+
+        ?>
+        <div id="company-data-<?php echo $user_id; ?>" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+                <button class="uk-modal-close-default" type="button" uk-close></button>
+                <h2 class="uk-modal-title"><?php echo $company_name ?></h2>
+
+                <h4 class="">Dados da empresa</h4>
+                <table class="uk-table uk-table-striped">
+                    <tbody>
+                        <tr>
+                            <td>Nome/Empresa</td>
+                            <td><?php echo $company_name; ?></td>
+                        </tr>
+                        <tr>
+                            <td>E-mail</td>
+                            <td><?php echo $company_email; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Telefone</td>
+                            <td><?php echo $company_tel; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Documento/Cnpj</td>
+                            <td><?php echo $company_doc; ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4 class="">Vouchers</h4>
+                <?php require_once plugin_dir_path( __FILE__ ) . '/tpl-list-vouchers-by-user.php';  ?>
+            </div>
+        </div>
+        <?php
+    endforeach;
 endif;
 ?>
