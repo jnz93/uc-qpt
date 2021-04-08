@@ -32,6 +32,7 @@ if ( $query->have_posts() ) :
                 <th class="">Shortcode <span class="uk-margin-small-left" uk-icon="icon: question" uk-tooltip="title: Utilize o shortcode em posts, páginas ou widgets; pos: top"></span></th>
                 <th class="">Pergunta(s) <span class="uk-margin-small-left" uk-icon="icon: question" uk-tooltip="title: Total de perguntas nesse inventário; pos: top"></span></th>
                 <th class="">Resultado(s) <span class="uk-margin-small-left" uk-icon="icon: question" uk-tooltip="title: Quantas vezes o inventário foi submetido; pos: top"></span></th>
+                <th class="">Ações <span class="uk-margin-small-left" uk-icon="icon: question" uk-tooltip="title: Quantas vezes o inventário foi submetido; pos: top"></span></th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +50,7 @@ if ( $query->have_posts() ) :
                 <td>[shortcode]</td>
                 <td><?php echo $questions_total; ?></td>
                 <td>0</td>
+                <td><td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Inventário" uk-toggle="target: #edit-inventory" onclick="loadInventoryData('<?php echo $post_id; ?>', '<?php echo $ajax_url; ?>')"></span> <span uk-icon="ban" uk-tooltip="Excluir Inventário"></span></td>
             </tr>
             <?php
         endwhile;

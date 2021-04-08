@@ -46,6 +46,7 @@
 
     <?php    
     require_once plugin_dir_path( __FILE__ ) . 'uc-qpt-new-quiz.php';
+    require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-edit-inventory.php';
     require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-register-company.php';
     require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-create-voucher.php';
     ?>

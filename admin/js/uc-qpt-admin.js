@@ -410,8 +410,8 @@ function createNewVoucher(ajaxUrl)
 function setShowHide(ajaxUrl, el)
 {
 	
-	var questionId = el.parent().parent().parent().parent().parent('.uk-card').attr('data-question-id');
-	var showQuestion = '';
+	var questionId = el.parents('.uk-card').attr('data-question-id'),
+		showQuestion = '';
 
 	if( el.is(':checked') ) {
 		showQuestion = 'no';
@@ -530,3 +530,31 @@ function setVoucherIdOnResultModal(voucherId, voucherCode, ajaxUrl)
 		}
 	});
  }
+
+
+ /**
+ * Load inventory data from backend with ajax
+ * @param {*} postId
+ * @param {*} ajaxUrl 
+ */
+function loadInventoryData( postId, ajaxUrl )
+{
+	'use strict';
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: {
+			action: 'ucqpt_load_inventory_data',
+			data: postId
+		},
+	}).done(function(res) {
+		// Elements
+		var wrapperAnswers = jQuery('#wrapper-data');
+
+		wrapperAnswers.html(res);
+		// console.log(res);
+		UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Inventário recuperado com sucesso!', status: 'success', pos: 'bottom-center'});
+	})
+
+}

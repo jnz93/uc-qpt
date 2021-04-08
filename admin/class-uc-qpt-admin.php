@@ -72,6 +72,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_switch_show_question', array($this, 'ucqpt_switch_show_question_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_update_voucher_data', array($this, 'ucqpt_update_voucher_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_get_used_voucher_data', array($this, 'ucqpt_get_used_voucher_data_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_load_inventory_data', array($this, 'ucqpt_load_inventory_data_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -838,4 +839,119 @@ class Uc_Qpt_Admin {
 		endif;
 	}
 	
+	/**
+	 * Carregar dados de um inventário via ajax
+	 * @since 1.4.0
+	 */
+	public function ucqpt_load_inventory_data_by_ajax()
+	{
+		if ( empty($_POST) ) :
+			die();
+		endif;
+
+		$inventory_id = $_POST['data'];
+		
+		// Collect data
+		$title 			= get_the_title( $inventory_id );
+		$desc 			= get_the_excerpt( $inventory_id );
+		$ajax_url 		= admin_url('admin-ajax.php');
+
+		$list_ids 		= get_post_meta( $inventory_id, 'quiz_questions_ids', true ); 
+		$arr_ids		= explode(',', $list_ids);
+		?>
+		<button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header uk-flex uk-flex-between">
+            <div class="">
+                <h2 class="uk-modal-title"><?php echo $title ?></h2>
+                <p class="uk-text"><?php echo $desc ?></p>
+            </div>
+        </div>
+        <div class="uk-modal-body">
+            <div class="wrapper-new-question">    
+                <div id="wrapper-data" class="uk-width-1-1">
+                    <!-- <div class="uk-width-1-1 uk-flex uk-flex-center">
+                        <button class="uk-button uk-button-default uk-button-medium" type="button" onclick="addTplQuestion('<?php echo $ajax_url; ?>')"><span uk-icon="icon:  plus"></span> Adiconar nova pergunta</button>
+                    </div> -->
+					<?php
+					if ( !empty($arr_ids) ) :
+						$tpl = '';
+						foreach ( $arr_ids as $id ) :
+
+							# Pergunta
+							$question_title = get_the_title( $id );?>
+
+							<div class="uk-card uk-card-default uk-width-1-1 uk-margin-small-bottom" data-question-id="<?php echo $id ?>">
+								<div class="uk-card-header">
+									<h4 class=""><?php echo $question_title ?></h4>
+									<div class="uk-flex ucqpt-actions uk-width-1-1">
+										<div class="uk-margin uk-margin-small-right">
+											<span class="uk-margin-small-right" uk-tooltip="Mostrar respostas"><i class="" uk-icon="list"></i>Respostas</span>
+											<span class="uk-margin-small-right" uk-tooltip="Editar pergunta"><i class="" uk-icon="file-edit"></i>Editar</span>
+											<span class="uk-margin-small-right" uk-tooltip="Excluir pergunta"><i class="" uk-icon="trash"></i>Excluir</span>
+										</div>
+										<div class="uk-grid-small uk-child-width-auto uk-grid">
+											<label uk-tooltip="Desativando ela ficará indisponível ao usuário"><input class="uk-checkbox" type="checkbox" data-value="yes" onclick="setShowHide('<?php echo $ajax_url; ?>', jQuery(this))"> Desativar pergunta</label>
+										</div>
+									</div>
+								</div>
+								<?php
+
+								# Respostas
+								$args = array(
+									'post_parent'    => $id,
+									'post_status'    => 'publish',
+								);
+								$answers = get_children( $args );
+
+								if ( ! is_wp_error( $answers ) ) : ?>
+									<div class="uk-card-body" style="display: none;">
+										<div class="uk-width-1-1">
+											<h4 class="">Respostas</h4>
+											<?php
+											foreach ( $answers as $answer ) :
+											
+												$answer_title = $answer->post_title;
+												$answer_id	= $answer->ID; ?>
+												<div class="uk-margin uk-flex uk-flex-row" answer-id="<?php echo $answer_id; ?>">
+													<p class="uk-text-emphasis"><?php echo $answer_title; ?></p>
+													<div class="uk-margin-left">
+														<div uk-form-custom="target: > * > span:first-child">
+															<select class="answer-one-perfil">
+																<option value="">Perfil da resposta</option>
+																<option value="A">Afetivo</option>
+																<option value="P">Pragmático</option>
+																<option value="R">Racional</option>
+																<option value="V">Visionário</option>
+															</select>
+															<button class="uk-button uk-button-default" type="button" tabindex="-1">
+																<span></span>
+																<span uk-icon="icon: chevron-down"></span>
+															</button>
+														</div>
+													</div>
+												</div> 
+												<?php
+											endforeach;
+											?>
+										</div>
+									</div>
+									<?php
+								endif;?>
+								</div>
+							<?php
+						endforeach;
+						?>
+						</div>
+						<?php
+					endif;
+					?>
+				</div>
+            </div>
+		</div>
+		</div>
+        <div class="uk-modal-footer uk-text-right">
+        </div>
+		<?php
+		die();
+	}
 }
