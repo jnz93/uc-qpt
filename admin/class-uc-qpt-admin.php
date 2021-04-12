@@ -73,6 +73,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_update_voucher_data', array($this, 'ucqpt_update_voucher_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_get_used_voucher_data', array($this, 'ucqpt_get_used_voucher_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_load_inventory_data', array($this, 'ucqpt_load_inventory_data_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_update_data', array($this, 'ucqpt_update_data_by_ajax')); // executed when logged in
 	}
 
 	/**
@@ -859,10 +860,11 @@ class Uc_Qpt_Admin {
 		$list_ids 		= get_post_meta( $inventory_id, 'quiz_questions_ids', true ); 
 		$arr_ids		= explode(',', $list_ids);
 		?>
+		<input type="hidden" name="ajaxurl" id="ajaxurl" value="<?php echo $ajax_url; ?>">
 		<button class="uk-modal-close-default" type="button" uk-close></button>
         <div class="uk-modal-header uk-flex uk-flex-between">
             <div class="">
-                <h2 class="uk-modal-title"><?php echo $title ?></h2>
+                <h2 class="uk-modal-title" ondblclick="editElement(jQuery(this), '<?php echo $inventory_id; ?>')" uk-tooltip="title: Clique duas vezes para editar; pos: right"><?php echo $title ?></h2>
                 <p class="uk-text"><?php echo $desc ?></p>
             </div>
         </div>
@@ -882,15 +884,18 @@ class Uc_Qpt_Admin {
 
 							<div class="uk-card uk-card-default uk-width-1-1 uk-margin-small-bottom" data-question-id="<?php echo $id ?>">
 								<div class="uk-card-header">
-									<h4 class=""><?php echo $question_title ?></h4>
-									<div class="uk-flex ucqpt-actions uk-width-1-1">
-										<div class="uk-margin uk-margin-small-right">
-											<span class="uk-margin-small-right" uk-tooltip="Mostrar respostas"><i class="" uk-icon="list"></i>Respostas</span>
-											<span class="uk-margin-small-right" uk-tooltip="Editar pergunta"><i class="" uk-icon="file-edit"></i>Editar</span>
-											<span class="uk-margin-small-right" uk-tooltip="Excluir pergunta"><i class="" uk-icon="trash"></i>Excluir</span>
+									<div class="uk-grid">
+										<h4 class="uk-width-5-6" ondblclick="editElement(jQuery(this), '<?php echo $id; ?>')" uk-tooltip="title: Clique duas vezes para editar; pos: top-right"><?php echo $question_title ?></h4>
+										<div class="uk-flex ucqpt-actions uk-width-1-6">
+											<div class="uk-grid-small uk-child-width-auto uk-grid">
+												<label class="uk-margin-small-bottom" uk-tooltip="Desative a pergunta e ela não será exibida ao usuário.">
+													<input class="uk-checkbox" type="checkbox" data-value="yes" onclick="setShowHide('<?php echo $ajax_url; ?>', jQuery(this))"> Desativar
+												</label>
+											</div>
 										</div>
-										<div class="uk-grid-small uk-child-width-auto uk-grid">
-											<label uk-tooltip="Desativando ela ficará indisponível ao usuário"><input class="uk-checkbox" type="checkbox" data-value="yes" onclick="setShowHide('<?php echo $ajax_url; ?>', jQuery(this))"> Desativar pergunta</label>
+										<div class="uk-margin uk-margin-small-right uk-width-1-1">
+											<button class="uk-margin-small-right" uk-tooltip="Mostrar respostas" <?php echo 'uk-toggle="target: #answers-'. $id .'; animation: uk-animation-fade"' ?>><i class="" uk-icon="list"></i>Respostas</button>
+											<button class="" uk-tooltip="Excluir da base de perguntas"><i class="" uk-icon="trash"></i>Excluir</button>
 										</div>
 									</div>
 								</div>
@@ -904,30 +909,42 @@ class Uc_Qpt_Admin {
 								$answers = get_children( $args );
 
 								if ( ! is_wp_error( $answers ) ) : ?>
-									<div class="uk-card-body" style="display: none;">
+									<div id="<?php echo 'answers-'. $id .''; ?>" class="uk-card-body" hidden>
 										<div class="uk-width-1-1">
 											<h4 class="">Respostas</h4>
 											<?php
 											foreach ( $answers as $answer ) :
 											
-												$answer_title = $answer->post_title;
-												$answer_id	= $answer->ID; ?>
-												<div class="uk-margin uk-flex uk-flex-row" answer-id="<?php echo $answer_id; ?>">
-													<p class="uk-text-emphasis"><?php echo $answer_title; ?></p>
-													<div class="uk-margin-left">
-														<div uk-form-custom="target: > * > span:first-child">
-															<select class="answer-one-perfil">
-																<option value="">Perfil da resposta</option>
-																<option value="A">Afetivo</option>
-																<option value="P">Pragmático</option>
-																<option value="R">Racional</option>
-																<option value="V">Visionário</option>
-															</select>
-															<button class="uk-button uk-button-default" type="button" tabindex="-1">
-																<span></span>
-																<span uk-icon="icon: chevron-down"></span>
-															</button>
-														</div>
+												$answer_title 	= $answer->post_title;
+												$answer_id		= $answer->ID; 
+												$answer_perfil 	= get_post_meta( $answer_id, 'answer_perfil', true);
+												switch ( $answer_perfil ) :
+													case $answer_perfil == 'A':
+														$answer_perfil = 'Afetivo';
+														break;
+
+													case $answer_perfil == 'P':
+														$answer_perfil = 'Pragmático';
+														break;
+
+													case $answer_perfil == 'R':
+														$answer_perfil = 'Racional';
+														break;
+													
+													case $answer_perfil == 'V':
+														$answer_perfil = 'Visionário';
+														break;
+
+													default:
+														$answer_perfil = 'Não identificado';
+														break;
+												endswitch;
+
+												?>
+												<div class="uk-margin uk-flex uk-flex-row " answer-id="<?php echo $answer_id; ?>">
+													<p class="uk-text-emphasis uk-width-5-6" ondblclick="editElement(jQuery(this), '<?php echo $answer_id; ?>')" uk-tooltip="title: Clique duas vezes para editar; pos: top-right"><?php echo $answer_title; ?></p>
+													<div class="uk-width-1-6 uk-position-relative">
+														<span class="uk-badge uk-label uk-position-absolute uk-position-center-right"><?php echo $answer_perfil; ?></span>
 													</div>
 												</div> 
 												<?php
@@ -952,6 +969,30 @@ class Uc_Qpt_Admin {
         <div class="uk-modal-footer uk-text-right">
         </div>
 		<?php
+		die();
+	}
+
+	/**
+	 * Salva título de inventário, pergunta e resposta via ajax
+	 * 
+	 * @since v1.4.0 
+	 */
+	public function ucqpt_update_data_by_ajax()
+	{
+		$id 	  	= $_POST['id'];
+		$new_data 	= $_POST['title'];
+
+		$postarr = array(
+			'ID'           => $id,
+			'post_title'   => $new_data,
+			// 'post_content' => 'This is the updated content.',
+		);
+		$update = wp_update_post( $postarr );
+
+		if ( ! is_wp_error( $update ) ) :
+			echo 'success';
+		endif;
+
 		die();
 	}
 }

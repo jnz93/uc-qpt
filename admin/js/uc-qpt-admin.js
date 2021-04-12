@@ -558,3 +558,68 @@ function loadInventoryData( postId, ajaxUrl )
 	})
 
 }
+
+/**
+ * Function responsability for turn text elements in input
+ * 
+ * @since v1.4.0
+ */
+function editElement(el, id)
+{
+	var currElVal = el.text(),
+		newElement = '<div class="uk-width-5-6"><input name="" id="edit-'+ id +'" class="uk-input" type="text" value="'+ currElVal +'" data-id="'+ id +'" /><button class="uk-button uk-button-default uk-button-small" onclick="updateData(jQuery(this))" uk-icon="check"></button></div>';
+
+	el.attr('hidden', true);
+	el.after(newElement);
+}
+
+
+/**
+ * Responsavel por fazer o oupdate dos textos no backend
+ * 
+ * @since v1.4.0
+ */
+function updateData(el)
+{
+	'use strict';
+	// console.log(el);
+	var id 		= el.siblings('.uk-input').attr('data-id'),
+		value 	= el.siblings('.uk-input').val(),
+		titleEl = el.parent().siblings('h4, h2, p'),
+		ajaxUrl = jQuery('#ajaxurl').val();
+
+	// console.log(id);
+	// console.log(value);
+	// console.log(ajaxUrl);
+
+	if (id.length > 1 && value.length > 3 ) {
+		
+		var dataToSend = {
+			action: 'ucqpt_update_data',
+			id: id,
+			title: value
+		};
+
+		jQuery.ajax({
+			type: 'POST',
+			url: ajaxUrl,
+			data: dataToSend,
+		}).done(function(res) {
+			// Elements
+			// var wrapperAnswers = jQuery('#wrapper-data');
+	
+			// wrapperAnswers.html(res);
+			// console.log(res);
+			if (res == 'success'){
+
+				var newData = '<h2 class="uk-modal-title" ondblclick="editElement(jQuery(this), '+ id +')" uk-tooltip="Clique duas vezes para editar">'+ value +'</h2>';
+
+				titleEl.text(value);
+				titleEl.removeAttr('hidden');
+				el.parent().remove();
+				UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Inventário recuperado com sucesso!', status: 'success', pos: 'bottom-center'});
+			}
+
+		})
+	}
+}
