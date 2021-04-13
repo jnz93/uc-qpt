@@ -74,6 +74,8 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_get_used_voucher_data', array($this, 'ucqpt_get_used_voucher_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_load_inventory_data', array($this, 'ucqpt_load_inventory_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_update_data', array($this, 'ucqpt_update_data_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_update_company_data', array($this, 'ucqpt_update_company_data_by_ajax')); // executed when logged in
+
 	}
 
 	/**
@@ -895,7 +897,7 @@ class Uc_Qpt_Admin {
 										</div>
 										<div class="uk-margin uk-margin-small-right uk-width-1-1">
 											<button class="uk-margin-small-right" uk-tooltip="Mostrar respostas" <?php echo 'uk-toggle="target: #answers-'. $id .'; animation: uk-animation-fade"' ?>><i class="" uk-icon="list"></i>Respostas</button>
-											<button class="" uk-tooltip="Excluir da base de perguntas"><i class="" uk-icon="trash"></i>Excluir</button>
+											<!-- <button class="" uk-tooltip="Excluir da base de perguntas"><i class="" uk-icon="trash"></i>Excluir</button> -->
 										</div>
 									</div>
 								</div>
@@ -994,5 +996,62 @@ class Uc_Qpt_Admin {
 		endif;
 
 		die();
+	}
+
+	/**
+	 * Update nos dados de empresas cadastradas via ajax
+	 * 
+	 * @since v1.4.0
+	 */
+	public function ucqpt_update_company_data_by_ajax()
+	{
+		$id 		= $_POST['id'];
+		$type 		= $_POST['type'];
+		$value 		= $_POST['title'];
+		$user_data	= array(
+			'ID' 	=> $id,
+		);
+
+		switch ($type) :
+			case 'name':
+				$user_data['display_name'] 	= $value;
+				break;
+			case 'email':
+				$user_data['user_email'] 	= $value;
+				break;
+				
+			case 'pass':
+				$user_data['user_pass']		= $value;
+
+			default:
+				unset($user_data);
+				break;
+		endswitch;
+
+		if ( ! empty( $user_data ) ) :
+			
+			$update = wp_update_user( $user_data );
+
+			if ( !is_wp_error( $update ) ) :
+				die ('success');
+			else :
+				die('error');
+			endif;
+
+		else :
+
+			if ( $type == 'phone' ) :
+				update_user_meta( $id, 'ucqpt_company_tel', $value );
+				die('success');
+			endif;
+
+			if ( $type == 'doc' ) :
+				update_user_meta( $id, 'ucqpt_company_doc', $value );
+				die('success');
+			endif;
+
+		endif;
+
+		die('error');
 	}
 }

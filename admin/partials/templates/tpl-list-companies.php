@@ -21,7 +21,9 @@ $args = array(
 $companies = get_users( $args );
 
 ?>
-
+<script>
+var ajaxUrl = '<?php echo $ajax_url; ?>';
+</script>
 <?php 
 if ( ! empty( $companies ) ) :
     ?>
@@ -92,19 +94,23 @@ if ( ! empty( $companies ) ) :
                     <tbody>
                         <tr>
                             <td>Nome/Empresa</td>
-                            <td><?php echo $company_name; ?></td>
+                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="name"><?php echo $company_name; ?></td>
                         </tr>
                         <tr>
                             <td>E-mail</td>
-                            <td><?php echo $company_email; ?></td>
+                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="email"><?php echo $company_email; ?></td>
                         </tr>
                         <tr>
                             <td>Telefone</td>
-                            <td><?php echo $company_tel; ?></td>
+                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="phone"><?php echo $company_tel; ?></td>
                         </tr>
                         <tr>
                             <td>Documento/Cnpj</td>
-                            <td><?php echo $company_doc; ?></td>
+                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="doc"><?php echo $company_doc; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Senha de acesso</td>
+                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="pass">Clique para redefinir a senha</td>
                         </tr>
                     </tbody>
                 </table>

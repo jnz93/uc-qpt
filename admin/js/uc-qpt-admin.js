@@ -560,7 +560,7 @@ function loadInventoryData( postId, ajaxUrl )
 }
 
 /**
- * Function responsability for turn text elements in input
+ * Habilita edição dos títulos de inventários, perguntas e respostas. 
  * 
  * @since v1.4.0
  */
@@ -572,7 +572,6 @@ function editElement(el, id)
 	el.attr('hidden', true);
 	el.after(newElement);
 }
-
 
 /**
  * Responsavel por fazer o oupdate dos textos no backend
@@ -617,9 +616,63 @@ function updateData(el)
 				titleEl.text(value);
 				titleEl.removeAttr('hidden');
 				el.parent().remove();
-				UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Inventário recuperado com sucesso!', status: 'success', pos: 'bottom-center'});
+				UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Dado alterado com sucesso!', status: 'success', pos: 'bottom-center'});
 			}
 
 		})
 	}
 }
+
+/**
+ * Habilita um input para editar dados da empres/usuário 
+ * 
+ * @since v1.4.0
+ */
+function editCompanyData(el)
+{
+	var currElVal 	= el.text(),
+		dataId 		= el.attr('data-id'),
+		dataType 	= el.attr('data-type'),
+		newElement 	= '<div class="uk-width-5-6"><input name="" id="edit-'+ dataId +'" class="uk-input" type="text" value="'+ currElVal +'" data-type="'+ dataType +'" data-id="'+ dataId +'" /><button class="uk-button uk-button-default uk-button-small" onclick="updateCompanyData(jQuery(this))" uk-icon="check"></button></div>';
+
+	el.attr('hidden', true);
+	el.after(newElement);
+}
+
+
+function updateCompanyData(el)
+{
+	'use strict';
+	console.log(el);
+
+	var dataValue 	= el.siblings('.uk-input').val(),
+		dataType 	= el.siblings('.uk-input').attr('data-type'),
+		dataId 		= el.siblings('.uk-input').attr('data-id');
+
+	var dataToSend = {
+		action: 'ucqpt_update_company_data',
+		type: dataType,
+		id: dataId,
+		title: dataValue
+	};
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: dataToSend,
+	}).done(function(res) {
+		console.log(res);
+		if ( res == 'success' ){
+
+			var tdEl = el.parent().siblings('td.data');
+
+			tdEl.text(dataValue);
+			tdEl.removeAttr('hidden');
+			el.parent().remove();
+			UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Dado alterado com sucesso!', status: 'success', pos: 'bottom-center'});
+		}
+
+	})
+
+}
+ 
