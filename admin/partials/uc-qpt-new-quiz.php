@@ -19,14 +19,14 @@ $ajax_url = admin_url('admin-ajax.php');
         <button class="uk-modal-close-default" type="button" uk-close></button>
         <div class="uk-modal-header uk-flex uk-flex-between">
             <div id="modal-title" class="">
-                <h2 class="uk-modal-title">Novo teste</h2>
+                <h2 class="uk-modal-title uk-heading-bullet">Novo inventário</h2>
                 <p class=""></p>
             </div>
         </div>
         <div class="uk-modal-body">
             <form class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-2">
-                    <label class="uk-form-label" for="ucqpt_test_name">Nome do Teste</label>
+                    <label class="uk-form-label" for="ucqpt_test_name">Nome do inventário</label>
                     <div class="uk-form-controls">
                         <input class="uk-input" id="ucqpt_test_name" type="text" placeholder="Adicione o nome do teste">
                     </div>
