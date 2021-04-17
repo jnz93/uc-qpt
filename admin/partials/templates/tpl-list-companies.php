@@ -121,5 +121,14 @@ if ( ! empty( $companies ) ) :
         </div>
         <?php
     endforeach;
+else :
+    ?>
+    <div class="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+        <div class="uk-width-2-3">
+            <h3 class="uk-heading-line uk-text-center"><span>Desculpe. Ainda não temos empresas cadastradas.</span></h3>
+            <button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-company" style="display: block; margin: auto;">Cadastrar Empresa</button>
+        </div>
+    </div>
+    <?php
 endif;
 ?>

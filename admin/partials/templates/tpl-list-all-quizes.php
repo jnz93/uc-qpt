@@ -58,5 +58,14 @@ if ( $query->have_posts() ) :
         </tbody>
     </table>
     <?php
+else :
+    ?>
+    <div class="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
+        <div class="uk-width-2-3">
+            <h3 class="uk-heading-line uk-text-center"><span>Desculpe. Ainda não temos inventário(s) cadastrados.</span></h3>
+            <button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #new-quiz" style="display: block; margin: auto;">Novo Inventário</button>
+        </div>
+    </div>
+    <?php
 endif;
 ?>
