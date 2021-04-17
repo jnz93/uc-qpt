@@ -21,7 +21,7 @@
         </div>
     </nav>
 
-    <ul class="uk-subnav uk-subnav-pill uk-flex-center uk-flex-middle" uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
+    <ul class="uk-subnav uk-subnav-pill uk-flex-center uk-flex-middle" uk-switcher="animation: uk-animation-slide-top-medium, uk-animation-slide-top-medium">
         <li><a href="#">Inventário(s)</a></li>
         <li><a href="#">Empresa(s)</a></li>
     </ul>
@@ -34,7 +34,7 @@
     require_once plugin_dir_path( __FILE__ ) . 'uc-qpt-new-quiz.php';
     require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-edit-inventory.php';
     require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-register-company.php';
-    require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-create-voucher.php';
+    // require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-create-voucher.php';
     ?>
 
 </div>
