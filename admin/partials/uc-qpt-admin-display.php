@@ -35,12 +35,10 @@
 
     <ul class="uk-subnav uk-subnav-pill uk-flex-center uk-flex-middle" uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
         <li><a href="#">Testes</button></a></li>
-        <li><a href="#">Perguntas/Respostas</a></li>
         <li><a href="#">Empresas</a></li>
     </ul>
     <ul class="uk-switcher uk-margin">
         <li><?php require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-list-all-quizes.php'; ?></li>
-        <li><?php require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-list-questions.php'; ?></li>
         <li><?php require_once plugin_dir_path( __FILE__ ) . 'templates/tpl-list-companies.php'; ?></li>
     </ul>
 
