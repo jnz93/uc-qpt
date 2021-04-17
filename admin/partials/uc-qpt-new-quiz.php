@@ -24,17 +24,11 @@ $ajax_url = admin_url('admin-ajax.php');
             </div>
         </div>
         <div class="uk-modal-body">
-            <form class="uk-grid-small" uk-grid>
-                <div class="uk-width-1-2">
-                    <label class="uk-form-label" for="ucqpt_test_name">Nome do inventário</label>
+            <form uk-grid>
+                <div class="uk-width-1-1 uk-flex uk-flex-column">
+                    <label class="uk-form-label uk-margin-small" for="ucqpt_test_name">Nome do inventário</label>
                     <div class="uk-form-controls">
-                        <input class="uk-input" id="ucqpt_test_name" type="text" placeholder="Adicione o nome do teste">
-                    </div>
-                </div>
-                <div class="uk-width-1-2">
-                    <label class="uk-form-label" for="ucqpt_test_description">Descrição do teste</label>
-                    <div class="uk-form-controls">
-                        <input class="uk-input" id="ucqpt_test_description" type="text" placeholder="Adicione uma descrição">
+                        <input class="uk-input uk-form-large" id="ucqpt_test_name" type="text" placeholder="Adicione um nome para o inventário">
                     </div>
                 </div>
                 <div class="">
