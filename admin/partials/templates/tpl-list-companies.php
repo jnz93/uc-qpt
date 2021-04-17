@@ -72,6 +72,7 @@ if ( ! empty( $companies ) ) :
         ?>
         </tbody>
     </table>
+    <button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-company" style="display: block; margin: auto;">Cadastrar Empresa</button>
 
     <!-- Modais -->
     <?php

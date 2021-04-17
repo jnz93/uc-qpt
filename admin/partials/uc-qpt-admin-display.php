@@ -17,8 +17,8 @@
     <nav class="uk-navbar-container" uk-navbar>
 
         <div class="uk-navbar-left">
-        <h1 class="uk-heading-bullet">Bem Vindo(a) - </h1>
-            <ul class="uk-navbar-nav uk-flex uk-flex-middle">
+            <h1 class="uk-heading-bullet">Bem Vindo(a) - </h1>
+            <ul class="uk-navbar-nav uk-flex uk-flex-middle" style="display: none;">
                 <li class="">
                     <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #new-quiz">Adicionar Inventário</button></a>
                 </li>
@@ -29,12 +29,12 @@
                     <a href="#"><button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-voucher">Cadastrar Voucher</button></a>
                 </li>
             </ul>
-
+    
         </div>
     </nav>
 
-    <ul class="uk-subnav uk-subnav-pill" uk-switcher>
-        <li><a href="#">Testes</a></li>
+    <ul class="uk-subnav uk-subnav-pill uk-flex-center uk-flex-middle" uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
+        <li><a href="#">Testes</button></a></li>
         <li><a href="#">Perguntas/Respostas</a></li>
         <li><a href="#">Empresas</a></li>
     </ul>

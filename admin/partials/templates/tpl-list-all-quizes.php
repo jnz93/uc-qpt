@@ -57,6 +57,7 @@ if ( $query->have_posts() ) :
         ?>
         </tbody>
     </table>
+    <button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #new-quiz" style="display: block; margin: auto;">Novo Inventário</button>
     <?php
 else :
     ?>
