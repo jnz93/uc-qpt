@@ -65,6 +65,9 @@ class Uc_Qpt_Admin {
 		// Remove admin noticies for not super admin users
 		add_action('in_admin_header', array( $this, 'ucqpt_hide_notices_to_all_but_super_admin'), 99);
 
+		// Woocommerce Menu		
+		add_filter ( 'woocommerce_account_menu_items', array($this, 'ucqpt_remove_my_account_links') );
+
 		// Ajax actions
 		add_action('wp_ajax_ucqpt_create_new_quiz', array($this, 'ucqpt_create_new_quiz_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_draft_quiz', array($this, 'ucqpt_create_draft_quiz_by_ajax')); // executed when logged in
@@ -1068,5 +1071,25 @@ class Uc_Qpt_Admin {
 			remove_all_actions( 'user_admin_notices' );
 			remove_all_actions( 'admin_notices' );
 		}
+	}
+
+	/**
+	 * Disable my account menu items
+	 * 
+	 * @since v1.5.0
+	 */
+	public function ucqpt_remove_my_account_links( $menu_links ){
+	
+		unset( $menu_links['edit-address'] ); // Addresses
+		unset( $menu_links['orders'] ); // Remove Orders
+		unset( $menu_links['downloads'] ); // Disable Downloads
+	
+		//unset( $menu_links['dashboard'] ); // Remove Dashboard
+		//unset( $menu_links['payment-methods'] ); // Remove Payment Methods
+		//unset( $menu_links['edit-account'] ); // Remove Account details tab
+		//unset( $menu_links['customer-logout'] ); // Remove Logout link
+	
+		return $menu_links;
+	
 	}
 }
