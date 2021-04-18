@@ -53,7 +53,7 @@ class Uc_Qpt_Public {
 		$this->version = $version;
 
 		// Add shortcodes
-		add_shortcode( 'quiz', array($this, 'template_quiz') );
+		add_shortcode( 'mindflow', array($this, 'template_quiz') );
 
 		// Ajax Actions
 		add_action('wp_ajax_ucqpt_submit_quiz', array($this, 'ucqpt_submit_quiz'));
@@ -125,14 +125,10 @@ class Uc_Qpt_Public {
 	public function template_quiz($atts)
 	{
 		$atts = shortcode_atts( array(
-			'quiz_id' 	=> 0
-		), $atts, 'quiz' );
+			'id' 	=> 0
+		), $atts, 'mindflow' );
 
-		// if ( !is_user_logged_in() ) :
-		// 	die('Somente usuários logados tem acesso!');
-		// endif;
-
-		$quiz_id 	= $atts['quiz_id'];
+		$quiz_id 	= $atts['id'];
 		$curr_user 	= wp_get_current_user();
 		$user_id 	= $curr_user->ID;
 
@@ -153,7 +149,7 @@ class Uc_Qpt_Public {
 		// if ( $has_completed_test == false && !empty($idsarr)) :			
 		if ( true ) :			
 			
-			require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-voucher-validation.php';
+			include_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-voucher-validation.php';
 			// require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-quiz.php';
 			
 		else :
