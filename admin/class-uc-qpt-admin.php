@@ -62,6 +62,9 @@ class Uc_Qpt_Admin {
 		// Redirect to admin plugin page after login on wp admin
 		add_filter( 'login_redirect', array( $this, 'ucqpt_admin_default_page' ), 10, 3 );
 
+		// Remove admin noticies for not super admin users
+		add_action('in_admin_header', array( $this, 'ucqpt_hide_notices_to_all_but_super_admin'), 99);
+
 		// Ajax actions
 		add_action('wp_ajax_ucqpt_create_new_quiz', array($this, 'ucqpt_create_new_quiz_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_create_draft_quiz', array($this, 'ucqpt_create_draft_quiz_by_ajax')); // executed when logged in
@@ -1053,5 +1056,17 @@ class Uc_Qpt_Admin {
 		endif;
 
 		die('error');
+	}
+
+	/**
+	 * Hide admin notices for the users are not super admin
+	 * 
+	 * @since v1.4.2
+	 */
+	public function ucqpt_hide_notices_to_all_but_super_admin(){
+		if ( !is_super_admin() ) {
+			remove_all_actions( 'user_admin_notices' );
+			remove_all_actions( 'admin_notices' );
+		}
 	}
 }
