@@ -13,12 +13,12 @@
  * @package           Uc_Qpt
  *
  * @wordpress-plugin
- * Plugin Name:       UnityCode Quiz Personality Test
- * Plugin URI:        unitycode.tech
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Plugin Name:       Mindflow - Metódo PRAV
+ * Plugin URI:        https://unitycode.tech
+ * Description:       Adicione questionários, insira perguntas, respostas e selecione o perfil de cada resposta. Cadastre empresas e adicione vouchers para que seus colaboradores tenham acesso ao método PRAV. Questionários, perguntas, respostas, empresas e vouchers são salvos em banco de dados e acessíveis a clique de distância.
+ * Version:           1.4.2
  * Author:            jnz93
- * Author URI:        unitycode.tech
+ * Author URI:        https://unitycode.tech
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       uc-qpt
