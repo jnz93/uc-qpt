@@ -47,7 +47,7 @@ if ( $query->have_posts() ) :
             ?>
             <tr>
                 <td><?php the_title(); ?></td>
-                <td>[shortcode]</td>
+                <td><?php echo '[mindflow id="'. $post_id .'"]' ?></td>
                 <td><?php echo $questions_total; ?></td>
                 <td>0</td>
                 <td><td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Inventário" uk-toggle="target: #edit-inventory" onclick="loadInventoryData('<?php echo $post_id; ?>', '<?php echo $ajax_url; ?>')"></span> <span uk-icon="ban" uk-tooltip="Excluir Inventário"></span></td>
