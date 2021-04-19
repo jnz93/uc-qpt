@@ -639,7 +639,11 @@ function editCompanyData(el)
 	el.after(newElement);
 }
 
-
+/**
+ * Envia as alterações para o backend para salvar depois mostra uma mensagem
+ * 
+ * @param {*} el 
+ */
 function updateCompanyData(el)
 {
 	'use strict';

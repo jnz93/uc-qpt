@@ -26,7 +26,7 @@ $vouchers = new WP_Query($args);
 <?php 
 if ( $vouchers->have_posts() ) :
     ?>
-    <table class="uk-table uk-table-striped">
+    <table class="uk-table uk-table-divider uk-table-hover">
         <thead>
             <tr>
                 <th>Código</th>
