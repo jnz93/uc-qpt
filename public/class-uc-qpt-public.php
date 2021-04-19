@@ -453,7 +453,7 @@ class Uc_Qpt_Public {
 
 		else :
 			
-			echo $voucher_code . ' Inválido! </br>';
+			echo '<h3 class="uk-text-lead uk-text-center uk-text-warning uk-margin-top">Voucher <b>' . $voucher_code . '</b> Inválido!</h3></br>';
 
 		endif;
 
