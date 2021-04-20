@@ -804,7 +804,7 @@ class Uc_Qpt_Admin {
 	 */
 	public function ucqpt_send_created_account_notification( $login, $pass, $email )
 	{
-		$url_panel 		= admin_url( );
+		$url_panel 		= get_permalink( wc_get_page_id( 'myaccount' ) );
 		$to 			= $email;
 		$subject 		= 'Mindflow - Cadastro na plataforma';
 		$headers 		= array('Content-Type: text/html; charset=UTF-8');
