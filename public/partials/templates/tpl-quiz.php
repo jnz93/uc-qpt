@@ -16,12 +16,11 @@ $question = '';
 $ajax_url 	= admin_url( 'admin-ajax.php' );
 ?>
 <!-- # Wrapper perguntas e respostas -->
-<div class="wrapper-quiz" data-id="<?php echo $quiz_id ?>">
-    <h2><?php echo $title_quiz ?></h2>
-    <p><?php echo $desc_quiz ?></p>
+<div class="wrapper-quiz container uk-margin-top" data-id="<?php echo $quiz_id ?>">
+    <h2 style="display: none;"><?php echo $title_quiz ?></h2>
+    <p style="display: none;"><?php echo $desc_quiz ?></p>
     <div class="wrapper-result">
-        <div id="caution-box">
-            <h4>Teste de estilo</h4>
+        <div id="caution-box" style="color: #fff; padding: 20px 40px;">
             <p class="">Analise cuidadosamente cada questão e suas alternativas e atribua:</p>
             <ul class="uk-list uk-list-hyphen">
                 <li>Nota 6 para a alternativa que <b>MAIS</b> tem a ver com você.</li>
@@ -33,7 +32,7 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
         </div>
 
         <!-- # Perguntas -->
-        <div id="regForm" class="">
+        <div id="regForm" class="" style="background: none;">
         <?php 
         foreach ( $idsarr as $id ) :
 
@@ -71,7 +70,7 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                                             
                                             <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
                                                 <span class="uk-margin-small-right">Peso:</span>
-                                                <select name="uk-text-emphasis" id="" class="uk-select uk-form-width-small" onChange="filterWeights(jQuery(this))" oninput="this.className = ''">
+                                                <select name="uk-text-emphasis uk-text-secondary" id="" class="uk-select uk-form-width-small" onChange="filterWeights(jQuery(this))" oninput="this.className = ''">
                                                     <option value="0" class="" selected>Selecione</option>
                                                     <option value="1" class="">1</option>
                                                     <option value="2" class="">2</option>
