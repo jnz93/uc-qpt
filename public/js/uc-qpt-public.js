@@ -299,3 +299,59 @@ function validateAnswers(el)
 		jQuery('#nextBtn').hide();
 	}
 }
+
+/**
+ * Setar voucher id no modal de update
+ * @param {*} voucherId
+ * @param {*} voucherCode
+ */
+function setVoucherIdOnModal(voucherId, voucherCode)
+{
+	'use strict';
+
+	jQuery('#edit-voucher').attr('data-voucher', voucherId);
+	jQuery('#edit-voucher').find('.uk-modal-title').text('Editar Voucher: ' + voucherCode);
+}
+ 
+
+ 
+/**
+ * Salvar dados do usuário no voucher via painel da empresa
+ * @param {*} ajaxUrl 
+ * 
+ * @since v1.3.0
+ */
+function updateVoucherUserData(ajaxUrl)
+{
+'use strict';
+
+var userName 	= jQuery('#ucqpt_customer_name').val(),
+	userEmail 	= jQuery('#ucqpt_customer_email').val(),
+	userTel 	= jQuery('#ucqpt_customer_tel').val(),
+	userDoc 	= jQuery('#ucqpt_customer_cpf').val(),
+	voucherId 	= jQuery('#edit-voucher').attr('data-voucher');
+
+var dataSend = {
+	action: 'ucqpt_update_voucher_data',
+	voucherId: voucherId,
+	userName: userName,
+	userEmail: userEmail,
+	userTel: userTel,
+	userDoc: userDoc
+};
+
+jQuery.ajax({
+	type: 'POST',
+	url: ajaxUrl,
+	data: dataSend
+})
+.done( function (res) {
+	if (res == 'error') {
+		console.log(res);
+	} else {
+		UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Os dados foram salvos com sucesso!', pos: 'bottom-center', status:'success' });
+		UIkit.modal('#edit-voucher').hide();
+		document.getElementById('form-voucher').reset();
+	}
+});
+}
