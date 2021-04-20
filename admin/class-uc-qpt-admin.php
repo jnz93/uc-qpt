@@ -1018,47 +1018,55 @@ class Uc_Qpt_Admin {
 			'ID' 	=> $id,
 		);
 
-		switch ($type) :
-			case 'name':
-				$user_data['display_name'] 	= $value;
-				break;
-			case 'email':
-				$user_data['user_email'] 	= $value;
-				break;
+		if ( $type ) :
+			switch ($type) :
+
+				case $type == 'name':
+					$user_data['display_name'] 	= $value;
+					break;
+
+				case $type == 'email':
+					$user_data['user_email'] 	= $value;
+					break;
+					
+				case $type == 'pass':
+					$user_data['user_pass']		= $value;
+					break;
+
+				default:
+					unset($user_data);
+					break;
+
+			endswitch;
+
+			if ( ! empty( $user_data ) ) :
 				
-			case 'pass':
-				$user_data['user_pass']		= $value;
+				$update = wp_update_user( $user_data );
 
-			default:
-				unset($user_data);
-				break;
-		endswitch;
+				if ( !is_wp_error( $update ) ) :
+					die ('success');
+				else :
+					die('error');
+				endif;
 
-		if ( ! empty( $user_data ) ) :
-			
-			$update = wp_update_user( $user_data );
-
-			if ( !is_wp_error( $update ) ) :
-				die ('success');
 			else :
-				die('error');
-			endif;
 
+				if ( $type == 'phone' ) :
+					update_user_meta( $id, 'ucqpt_company_tel', $value );
+					die('success');
+				endif;
+
+				if ( $type == 'doc' ) :
+					update_user_meta( $id, 'ucqpt_company_doc', $value );
+					die('success');
+				endif;
+
+			endif;
 		else :
 
-			if ( $type == 'phone' ) :
-				update_user_meta( $id, 'ucqpt_company_tel', $value );
-				die('success');
-			endif;
-
-			if ( $type == 'doc' ) :
-				update_user_meta( $id, 'ucqpt_company_doc', $value );
-				die('success');
-			endif;
+			die('error');
 
 		endif;
-
-		die('error');
 	}
 
 	/**
