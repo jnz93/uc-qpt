@@ -148,11 +148,14 @@ class Uc_Qpt_Public {
 		
 		// echo $has_completed;
 		// if ( $has_completed_test == false && !empty($idsarr)) :			
-		if ( true ) :			
+		if ( true ) :	
+
+			ob_start();
+			include( plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-voucher-validation.php' );
+			$append = ob_get_clean();
+    		return $content . $append;
 			
-			include_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-voucher-validation.php';
 			// require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-quiz.php';
-			
 		else :
 			Uc_Qpt_Public::ucqpt_print_result_test($user_id, $quiz_id);
 		endif;
