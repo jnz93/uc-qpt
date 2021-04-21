@@ -81,6 +81,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_load_inventory_data', array($this, 'ucqpt_load_inventory_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_update_data', array($this, 'ucqpt_update_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_update_company_data', array($this, 'ucqpt_update_company_data_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_refresh_vouchers_table', array($this, 'ucqpt_refresh_vouchers_table_by_ajax')); // executed when logged in
 
 	}
 
@@ -503,14 +504,14 @@ class Uc_Qpt_Admin {
 			'role'                  => 'contributor',   //(string) User's role.
 		);
 		$user_id = wp_insert_user( $user_data );
-		// echo 'Id: ' . $user_id;
+		
 		if ( !is_wp_error( $user_id ) ) :
-			update_user_meta( $user_id, 'ucqpt_company_tel', $company_tel );
-			update_user_meta( $user_id, 'ucqpt_company_doc', $company_cnpj );
-			update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
-
 			$this->ucqpt_create_vouchers_by_qty( $user_id, $company_vouchers );
 			$this->ucqpt_send_created_account_notification( $company_name, $company_pass, $company_email );
+
+			update_user_meta( $user_id, 'ucqpt_company_tel', $company_tel );
+			update_user_meta( $user_id, 'ucqpt_company_doc', $company_cnpj );			
+			update_user_meta( $user_id, 'ucqpt_company_vouchers', $company_vouchers);
 
 			die('success');
 		else :
@@ -685,7 +686,20 @@ class Uc_Qpt_Admin {
 		
 			endif;
 		endfor;
+
+		/**
+		 * Coleta e update de meta-informações sobre os vouchers
+		*/
+		$key_vouchers_total = 'ucqpt_company_vouchers';
+		$curr_vouchers_total = get_user_meta( $cia_id, $key_vouchers_total, true );
+
+		$new_vouchers_total  = $curr_vouchers_total + $qty;
+		update_user_meta( $cia_id, $key_vouchers_total, $new_vouchers_total ); # Salvando ids de vouchers criados no usuário(empresa)
+
 		$key_vouchers_id 	= 'ucqpt_company_vouchers_id';
+		$curr_vouchers_id 	= get_user_meta( $cia_id, $key_vouchers_id, true );
+
+		$str_vouchers_id = $curr_vouchers_id . $str_vouchers_id;
 		update_user_meta( $cia_id, $key_vouchers_id, $str_vouchers_id ); # Salvando ids de vouchers criados no usuário(empresa)
 	}
 
@@ -1061,6 +1075,11 @@ class Uc_Qpt_Admin {
 					die('success');
 				endif;
 
+				if ( $type == 'vouchers' ) :
+					$this->ucqpt_create_vouchers_by_qty( $id, $value );
+					die('success');
+				endif;
+
 			endif;
 		else :
 
@@ -1099,5 +1118,70 @@ class Uc_Qpt_Admin {
 	
 		return $menu_links;
 	
+	}
+
+	/**
+	 * Refresh vouchers table data
+	 * 
+	 * @since v1.5.2
+	 */
+	public function ucqpt_refresh_vouchers_table_by_ajax() 
+	{
+		$user_id = $_POST['id'];
+
+		if ( empty( $user_id ) ) :
+			die('Usuário inválido');
+		endif;
+
+		$args = array(
+			'post_type'         => 'uc_voucher',
+			'author'            => $user_id,
+			'order_by'          => 'post_date',
+			'order'             => 'ASC',
+			'posts_per_page'    => -1
+		);
+		
+		$vouchers       = new WP_Query($args);
+		$vouchers_count = $vouchers->post_count;
+
+		if ( $vouchers->have_posts() ) :
+			?>
+			<table class="uk-table uk-table-divider uk-table-hover uk-overflow-auto">
+				<thead>
+					<tr>
+						<th>Código</th>
+						<th>Utilizado</th>
+						<th>Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+				while ( $vouchers->have_posts() ) :
+					$vouchers->the_post();
+					$post_id            = get_the_ID();
+					$v_code             = get_the_title( );
+					$v_is_used          = get_post_meta( $post_id, 'ucqpt_is_used', true );
+					$v_result_test_data = get_post_meta( $post_id, 'ucqpt_result_test_data', true );
+					?>
+					<tr data-id="<?php echo $post_id; ?>">
+						<td><?php echo $v_code; ?></td>
+						<td>
+							<?php if ( $v_is_used == 'yes') : ?>
+								Sim <span class="uk-margin-small-left" uk-icon="file-text" uk-tooltip="Abrir Resultado" uk-toggle="target: #result-voucher" onclick="setVoucherIdOnResultModal('<?php echo $post_id ?>', '<?php echo $v_code; ?>', '<?php echo $ajax_url; ?>')"></span>
+							<?php else : ?>
+								Não
+							<?php endif; ?>
+						</td>
+						<td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>')"></span> <span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span></td>
+					</tr>
+					<?php
+				endwhile;
+				?>
+				</tbody>
+			</table>
+			<?php
+		endif;
+
+		die();
 	}
 }

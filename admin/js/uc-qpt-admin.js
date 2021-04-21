@@ -647,8 +647,7 @@ function editCompanyData(el)
 function updateCompanyData(el)
 {
 	'use strict';
-	console.log(el);
-
+	
 	var dataValue 	= el.siblings('.uk-input').val(),
 		dataType 	= el.siblings('.uk-input').attr('data-type'),
 		dataId 		= el.siblings('.uk-input').attr('data-id');
@@ -665,18 +664,58 @@ function updateCompanyData(el)
 		url: ajaxUrl,
 		data: dataToSend,
 	}).done(function(res) {
-		console.log(res);
 		if ( res == 'success' ){
 
-			var tdEl = el.parent().siblings('td.data');
+			if ( dataType == "vouchers" ) {
+				var inputSiblings 		= el.siblings('input'),
+					labelVouchersTotal 	= jQuery('#total-' + dataId),
+					currVouchersTotal 	= labelVouchersTotal.attr('data-total'),
+					newTotal 			= parseInt(currVouchersTotal) + parseInt(dataValue);
 
-			tdEl.text(dataValue);
-			tdEl.removeAttr('hidden');
-			el.parent().remove();
+				inputSiblings.val(0);
+				labelVouchersTotal.text('TOTAL: ' + newTotal).attr('data-total', newTotal);
+				refreshVouchersTable(dataId);
+			} else {
+
+				var tdEl = el.parent().siblings('td.data');
+		
+				tdEl.text(dataValue);
+				tdEl.removeAttr('hidden');
+				el.parent().remove();
+			}
+
 			UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Dado alterado com sucesso!', status: 'success', pos: 'bottom-center'});
 		}
 
 	})
 
 }
- 
+
+
+/**
+ * Atualiza a tabela de vouchers disponíveis para a empresa na tela de edição
+ * 
+ * @param {*} userId 
+ * @since v1.5.2
+ */
+function refreshVouchersTable( userId )
+{
+	'use strict';
+	if ( userId.length == 0 ) {
+		return;
+	}
+
+	
+	var dataToSend = {
+		action: 'ucqpt_refresh_vouchers_table',
+		id: userId
+	};
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: dataToSend,
+	}).done(function(res) {
+		jQuery('#wrapper-vouchers-' + userId).html(res);
+	});
+}

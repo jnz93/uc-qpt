@@ -88,36 +88,42 @@ if ( ! empty( $companies ) ) :
         <div id="company-data-<?php echo $user_id; ?>" uk-modal>
             <div class="uk-modal-dialog uk-modal-body">
                 <button class="uk-modal-close-default" type="button" uk-close></button>
-                <h2 class="uk-modal-title"><?php echo $company_name ?></h2>
+                <h2 class="uk-modal-title uk-heading-bullet"><?php echo $company_name ?></h2>
 
-                <h4 class="">Dados da empresa</h4>
-                <table class="uk-table uk-table-striped">
-                    <tbody>
-                        <tr>
-                            <td>Nome/Empresa</td>
-                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="name"><?php echo $company_name; ?></td>
-                        </tr>
-                        <tr>
-                            <td>E-mail</td>
-                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="email"><?php echo $company_email; ?></td>
-                        </tr>
-                        <tr>
-                            <td>Telefone</td>
-                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="phone"><?php echo $company_tel; ?></td>
-                        </tr>
-                        <tr>
-                            <td>Documento/Cnpj</td>
-                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="doc"><?php echo $company_doc; ?></td>
-                        </tr>
-                        <tr>
-                            <td>Senha de acesso</td>
-                            <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="pass">Clique para redefinir a senha</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <ul class="uk-subnav uk-subnav-pill" uk-switcher="animation: uk-animation-fade">
+                    <li><a href="#">Dados da empresa</a></li>
+                    <li><a href="#">Vouchers</a></li>
+                </ul>
 
-                <h4 class="">Vouchers</h4>
-                <?php require_once plugin_dir_path( __FILE__ ) . '/tpl-list-vouchers-by-user.php';  ?>
+                <ul class="uk-switcher uk-margin">
+                    <li>
+                        <table class="uk-table uk-table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>Nome/Empresa</td>
+                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="name"><?php echo $company_name; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>E-mail</td>
+                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="email"><?php echo $company_email; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Telefone</td>
+                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="phone"><?php echo $company_tel; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Documento/Cnpj</td>
+                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="doc"><?php echo $company_doc; ?></td>
+                                </tr>
+                                <tr>
+                                    <td>Senha de acesso</td>
+                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="pass">Clique para redefinir a senha</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                    <li><?php include( plugin_dir_path( __FILE__ ) . '/tpl-list-vouchers-by-user.php' ); ?></li>
+                </ul>               
             </div>
         </div>
         <?php
