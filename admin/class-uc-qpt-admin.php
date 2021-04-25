@@ -82,6 +82,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_update_data', array($this, 'ucqpt_update_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_update_company_data', array($this, 'ucqpt_update_company_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_refresh_vouchers_table', array($this, 'ucqpt_refresh_vouchers_table_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_get_voucher_data', array($this, 'ucqpt_get_voucher_data_by_ajax')); // executed when logged in
 
 	}
 
@@ -1182,6 +1183,28 @@ class Uc_Qpt_Admin {
 			<?php
 		endif;
 
+		die();
+	}
+
+	/**
+	 * Returns the user voucher data
+	 * 
+	 * @since v1.5.3
+	 */
+	public function ucqpt_get_voucher_data_by_ajax()
+	{
+		if( empty( $_POST ) ) return;
+
+		$voucher_id 	= $_POST['id'];
+
+		$user_name 		= get_post_meta( $voucher_id, 'ucqpt_costumer_name', true );
+		$user_email 	= get_post_meta( $voucher_id, 'ucqpt_costumer_email', true );
+		$user_cpf 		= get_post_meta( $voucher_id, 'ucqpt_costumer_cpf', true );
+		$user_tel 		= get_post_meta( $voucher_id, 'ucqpt_costumer_tel', true );
+
+		$data_to_client = '{"name": "'. $user_name .'", "email": "'. $user_email .'", "doc": "'. $user_cpf .'", "tel": "'. $user_tel .'"}';
+
+		echo $data_to_client;
 		die();
 	}
 }

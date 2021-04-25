@@ -449,12 +449,35 @@ function setShowHide(ajaxUrl, el)
  * @param {*} voucherId
  * @param {*} voucherCode
  */
-function setVoucherIdOnModal(voucherId, voucherCode)
+function setDataVoucherOnModal(voucherId, voucherCode)
 {
 	'use strict';
 
 	jQuery('#edit-voucher').attr('data-voucher', voucherId);
 	jQuery('#edit-voucher').find('.uk-modal-title').text('Editar Voucher: ' + voucherCode);
+	
+	var dataSend = {
+		action: 'ucqpt_get_voucher_data',
+		id: voucherId,
+	}
+
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: dataSend
+	})
+	.done( function (res) {
+		var userData = JSON.parse(res);
+
+		if (userData.name.length == 0 && userData.email.length == 0 && userData.doc.length == 0 && userData.tel.length == 0 ) {
+			return;
+		}
+		
+		jQuery('#ucqpt_customer_name').val(userData.name);
+		jQuery('#ucqpt_customer_email').val(userData.email);
+		jQuery('#ucqpt_customer_cpf').val(userData.doc);
+		jQuery('#ucqpt_customer_tel').val(userData.tel);
+	});
 }
 
 /**

@@ -23,6 +23,9 @@ $args = array(
 $vouchers       = new WP_Query($args);
 $vouchers_count = $vouchers->post_count;
 ?>
+<script>
+var ajaxUrl = '<?php echo $ajax_url ?>';
+</script>
 <?php 
 if ( $vouchers->have_posts() ) :
     ?>
@@ -61,12 +64,12 @@ if ( $vouchers->have_posts() ) :
                     <td><?php echo $v_code; ?></td>
                     <td>
                         <?php if ( $v_is_used == 'yes') : ?>
-                            Sim <span class="uk-margin-small-left" uk-icon="file-text" uk-tooltip="Abrir Resultado" uk-toggle="target: #result-voucher" onclick="setVoucherIdOnResultModal('<?php echo $post_id ?>', '<?php echo $v_code; ?>', '<?php echo $ajax_url; ?>')"></span>
+                            Sim <span class="uk-margin-small-left" uk-icon="file-text" uk-tooltip="Abrir Resultado" uk-toggle="target: #result-voucher" onclick="setDataVoucherOnModal('<?php echo $post_id ?>', '<?php echo $v_code; ?>', '<?php echo $ajax_url; ?>')"></span>
                         <?php else : ?>
                             Não
                         <?php endif; ?>
                     </td>
-                    <td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>')"></span> <span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span></td>
+                    <td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>', '<?php echo $ajax_url ?>')"></span> <span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span></td>
                 </tr>
                 <?php
             endwhile;
