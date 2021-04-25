@@ -28,6 +28,8 @@ if ( $vouchers->have_posts() ) :
     ?>
     <div class="uk-flex uk-flex-between uk-flex-middle">
         <span id="<?php echo 'total-' . $user_id; ?>" class="uk-label uk-label-success" data-total="<?php echo $vouchers_count; ?>"><?php echo 'Total: ' . $vouchers_count; ?></span>
+        
+        <?php if( is_admin() || current_user_can( 'administrator' ) ) : ?>
         <div class="uk-margin">
             <label class="uk-form-label uk-margin-bottom" for="<?php echo 'edit-' . $user_id ?>">Adicionar vouchers</label>
             <div class="uk-form-controls">
@@ -35,6 +37,7 @@ if ( $vouchers->have_posts() ) :
                 <button class="uk-button uk-button-default uk-button-small" onclick="updateCompanyData(jQuery(this))">Adicionar</button>
             </div>
         </div>
+        <?php endif; ?>
     </div>
     <div id="<?php echo 'wrapper-vouchers-' . $user_id; ?>" class="uk-overflow-auto">
         <table class="uk-table uk-table-divider uk-table-hover">
