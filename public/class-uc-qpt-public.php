@@ -471,6 +471,8 @@ class Uc_Qpt_Public {
 	 */
 	public function uqpt_record_user_data_by_ajax()
 	{
+		if( empty( $_POST ) ) return;
+
 		$user_name 	= $_POST['name'];
 		$user_email = $_POST['email'];
 		$user_phone = $_POST['phone'];
@@ -491,6 +493,10 @@ class Uc_Qpt_Public {
 		$idsarr 	= explode(',', $meta_ids);
 
 		if ( strtolower($saved_user_name) == strtolower($user_name) || $saved_user_email == $user_email || $saved_user_tel == $user_phone ) :
+
+			update_post_meta( $voucher_id, 'ucqpt_costumer_name', $user_name );
+			update_post_meta( $voucher_id, 'ucqpt_costumer_email', $user_email );
+			update_post_meta( $voucher_id, 'ucqpt_costumer_tel', $user_phone );
 
 			require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-quiz.php';
 
