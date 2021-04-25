@@ -86,7 +86,7 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                                     <?php
                                     $pos++;
                             endforeach; ?>
-                                    <button type="reset" class="uk-button uk-button-default uk-margin-small-top" onclick="resetAnswers(jQuery(this))">Resetar respostas</button>
+                                    <button type="reset" class="uk-button uk-button-default uk-button-small uk-margin-small-top" onclick="resetAnswers(jQuery(this))">Resetar respostas</button>
                                 </form>
                             </div>
                             <?php
@@ -107,7 +107,7 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
             endforeach; ?>
         </ul>
         <!-- Control Buttons -->
-        <div class="uk-flex uk-flex-between uk-margin-small-top">
+        <div class="uk-flex uk-flex-between uk-margin-small-top" style="position: absolute; bottom: 80px; right: 60px;">
             <button type="button" id="prevBtn" class="uk-button uk-button-secondary uk-button-small" onclick="nextPrev(-1)" style="display:none;"><span uk-icon="arrow-left"></span> Anterior</button>
             <button type="button" id="nextBtn" class="uk-button uk-button-secondary uk-button-small" onclick="nextPrev(1)" style="display:none;">Próxima <span uk-icon="arrow-right"></span></button>
         </div>
