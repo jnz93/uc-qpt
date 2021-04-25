@@ -42,3 +42,8 @@
         <button type="button" class="uk-button uk-button-primary" onclick="submitUserData('<?php echo admin_url('admin-ajax.php') ?>')">Enviar dados</button>
     </div>
 </form>
+
+<script>
+jQuery(document).ready(function (){
+    jQuery('#user_phone').mask('(00) 0 0000-0000');
+});
