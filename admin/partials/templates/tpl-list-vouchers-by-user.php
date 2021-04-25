@@ -146,6 +146,7 @@ jQuery(document).ready(function (){
         <h2 class="uk-modal-title"></h2>
         <p class="result"></p>
         <p class="uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Enviar resultado</button>
             <button class="uk-button uk-button-default uk-modal-close" type="button">Fechar</button>
         </p>
     </div>
