@@ -701,9 +701,9 @@ function updateCompanyData(el)
 				tdEl.text(dataValue);
 				tdEl.removeAttr('hidden');
 				el.parent().remove();
+				UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Pronto!', status: 'success', pos: 'bottom-center'});
 			}
 
-			UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Dado alterado com sucesso!', status: 'success', pos: 'bottom-center'});
 		}
 
 	})
