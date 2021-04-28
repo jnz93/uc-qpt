@@ -440,7 +440,7 @@ class Uc_Qpt_Public {
 			
 			if ( $voucher_used ) :
 
-				$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
+				$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1 retorno">
 					<h3 class="uk-card-title">Ops! Algo deu errado.</h3>
 					<ul class="uk-list">
 						<p class="">Este voucher '. $voucher_code .' já foi utilizado.</p>
@@ -457,7 +457,12 @@ class Uc_Qpt_Public {
 
 		else :
 			
-			echo '<h3 class="uk-text-lead uk-text-center uk-text-warning uk-margin-top">Voucher <b>' . $voucher_code . '</b> Inválido!</h3></br>';
+			echo '<div class="uk-card uk-card-default uk-card-body uk-width-1-1 retorno">
+					<h3 class="uk-card-title">Ops! Algo deu errado.</h3>
+					<ul class="uk-list">
+						<p class="">Voucher <b>' . $voucher_code . '</b> Inválido!</p>
+					</ul>
+				</div>';
 
 		endif;
 
