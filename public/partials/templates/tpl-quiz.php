@@ -86,7 +86,7 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
                                     <?php
                                     $pos++;
                             endforeach; ?>
-                                    <button type="reset" class="uk-button uk-button-default uk-button-small uk-margin-small-top" onclick="resetAnswers(jQuery(this))">Resetar respostas</button>
+                                    <button type="reset" class="uk-button uk-button-default uk-button-small uk-margin-small-top" onclick="resetAnswers(jQuery(this))">Limpar respostas</button>
                                 </form>
                             </div>
                             <?php
