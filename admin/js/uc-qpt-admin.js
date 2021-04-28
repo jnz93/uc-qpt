@@ -97,7 +97,7 @@ function createNewQuiz(el, ajaxUrl)
 		tplQuiz.find('.uk-modal-title').siblings('p').text(quizDescription);
 		jQuery('#test-update').fadeIn();
 
-		UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> <b>'+ quizName +'</b> criado com sucesso!', status: 'success', pos: 'bottom-center'});
+		UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> <b>'+ quizName +'</b> foi criado!', status: 'success', pos: 'bottom-center'});
 	});
 }
 
