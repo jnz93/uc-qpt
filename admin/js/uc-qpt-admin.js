@@ -627,19 +627,13 @@ function updateData(el)
 			url: ajaxUrl,
 			data: dataToSend,
 		}).done(function(res) {
-			// Elements
-			// var wrapperAnswers = jQuery('#wrapper-data');
-	
-			// wrapperAnswers.html(res);
-			// console.log(res);
-			if (res == 'success'){
 
-				var newData = '<h2 class="uk-modal-title" ondblclick="editElement(jQuery(this), '+ id +')" uk-tooltip="Clique duas vezes para editar">'+ value +'</h2>';
+			if (res == 'success'){
 
 				titleEl.text(value);
 				titleEl.removeAttr('hidden');
 				el.parent().remove();
-				UIkit.notification({message: '<span uk-icon=\'icon: check\'></span>Dado alterado com sucesso!', status: 'success', pos: 'bottom-center'});
+				UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> Pronto!', status: 'success', pos: 'bottom-center'});
 			}
 
 		})
