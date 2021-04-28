@@ -433,12 +433,12 @@ function setShowHide(ajaxUrl, el)
 	{
 		if ( res == 'success' ) {
 			if ( showQuestion == 'yes' ) {
-				UIkit.notification("<span uk-icon='icon: check'></span> A pergunta foi Habilitada!", {pos: 'bottom-center'});
+				UIkit.notification("<span uk-icon='icon: check'></span> Habilitado(a)!", {pos: 'bottom-center'});
 			} else {
-				UIkit.notification("<span uk-icon='icon: ban'></span> A pergunta foi Desabilitada!", {pos: 'bottom-center'});
+				UIkit.notification("<span uk-icon='icon: ban'></span> Desabilitado(a)!", {pos: 'bottom-center'});
 			}
 		} else {
-			UIkit.notification("<span uk-icon='icon: close'></span> Houve um erro. Tente novamente", {pos: 'bottom-center'});
+			UIkit.notification("<span uk-icon='icon: close'></span> Houve um erro. Tente novamente", {pos: 'bottom-center', status: 'danger'});
 		}
 	});
 	
