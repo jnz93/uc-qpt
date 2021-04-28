@@ -692,6 +692,8 @@ function updateCompanyData(el)
 				inputSiblings.val(0);
 				labelVouchersTotal.text('TOTAL: ' + newTotal).attr('data-total', newTotal);
 				refreshVouchersTable(dataId);
+
+				UIkit.notification({message: '<span uk-icon=\'icon: check\'></span> <b>['+ dataValue +']</b> voucher(s) adicionado(s)!', status: 'success', pos: 'bottom-center'});
 			} else {
 
 				var tdEl = el.parent().siblings('td.data');
