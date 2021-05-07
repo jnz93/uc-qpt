@@ -113,7 +113,7 @@ $ajax_url 	= admin_url( 'admin-ajax.php' );
         </div>
     </div>
     <div id="wrapper-submit" class="uk-flex uk-flex-center" style="display: none;">
-        <button class="uk-button uk-button-primary" type="button" onclick="submitAnswers(jQuery('.wrapper-question'), '<?php echo $quiz_id; ?>', '<?php echo $voucher_id ?>', '<?php echo $ajax_url; ?>')">Responder Quiz</button>
+        <button class="uk-button uk-button-primary" type="button" onclick="submitAnswers(jQuery('.wrapper-question'), '<?php echo $quiz_id; ?>', '<?php echo $voucher_id ?>', '<?php echo $ajax_url; ?>')">Responder Inventário</button>
     </div>
 </div>
 
