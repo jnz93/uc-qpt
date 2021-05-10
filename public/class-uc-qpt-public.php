@@ -513,4 +513,17 @@ class Uc_Qpt_Public {
 
 		die();
 	}
+
+	/**
+	 * Retorna o template do gráfico html
+	 * 
+	 * @param $data = result data
+	 */
+	public function render_graphic_result($data)
+	{
+		ob_start();
+		include( plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-html-to-pdf.php' );
+		$append = ob_get_clean();
+		echo $content . $append;
+	}
 }
