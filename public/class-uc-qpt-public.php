@@ -296,6 +296,9 @@ class Uc_Qpt_Public {
 			$name_archive = $name_archive . '.pdf';
 			$path_archive = plugin_dir_url( __FILE__ ) . 'reports/'.$name_archive;
 
+			// Salvar caminho do arquivo no voucher
+			update_post_meta($voucher_id, 'ucqpt_path_archive', $path_archive);
+
 			# Imprimindo o Resultado
 			$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
 						<h3 class="uk-card-title">Resultado</h3>
