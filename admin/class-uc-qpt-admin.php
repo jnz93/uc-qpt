@@ -793,7 +793,7 @@ class Uc_Qpt_Admin {
 							</tr>
 							<tr>
 								<td>Total Visionário</td>
-								<td>'. $sanitazed_data[7] .'</td>
+								<td>'. $sanitazed_data[6] .'</td>
 							</tr>
 						</tbody>
 					</table>';
