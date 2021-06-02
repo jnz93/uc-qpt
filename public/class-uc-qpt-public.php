@@ -520,12 +520,12 @@ class Uc_Qpt_Public {
 	/**
 	 * Retorna o template do gráfico html
 	 * 
-	 * @param $data = result data
+	 * @param arr $data array do resultado
 	 */
 	public function render_graphic_result($data)
 	{
 		ob_start();
-		include( plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-html-to-pdf.php' );
+		include( plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-graphic-result.php' );
 		$append = ob_get_clean();
 		echo $content . $append;
 	}
