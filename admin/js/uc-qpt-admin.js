@@ -738,3 +738,39 @@ function refreshVouchersTable( userId )
 		jQuery('#wrapper-vouchers-' + userId).html(res);
 	});
 }
+
+/**
+ * Recebe um ID de usuário/empresa e retorna os dados ao offcanva #company-data
+ * 
+ * @param {*} id
+ * @since v1.6.0
+ */
+function getCompanyData( id )
+{
+	'use strict';
+
+	if( id.length === 0 ){
+		return;
+	}
+
+	var toBackEnd = {
+		action: 'ucqpt_get_company_data',
+		companyId: id
+	}
+
+	console.log(toBackEnd);
+	jQuery.ajax({
+		type: 'POST',
+		url: ajaxUrl,
+		data: toBackEnd,
+		before: function(res)
+		{
+			// add spinner
+		}
+	}).done( function ( res )
+	{
+		// Fechar spinner
+		// Inserir retorno no elemento
+		jQuery('#company-data').find('.uk-offcanvas-bar').html(res);
+	});
+}

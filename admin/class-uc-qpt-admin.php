@@ -83,6 +83,7 @@ class Uc_Qpt_Admin {
 		add_action('wp_ajax_ucqpt_update_company_data', array($this, 'ucqpt_update_company_data_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_refresh_vouchers_table', array($this, 'ucqpt_refresh_vouchers_table_by_ajax')); // executed when logged in
 		add_action('wp_ajax_ucqpt_get_voucher_data', array($this, 'ucqpt_get_voucher_data_by_ajax')); // executed when logged in
+		add_action('wp_ajax_ucqpt_get_company_data', array($this, 'ucqpt_get_company_data_by_ajax')); // executed when logged in
 
 	}
 
@@ -1205,6 +1206,22 @@ class Uc_Qpt_Admin {
 		$data_to_client = '{"name": "'. $user_name .'", "email": "'. $user_email .'", "doc": "'. $user_cpf .'", "tel": "'. $user_tel .'"}';
 
 		echo $data_to_client;
+		die();
+	}
+
+
+	/**
+	 * Recebe o id e retorna os dados da empresa
+	 * 
+	 * @since v1.6.0
+	 */
+	public function ucqpt_get_company_data_by_ajax()
+	{
+		if( empty( $_POST ) ) return;
+
+		$company_id = $_POST['companyId'];
+
+		include( plugin_dir_path( __FILE__ ) . 'partials/templates/company/company-data.php' );
 		die();
 	}
 }
