@@ -40,12 +40,12 @@ if ( ! empty( $companies ) ) :
         <?php
         foreach ( $companies as $company ) :
 
-            $user_id                 = $company->ID;
+            $company_id                 = $company->ID;
             $company_name               = $company->display_name;
-            $company_vouchers           = get_user_meta( $user_id, 'ucqpt_company_vouchers', true );
+            $company_vouchers           = get_user_meta( $company_id, 'ucqpt_company_vouchers', true );
 
             // Verificar se o voucher foi utilizado
-            $vouchers_ids               = get_user_meta($user_id, 'ucqpt_company_vouchers_id', true);
+            $vouchers_ids               = get_user_meta($company_id, 'ucqpt_company_vouchers_id', true);
             $vouchers_ids               = explode(',', $vouchers_ids);
             $vouchers_ids               = array_filter($vouchers_ids);
             $total_used                 = 0;
@@ -61,7 +61,7 @@ if ( ! empty( $companies ) ) :
 
             $remaining_vouchers         = intval($company_vouchers) - intval($total_used);
             ?>
-            <tr uk-toggle="target: #company-data-<?php echo $user_id ?>" data-id="<?php echo $user_id; ?>">
+            <tr uk-toggle="target: #company-data" data-id="<?php echo $company_id; ?>" onclick="getCompanyData('<?php echo $company_id; ?>')">
                 <td><?php echo $company_name; ?></td>
                 <td><?php echo $company_vouchers; ?></td>
                 <td><?php echo $total_used; ?></td>
@@ -74,60 +74,13 @@ if ( ! empty( $companies ) ) :
     </table>
     <button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-company" style="display: block; margin: auto;">Cadastrar Empresa</button>
 
-    <!-- Modais -->
-    <?php
-    foreach ( $companies as $company ) :
-        $user_id                    = $company->ID;
-        $company_name               = $company->display_name;
-        $company_email              = $company->user_email;
-        $company_vouchers           = get_user_meta( $user_id, 'ucqpt_company_vouchers', true );
-        $company_tel                = get_user_meta( $user_id, 'ucqpt_company_tel', true );
-        $company_doc                = get_user_meta( $user_id, 'ucqpt_company_doc', true );
-
-        ?>
-        <div id="company-data-<?php echo $user_id; ?>" uk-modal>
-            <div class="uk-modal-dialog uk-modal-body">
-                <button class="uk-modal-close-default" type="button" uk-close></button>
-                <h2 class="uk-modal-title uk-heading-bullet"><?php echo $company_name ?></h2>
-
-                <ul class="uk-subnav uk-subnav-pill" uk-switcher="animation: uk-animation-fade">
-                    <li><a href="#">Dados da empresa</a></li>
-                    <li><a href="#">Vouchers</a></li>
-                </ul>
-
-                <ul class="uk-switcher uk-margin">
-                    <li>
-                        <table class="uk-table uk-table-striped">
-                            <tbody>
-                                <tr>
-                                    <td>Nome/Empresa</td>
-                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="name"><?php echo $company_name; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>E-mail</td>
-                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="email"><?php echo $company_email; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Telefone</td>
-                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="phone"><?php echo $company_tel; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Documento/Cnpj</td>
-                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="doc"><?php echo $company_doc; ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Senha de acesso</td>
-                                    <td class="data" ondblclick="editCompanyData(jQuery(this))" data-id="<?php echo $user_id; ?>" data-type="pass">Clique para redefinir a senha</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </li>
-                    <li><?php include( plugin_dir_path( __FILE__ ) . '/tpl-list-vouchers-by-user.php' ); ?></li>
-                </ul>               
-            </div>
+    <!-- Off Canvas for company data -->
+    <div id="company-data" uk-offcanvas="overlay: true; flip: true">
+        <div class="uk-offcanvas-bar" style="min-width: 460px;">
+           <!-- Data with ajax -->
         </div>
-        <?php
-    endforeach;
+    </div>
+    <?php
 else :
     ?>
     <div class="uk-flex uk-flex-column uk-flex-center uk-flex-middle">
