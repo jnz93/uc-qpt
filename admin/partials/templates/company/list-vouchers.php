@@ -67,7 +67,10 @@ if ( $vouchers->have_posts() ) :
                             Não
                         <?php endif; ?>
                     </td>
-                    <td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setDataVoucherOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>', '<?php echo $ajax_url ?>')"></span> <span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span></td>
+                    <td>
+                        <span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setDataVoucherOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>')"></span> 
+                        <span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span>
+                    </td>
                 </tr>
                 <?php
             endwhile;
@@ -128,7 +131,7 @@ jQuery(document).ready(function (){
                 </div> <!-- /end customer_tel -->
 
                 <div class="">
-                    <button class="uk-button uk-button-primary" type="button" onclick="updateVoucherUserData('<?php echo $ajax_url; ?>')">Atualizar dados</button>
+                    <button class="uk-button uk-button-primary" type="button" onclick="updateVoucherUserData(jQuery(this), '<?php echo $ajax_url; ?>')">Atualizar dados</button>
                 </div>
             </form>
         </div>

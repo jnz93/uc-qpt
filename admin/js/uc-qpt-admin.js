@@ -519,29 +519,29 @@ function setVoucherIdOnResultModal(voucherId, voucherCode, ajaxUrl)
  * 
  * @since v1.3.0
  */
- function updateVoucherUserData(ajaxUrl)
+ function updateVoucherUserData( el, ajaxUrl )
  {
 	'use strict';
  
-	var userName 	= jQuery('#ucqpt_customer_name').val(),
-		userEmail 	= jQuery('#ucqpt_customer_email').val(),
-		userTel 	= jQuery('#ucqpt_customer_tel').val(),
-		userDoc 	= jQuery('#ucqpt_customer_cpf').val(),
-		voucherId 	= jQuery('#edit-voucher').attr('data-voucher');
-
-	var dataSend = {
-		action: 'ucqpt_update_voucher_data',
-		voucherId: voucherId,
-		userName: userName,
-		userEmail: userEmail,
-		userTel: userTel,
-		userDoc: userDoc
-	};
-
+	var parentForm 		= el.parents('form'),
+		userName 		= parentForm.find('#ucqpt_customer_name').val(),
+		userEmail 		= parentForm.find('#ucqpt_customer_email').val(),
+		userTel 		= parentForm.find('#ucqpt_customer_tel').val(),
+		userDoc 		= parentForm.find('#ucqpt_customer_cpf').val(),
+		voucherId 		= parentForm.parents('#edit-voucher').attr('data-voucher'),
+		toBackEnd 		= {};
+	
+	toBackEnd.action 	= 'ucqpt_update_voucher_data';
+	toBackEnd.voucherId = voucherId;
+	toBackEnd.userName 	= userName;
+	toBackEnd.userEmail = userEmail;
+	toBackEnd.userTel 	= userTel;
+	toBackEnd.userDoc 	= userDoc;
+	
 	jQuery.ajax({
 		type: 'POST',
 		url: ajaxUrl,
-		data: dataSend
+		data: toBackEnd
 	})
 	.done( function (res) {
 		if (res == 'error') {

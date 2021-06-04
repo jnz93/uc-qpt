@@ -1174,7 +1174,10 @@ class Uc_Qpt_Admin {
 								Não
 							<?php endif; ?>
 						</td>
-						<td><span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>')"></span> <span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span></td>
+						<td>
+							<span class="uk-margin-small-right" uk-icon="pencil" uk-tooltip="Editar Voucher" uk-toggle="target: #edit-voucher" onclick="setVoucherIdOnModal('<?php echo $post_id; ?>', '<?php echo $v_code; ?>', '<?php echo $ajax_url ?>')"></span> 
+							<span style="display: none !important;" uk-icon="ban" uk-tooltip="Excluir voucher"></span>
+						</td>
 					</tr>
 					<?php
 				endwhile;
