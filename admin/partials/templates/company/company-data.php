@@ -18,8 +18,6 @@ $company_tel            = get_user_meta( $company_id, 'ucqpt_company_tel', true 
 $company_doc            = get_user_meta( $company_id, 'ucqpt_company_doc', true );
 $company_vouchers       = get_user_meta( $company_id, 'ucqpt_company_vouchers', true );
 ?>
-<script> var ajaxUrl = '<?php echo $ajax_url ?>'; </script>
-
 <button class="uk-offcanvas-close" type="button" uk-close></button>
 <h2 class="uk-modal-title uk-heading-bullet"><?php echo $company_name ?></h2>
 <ul class="uk-subnav uk-subnav-pill" uk-switcher="animation: uk-animation-fade">
