@@ -773,3 +773,40 @@ function getCompanyData( id )
 		jQuery('#company-data').find('.uk-offcanvas-bar').html(res);
 	});
 }
+
+
+/**
+ * Inicializador de maskInput
+ * Importante todos os inputs precisam receber um data-mask="mask-cpf/mask-tel"
+ * 
+ * @since v1.6.0
+ */
+ function initMaskForInputs()
+ {
+	'use strict';
+
+	var elements    = jQuery(document).find('input[data-mask]'),
+		masks       = {};
+
+	masks.doc       = '000.000.000-00';
+	masks.tel       = '(00) 0 0000-0000';
+
+
+	elements.each(function( i ){
+		var currEl          = jQuery(this),
+			currDataValue   = currEl.attr('data-mask');
+
+		switch(currDataValue) {
+
+			case 'mask-doc':
+				currEl.mask(masks.doc);
+				break;
+			case 'mask-tel':
+				currEl.mask(masks.tel);
+				break;
+			
+			default:
+				console.log('Nada errado por aqui.');
+		}
+	});
+ }
