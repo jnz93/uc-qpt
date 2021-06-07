@@ -240,7 +240,6 @@ function setCheckpointsPosition()
 		var attr = jQuery(this).attr('data-value');
 
 		if( typeof attr !== 'undefined' ){
-			console.log(this);
 			currEl 			= jQuery(this);
 			currDataVal 	= attr;
 			currEl.css({

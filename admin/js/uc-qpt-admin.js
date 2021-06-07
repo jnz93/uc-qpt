@@ -758,7 +758,6 @@ function getCompanyData( id )
 		companyId: id
 	}
 
-	console.log(toBackEnd);
 	jQuery.ajax({
 		type: 'POST',
 		url: ajaxUrl,
