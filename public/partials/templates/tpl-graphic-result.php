@@ -255,8 +255,8 @@ function distanceIntoPtosValue()
 {
 	setCheckpointsPosition();
 	// Cálculo do valor de distancePtos
-	var maxPtosEl 		= document.getElementsByClassName('max-ptos'),
-		distanceRange 	= maxPtosEl[1].offsetLeft,
+	var maxPtosEl 		= document.getElementsByClassName('max-ptos');
+		distanceRange 	= maxPtosEl[0].offsetLeft,
 		distancePtos 	= distanceRange / 150;
 
 	// Pontuação direto do backend ~após validar a poc isso deve ser passado por ajax~
@@ -277,10 +277,10 @@ function distanceIntoPtosValue()
 		visionaryBlock 	= document.getElementsByClassName('bg-yellow'),
 		rationalBlock 	= document.getElementsByClassName('bg-green');
 
-	pragmaticBlock[1].style.width 	= pragmaticValuePx;
-	affectiveBlock[1].style.width 	= affectiveValuePx;
-	visionaryBlock[1].style.width 	= visionaryValuePx;
-	rationalBlock[1].style.width 	= rationalValuePx;
+	pragmaticBlock[0].style.width 	= pragmaticValuePx;
+	affectiveBlock[0].style.width 	= affectiveValuePx;
+	visionaryBlock[0].style.width 	= visionaryValuePx;
+	rationalBlock[0].style.width 	= rationalValuePx;
 
 }
 distanceIntoPtosValue();
