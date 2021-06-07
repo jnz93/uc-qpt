@@ -74,12 +74,78 @@ if ( ! empty( $companies ) ) :
     </table>
     <button class="uk-button uk-button-primary uk-button-large" uk-toggle="target: #register-company" style="display: block; margin: auto;">Cadastrar Empresa</button>
 
-    <!-- Off Canvas for company data -->
     <div id="company-data" uk-offcanvas="overlay: true; flip: true">
         <div class="uk-offcanvas-bar" style="min-width: 460px;">
            <!-- Data with ajax -->
         </div>
-    </div>
+    </div> <!-- /Off Canvas #company-data -->
+  
+    <div id="edit-voucher" class="uk-modal-container" uk-modal data-vocher="">
+        <div class="uk-modal-dialog">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div class="uk-modal-header uk-flex uk-flex-between">
+                <div id="modal-title" class="">
+                    <h2 class="uk-modal-title"></h2>
+                    <p class=""></p>
+                </div>
+            </div>
+            <div class="uk-modal-body">
+                <form class="uk-grid-small" uk-grid>
+                    
+                    <p class="uk-width-1-1 uk-text-large">Dados do usuário</p>
+
+                    <div class="uk-width-1-2">
+                        <label class="uk-form-label" for="ucqpt_customer_name">Nome Completo</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="ucqpt_customer_name" type="text" placeholder="Nome completo">
+                        </div>
+                    </div> <!-- /end customer_name -->
+                    
+                    <div class="uk-width-1-2">
+                        <label class="uk-form-label" for="ucqpt_customer_email">E-mail</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="ucqpt_customer_email" type="email" placeholder="email@domain.com">
+                        </div>
+                    </div> <!-- /end customer_email -->
+
+                    <div class="uk-width-1-2">
+                        <label class="uk-form-label" for="ucqpt_customer_cpf">CPF</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="ucqpt_customer_cpf" type="text" placeholder="000.000.000-00" data-mask="mask-doc">
+                        </div>
+                    </div> <!-- /end customer_cpf -->
+
+                    <div class="uk-width-1-2">
+                        <label class="uk-form-label" for="ucqpt_customer_tel">Telefone</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input" id="ucqpt_customer_tel" type="text" placeholder="(DDD) 0 0000-0000" data-mask="mask-tel">
+                        </div>
+                    </div> <!-- /end customer_tel -->
+
+                    <div class="">
+                        <button class="uk-button uk-button-primary" type="button" onclick="updateVoucherUserData(jQuery(this), '<?php echo $ajax_url; ?>')">Atualizar dados</button>
+                    </div>
+                </form>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+            </div>
+        </div>
+    </div> <!-- /Modal #edit-voucher -->
+
+    <div id="result-voucher" uk-modal data-voucher="">
+        <div class="uk-modal-dialog uk-modal-body">
+            <h2 class="uk-modal-title"></h2>
+            <p class="result"></p>
+            <p class="uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">Enviar resultado</button>
+                <button class="uk-button uk-button-default uk-modal-close" type="button">Fechar</button>
+            </p>
+        </div>
+    </div> <!-- /Modal #result-voucher -->
+
+    <script>
+        initMaskForInputs();
+    </script>
     <?php
 else :
     ?>
