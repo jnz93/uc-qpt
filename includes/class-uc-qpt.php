@@ -117,6 +117,12 @@ class Uc_Qpt {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-uc-qpt-admin.php';
 
 		/**
+		 * The class responsible for defining all actions for results on pdf
+		 * side of the site.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-tcpdf-helper.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
