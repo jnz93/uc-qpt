@@ -216,15 +216,6 @@ $ptos_racional 		= $data[5];
 $ptos_visionario 	= $data[6];
 $total_ptos 		= $data[7];
 
-// echo 'Afetivo: ' . $ptos_afetivo . '</br>';
-// echo 'Pragmatico: ' . $ptos_pragmatico . '</br>';
-// echo 'Racional: ' . $ptos_racional . '</br>';
-// echo 'Visionário: ' . $ptos_visionario . '</br>';
-// echo 'Total: ' . $total_ptos . '</br>';
-
-// echo '<pre>';
-// print_r($data);
-// echo '</pre>';
 ?>
 
 <script>
@@ -234,7 +225,7 @@ function setCheckpointsPosition()
 	 * Seta o posicionamento das guias de pontuação do gráfico;
 	 */
 	var checkpoints		= jQuery('.checkpoint'),
-		distancePtos 	= 300 / 150;;
+		distancePtos 	= 300 / 150;
 
 	checkpoints.each(function (index) {
 		var attr = jQuery(this).attr('data-value');
@@ -259,10 +250,10 @@ function distanceIntoPtosValue()
 		distancePtos 	= distanceRange / 150;
 
 	// Pontuação direto do backend ~após validar a poc isso deve ser passado por ajax~
-	var pragmaticTotal  = <?php echo $ptos_pragmatico; ?>,
-		affectiveTotal 	= <?php echo $ptos_afetivo; ?>,
-		visionaryTotal 	= <?php echo $ptos_visionario; ?>,
-		rationalTotal 	= <?php echo $ptos_racional; ?>;
+	var pragmaticTotal  = '<?php echo $ptos_pragmatico; ?>',
+		affectiveTotal 	= '<?php echo $ptos_afetivo; ?>',
+		visionaryTotal 	= '<?php echo $ptos_visionario; ?>',
+		rationalTotal 	= '<?php echo $ptos_racional; ?>';
 
 	// Potuação > equivalente em pixels do gráfico
 	var pragmaticValuePx 	= (pragmaticTotal * distancePtos) + 'px',
@@ -284,12 +275,3 @@ function distanceIntoPtosValue()
 }
 distanceIntoPtosValue();
 </script>
-<!-- 
-- Calcular a distância da esquerda(left) até o elemento ".max-ptos"(valor 150); [FEITO]
-  > Certificar-se de que o marcador 0 seja colado na margem esquerda;
-- Dividir a distância por 150 [FEITO]
-  > Cada uma das 150 unidades de distância equivalem a um ponto do resultado;
-- Agora cada bloco tera seu width equivalente a nota em pontos de distância; [FEITO]
-  > Cálculo = ptos resultado * ptos de distância;
-- Também será necessário "Calibrar" a distância entre cada marcador de pontuação(0, 40, 80, 110, 150) [Só falta esse item]
--->
