@@ -1,10 +1,8 @@
 <!-- 
-	Tamanho total: 860px = 227.56mm
-	Container do gráfico: 480px
-	Medida de distância: 3,2 - Ou seja 480 / 150;
- -->
-
-<!-- CSS -->
+Tamanho total: 860px = 227.56mm
+Container do gráfico: 480px
+Medida de distância: 3,2 - Ou seja 480 / 150;
+-->
 <style>
 	.g-container{
 		width: 760px; 
@@ -26,17 +24,10 @@
 		width: 100%;
 		position: relative;
 		left: 0;
-
-		display: flex;
-		justify-content: center;
 	}
 	.boxCaption__children{
 		width: 50%;
 		position: relative;
-		padding: 0 8px;
-
-		display: flex;
-		align-items: center;
 	}
 	.boxCaption__text{
 		font-size: 14px;
@@ -50,6 +41,8 @@
 		width: 25%;
 		height: 1px;
 		border-top: 1px dashed #000;
+		top: 8px;
+		position: absolute;
 	}
 
 	/* .boxBars */
@@ -176,20 +169,20 @@
 
 <!-- #container  -->
 <div class="g-container">
-	
+
 	<div class="graphic-container">
 		<!-- Leg: Fraquezas & Forças -->
 		<div class="boxCaption">
-			<div class="boxCaption__children">
-				<div class="boxCaption__before"></div>
-				<span class="boxCaption__text">Fraquezas</span>
-				<div class="boxCaption__after"></div>
+			<div class="boxCaption__children" style="float: left; top: 15px">
+				<div class="boxCaption__before" style="left: 30px;"></div>
+				<span class="boxCaption__text" style="margin-left: 90px;">Fraquezas</span>
+				<div class="boxCaption__after" style="right: 18px;"></div>
 			</div>
 			
-			<div class="boxCaption__children" style="justify-content: flex-end;">
-				<div class="boxCaption__before"></div>
-				<span class="boxCaption__text">Forças</span>
-				<div class="boxCaption__after"></div>
+			<div class="boxCaption__children" style="float: right; top: 15px">
+				<div class="boxCaption__before" style="left: 50px;"></div>
+				<span class="boxCaption__text" style="margin-left: 112px;">Forças</span>
+				<div class="boxCaption__after" style="right: 0;"></div>
 			</div>
 		</div>
 		
@@ -203,11 +196,11 @@
 
 		<!-- Leg: Textos bottom -->
 		<div class="boxCaption">
-			<div class="boxCaption__children">
+			<div class="boxCaption__children" style="float: left; top: 28px;">
 				<span class="boxCaption__text">Muito fraco</span>
 			</div>
 			
-			<div class="boxCaption__children" style="justify-content: flex-end;">
+			<div class="boxCaption__children"  style="float: right; top: 28px; text-align: right;">
 				<span class="boxCaption__text">Muito forte</span>
 			</div>
 		</div>
