@@ -1,0 +1,310 @@
+<?php
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\FpdfTpl;
+/**
+ * The Helper functionalities for work with html > pdf
+ *
+ * @package    Uc_Qpt
+ * @subpackage Uc_Qpt/admin
+ * @author     jnz93 <contato@unitycode.tech>
+ */
+class Uc_Qpt_PDFResult {
+	
+	/**
+	 * Recebe $data e executa os processos em ordem cronológica
+	 * 
+	 * @param int $id identificação do voucher submetido
+	 * 
+	 */
+	public function run( $id = null )
+	{
+		// Tratamento dos dados
+		$result		= Uc_Qpt_PDFResult::_sanitize_result( $id );
+		$profile	= $result['profile']['strengths'];
+		$points		= $result['points'];
+
+		// Produção
+		$file_html 		= Uc_Qpt_PDFResult::_create_graphic_html( $points );
+		$file_tpl 		= Uc_Qpt_PDFResult::_import_model( $profile );
+		$content 		= Uc_Qpt_PDFResult::_sanitize_content( $file_html );
+		$pdf 			= Uc_Qpt_PDFResult::_convert_to_pdf( $content );
+		$file_img		= Uc_Qpt_PDFResult::_convert_to_image( $pdf );
+		$file_result	= Uc_Qpt_PDFResult::_handle_graphic( $file_tpl, $file_img, $pdf );
+		$attach_id 		= Uc_Qpt_PDFResult::_upload( $file_result, $id );
+
+		// Limpeza de arquivos temporários
+		Uc_Qpt_PDFResult::_clean_trash();
+
+		return $attach_id;
+	}
+	
+	/**
+	 * Recebe um id pega os dados no banco, organiza e retorna em um array
+	 * 
+	 * @param int $id
+	 * @return array $data
+	 * 
+	 * @since 
+	 */
+	private function _sanitize_result( $id = null )
+	{
+		if ( $id == null ) return;
+
+		$key 		= 'ucqpt_test_result_data';
+		$data 		= get_post_meta( $id, $key, true );
+		$data 		= explode( '|', $data );
+
+		$sanitized_data = array(
+			'ID'				=> $data[0],
+			'profile'			=> array(
+				'strengths' 	=> str_replace( ':', '', substr( $data[1], strpos( $data[1], ':' ) ) ),
+				'weaknesses'	=> str_replace( ':', '', substr( $data[2], strpos( $data[2], ':' ) ) ),
+			),
+			'points'			=> array(
+				'affective'		=> str_replace( ':', '', substr( $data[3], strpos( $data[3], ':' ) ) ),
+				'pragmatic'		=> str_replace( ':', '', substr( $data[4], strpos( $data[4], ':' ) ) ),
+				'rational'		=> str_replace( ':', '', substr( $data[5], strpos( $data[5], ':' ) ) ),
+				'visionary'		=> str_replace( ':', '', substr( $data[6], strpos( $data[6], ':' ) ) ),
+				'total'			=> str_replace( ':', '', substr( $data[7], strpos( $data[7], ':' ) ) ),
+			),
+		);
+
+		return $sanitized_data;
+	}
+
+	/**
+	 * Criar o arquivo HTML com o gráfico de resultado
+	 * 
+	 * @param array $data dados do resultado
+	 * 
+	 * @since 
+	 */
+	private function _create_graphic_html( $data = null )
+	{
+		if ( $data == null ) return;
+
+		$rand = wp_generate_password( 4 );
+		$path = plugin_dir_path( dirname(__FILE__) ) . 'trash/' . $rand . '.html';
+
+		$doc = new DOMDocument();
+		$doc->loadHTMLFile(plugin_dir_path( dirname(__FILE__) ) . 'public/partials/templates/tpl-convert-graphic-html.php' );
+		$doc->saveHTMLFile( $path );
+
+		return $path;
+	}
+
+	/**
+	 * Retorna PDF que será manipulado
+	 * 
+	 * @param string $profile o perfil do resultado do teste, ex: Afetivo/Racional
+	 * @since 
+	 */
+	private function _import_model( $profile = null )
+	{
+		if ( $profile == null ) return;
+
+		$dir_path 		= plugin_dir_path( dirname( __FILE__ ) ) . 'includes/library/results/';
+		$file_name 		= strtolower( str_replace( array('/', 'á'), array('-', 'a'), $profile ) );
+		$file_path 		= $dir_path . $file_name . '.pdf';
+		$file_exists 	= file_exists( $file_path );
+
+		if ( ! $file_exists ) :
+			$file_path = false;
+		endif;
+
+		return $file_path;
+	}
+
+	/**
+	 * Retorna o conteúdo HTML do arquivo recebido como parâmetro
+	 * 
+	 * @param string $archive caminho do arquivo html
+	 * @return string $content conteúdo html
+	 * 
+	 * @since 
+	 */
+	private function _sanitize_content( $archive_path = null )
+	{
+		if ( $archive_path == null ) return;
+		
+		$html = file_get_contents( $archive_path );
+		$html = stripcslashes($html);
+		ob_start(); ?>
+		
+		<page style="font-size: 14px">
+			<?php print $html; ?>
+		</page>
+		
+		<?php
+		$content = ob_get_contents();
+		ob_clean();
+
+		return $content;
+	}
+
+	/**
+	 * Recebe o conteúdo HTML e converte para PDF no final retorna caminho/path do arquivo
+	 * 
+	 * @param string $content html que será convertido
+	 * 
+	 * @since
+	 */
+	private function _convert_to_pdf( $content = null )
+	{
+		if ( $content == null ) return;
+
+		require_once( plugin_dir_path( __FILE__ ) . 'library/html2pdf_lib/html2pdf.class.php');
+		require_once( plugin_dir_path( __FILE__ ) . 'library/FPDI-2.3.6/src/autoload.php');
+
+		try
+		{
+			$rand		= wp_generate_password( 4, false );
+			$path_pdf 	= plugin_dir_path( dirname( __FILE__ ) ) . 'trash/' . $rand . '.pdf';
+
+			$html2pdf 	= new HTML2PDF('P', 'A4', 'en');
+			$html2pdf->setDefaultFont( 'courier' );
+			$html2pdf->writeHTML( $content );
+			$file 		= $html2pdf->Output($path_pdf, 'F');
+			
+			return $path_pdf;
+			# Remove temp pdf
+			// unlink('temp.pdf');
+		}
+		catch ( HTML2PDF_exception $e )
+		{
+			echo $e;
+			exit;
+		}
+	}
+
+	/**
+	 * Converte PDF em imagem com ajuda da classe Imagick
+	 * 
+	 * @param string $file_path caminho do arquivo que será manipulado
+	 * @return string $image_path
+	 */
+	private function _convert_to_image( $file_path = null )
+	{
+		if ( $file_path == null ) return;
+
+		$img = new imagick( $file_path );
+		$img->setImageFormat( "jpg" );
+		$image_path = plugin_dir_path( dirname( __FILE__ ) ) . 'trash/img/' . time(). '.png';
+		$img->setSize(300, 200);
+		$img->writeImage( $image_path );
+		$img->clear();
+		$img->destroy();
+
+		return $image_path;
+	}
+
+	/**
+	 * Insere uma imagem(png,jpg) na página 4 do arquivo pdf
+	 * Caso não encontre o modelo do resultado salva apenas o gráfico gerado em pdf
+	 * 
+	 * @param string $model_file - abs path do modelo de resultado
+	 * @param string $graphic_png - abs path do gráfico em png
+	 * @param string $graphic_pdf - abs path do gráfico em pdf
+	 * 
+	 * @return string $file
+	 */
+	private function _handle_graphic( $model_file = null, $graphic_png = null, $graphic_pdf )
+	{
+		if ( $graphic_png == null ) return;
+		
+		$file_url;
+		$file_name;
+		if ( ! $model_file ) : 
+
+			# Se não houver pdf modelo
+			$arr 		= explode( '/', $graphic_pdf );
+			$file_name 	= end( $arr );
+
+		else :
+
+			require_once( plugin_dir_path( __FILE__ ) . 'library/fpdf/fpdf.php');
+			require_once( plugin_dir_path( __FILE__ ) . 'library/FPDI-2.3.6/src/autoload.php');
+	
+			$pdf 		= new FPDI();
+			$pagecount 	= $pdf->setSourceFile( $model_file );
+	
+			for ( $i = 1; $i <= $pagecount; $i++ ) :
+				$pdf->AddPage();
+				$tpl = $pdf->importPage( $i );
+				
+				if ( $i == 4 ) :
+	
+					$pdf->useTemplate( $tpl, 0, 0, 210 );
+					$pdf->SetXY( 90, 160 );
+					$pdf->Image( $graphic_png, 16, 60, 110, 150 ); #Image(string file [, float x [, float y [, float w [, float h [, string type [, mixed link]]]]]])
+	
+				endif;
+	
+				$pdf->useImportedPage( $tpl );
+			endfor;
+	
+			$trash_dir 	= plugin_dir_path( dirname( __FILE__ ) ) . 'trash/';
+			$file_name	= wp_generate_password( 6, false ) . '.pdf';
+			$file_path	= $trash_dir . $file_name;
+	
+			$pdf->Output( $file_path , 'F');
+
+		endif;
+
+		# Definição da url do arquivo que será upado
+		$file_url 	= plugin_dir_url( dirname( __FILE__ ) ) . 'trash/' . $file_name;
+
+		return $file_url;
+	}
+
+	/**
+	 * Recebe uma url para upload utilizando media_handle_sideload();
+	 * 
+	 * @param string $file url
+	 * @param int $id id parent/voucher
+	 * @return int $attach_id
+	 */
+	private function _upload( $file = null, $id )
+	{
+		if ( $file == null ) return;
+
+		$parent_id 		= $id;
+		$file_name 		= basename( $file );
+		$file_tmp 		= download_url( $file );
+
+		$file_array = array(
+			'name' => $file_name,
+			'tmp_name' => $file_tmp
+		);
+
+		if ( is_wp_error( $file_tmp ) ) :
+			@unlink( $file_array['tmp_name']);
+			return $tpm;
+		endif;
+
+		$attach_id = media_handle_sideload( $file_array, $parent_id );
+
+		if ( is_wp_error( $attach_id ) ) :
+			@unlink( $file_array['tmp_name'] );
+			return $attach_id;
+		endif;
+
+		return $attach_id;
+	}
+
+	/**
+	 * Executa uma limpeza deletando todos os arquivos temporários dentro da pasta /trash
+	 * 
+	 * @since 
+	 */
+	private function _clean_trash()
+	{
+		$trash 		= plugin_dir_path( dirname( __FILE__ ) ) . 'trash/';
+		$trash_img 	= plugin_dir_path( dirname( __FILE__ ) ) . 'trash/img/';
+
+		array_map('unlink', glob( $trash . '*.html') );
+		array_map('unlink', glob( $trash . '*.pdf') );
+		array_map('unlink', glob( $trash_img . '*.png') );
+	}
+
+}
