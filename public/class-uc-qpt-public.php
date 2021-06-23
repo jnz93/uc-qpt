@@ -300,7 +300,7 @@ class Uc_Qpt_Public {
 			update_post_meta($voucher_id, 'ucqpt_path_archive', $path_archive);
 
 			# Imprimindo o Resultado
-			$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
+			$output = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1">
 						<h3 class="uk-card-title">Resultado</h3>
 						<ul class="uk-list">
 							<li>Pontos Fortes: '. $strength_points_str.'</li>
@@ -308,11 +308,28 @@ class Uc_Qpt_Public {
 							<li>Um e-mail foi enviado para '. $voucher_email .' com o resultado completo!</li>
 						</ul>
 					</div>';
-				echo $result;
 
+			// Testes
+			$result = Uc_Qpt_PDFResult::run( $voucher_id );		
+			if ( is_int( $result ) ) :
+				
+				$output .= '<p>Resultado processado com sucesso!</p>';
 
-			// echo $path_archive;			
-			wp_mail( $voucher_email, 'Resultado teste de perfil', 'Baixe o seu resultado', array(), $path_archive );
+				$data = Uc_Qpt_EmailResult::send( $voucher_id );
+
+				if ( $data ) :
+					$output .= '<p>E-mail enviado com sucesso!</p>';
+				else :
+					$output .= '<p>Problema ao enviar e-mail.</p>';
+				endif;
+
+			else :
+
+				$output .= '<p>Resultado inválido!</p>';
+				
+			endif;
+			
+			echo $output;
 			die();
 
 		else :
