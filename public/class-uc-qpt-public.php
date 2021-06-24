@@ -306,8 +306,7 @@ class Uc_Qpt_Public {
 							<li>Pontos Fortes: '. $strength_points_str.'</li>
 							<li>Pontos Fracos: '. $weak_points_str .'</li>
 							<li>Um e-mail foi enviado para '. $voucher_email .' com o resultado completo!</li>
-						</ul>
-					</div>';
+						</ul>';
 
 			// Testes
 			$result = Uc_Qpt_PDFResult::run( $voucher_id );		
@@ -329,6 +328,7 @@ class Uc_Qpt_Public {
 				
 			endif;
 			
+			$output .= '</div>';
 			echo $output;
 			die();
 
