@@ -86,6 +86,16 @@ class Uc_Qpt_PDFResult {
 		$rand = wp_generate_password( 4 );
 		$path = plugin_dir_path( dirname(__FILE__) ) . 'trash/' . $rand . '.html';
 
+		$points = array();
+		if ( ! empty( $data ) ) :
+			foreach ( $data as $item => $value ) :
+				
+				$sum 			= ( $value * 3.2 ); # 3.2 = 480(width) / 150(maxptos)
+				$points[$item] 	= $item != 'total' ? $sum : $value;
+
+			endforeach;
+		endif;
+
 		$doc = new DOMDocument();
 		$doc->loadHTMLFile(plugin_dir_path( dirname(__FILE__) ) . 'public/partials/templates/tpl-convert-graphic-html.php' );
 		$doc->saveHTMLFile( $path );
