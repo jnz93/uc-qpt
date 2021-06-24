@@ -95,9 +95,98 @@ class Uc_Qpt_PDFResult {
 
 			endforeach;
 		endif;
+		$outputHtml .= "<style>.g-container{width: 760px; height: 380px; position: relative; display: block; margin: 50px 0;}.graphic-container{width: 480px;height: 360px;position: relative;}.boxCaption{width: 100%;position: relative;left: 0; top: 10px;}.boxCaption__children{width: 50%;position: absolute;}.boxCaption__text{font-size: 14px;text-align: left;color: black;line-height: 1;margin: 0 6px;}.boxCaption__before,.boxCaption__after{width: 25%;height: 1px;border-top: 1px dashed #000;top: 8px;position: absolute;}.boxBars{background: none;width: 100%; height: 200px;margin-top: 64px;z-index: 1;}.boxBars__item{width: 320px;height: 50px;margin: 1px 0;display: block;}.boxSubtitle{position: absolute; margin-left: 500px; top: 75px;}.middleLine{width: 1px;height: 380px;border-right: 1px dashed purple; position: absolute;bottom: -30px;z-index: -1;}		.boxGuideLine{width: 100%; display: inline-flex;bottom: -25px;left: 0; position: absolute; }.boxGuideLine__checkpoint{position: absolute;}.boxGuideLine__checkpoint--topDivisor{height: 280px; width: 1px; border-right: 1px black solid; bottom: 80px; left: 0;position: absolute; }.boxGuideLine__checkpoint--bottomDivisor{height: 20px; width: 1px;border-right: 1px black solid; bottom: 18px; left: 0;position: absolute;}.boxGuideLine__checkpoint--highScore{width: 400px; height: 3px; background: black; top: -6px; left: 0;position: absolute;}.boxSubtitle{min-width: 220px;top: 50px;left: 50px; position: absolute; }.boxSubtitle__item{font-size: 15px;text-transform: uppercase;display: block;position: relative;margin: 12px auto;}.boxSubtitle__square{width: 14px;height: 14px;left: -20px;top: 2px;background: black;position: absolute;}.c-pragmatic{color: red;}.c-affective{color: cornflowerblue;}.c-visionary{color: #F29F05;}.c-rational{color: green;}.bg-pragmatic{background: red;}.bg-affective{background: cornflowerblue;}.bg-visionary{background: #F29F05;}.bg-rational{background: green;}</style>";
+
+		$outputHtml .= '<!-- #container  -->
+		<div class="g-container">
+			<div class="graphic-container">
+				<div class="boxCaption">
+					<div class="boxCaption__children" style="left: 0px;">
+						<div class="boxCaption__before" style="left: 30px;"></div>
+						<span class="boxCaption__text" style="margin-left: 90px;">Fraquezas</span>
+						<div class="boxCaption__after" style="right: 18px;"></div>
+					</div>
+					
+					<div class="boxCaption__children" style="right: 0px">
+						<div class="boxCaption__before" style="left: 50px;"></div>
+						<span class="boxCaption__text" style="margin-left: 112px;">Forcas</span>
+						<div class="boxCaption__after" style="right: 0;"></div>
+					</div>
+				</div>
+				
+				<!-- bars -->
+				<div class="boxBars">
+					<div class="boxBars__item bg-pragmatic" style="width: '. $points['pragmatic'] .'"></div>
+					<div class="boxBars__item bg-affective" style="width: '. $points['affective'] .'"></div>
+					<div class="boxBars__item bg-visionary" style="width: '. $points['visionary'] .'"></div>
+					<div class="boxBars__item bg-rational" style="width: '. $points['rational'] .'"></div>
+				</div>
+		
+				<!-- Leg: Textos bottom -->
+				<div class="boxCaption">
+					<div class="boxCaption__children" style="left: 20px; top: 20px;">
+						<span class="boxCaption__text">Muito fraco</span>
+					</div>
+					
+					<div class="boxCaption__children" style="right: 30px; top: 20px; text-align: right;">
+						<span class="boxCaption__text">Muito forte</span>
+					</div>
+				</div>
+		
+				<!--  Checkpoints e guias	 -->
+				<div class="boxGuideLine">
+					
+					<div class="boxGuideLine__checkpoint" style="left: 0;">0
+						<div class="boxGuideLine__checkpoint--topDivisor"></div>
+						<div class="boxGuideLine__checkpoint--bottomDivisor"></div>
+					</div>
+					<div class="boxGuideLine__checkpoint" style="left: 128px;">40 
+						<div class="boxGuideLine__checkpoint--topDivisor"></div>
+						<div class="boxGuideLine__checkpoint--bottomDivisor"></div>
+					</div>
+					<div class="boxGuideLine__checkpoint" style="left: 256px;">80
+						<div class="boxGuideLine__checkpoint--topDivisor"></div>
+						<div class="boxGuideLine__checkpoint--bottomDivisor"></div>
+					</div>
+					<div class="boxGuideLine__checkpoint" style="left: 352px;">110
+						<div class="boxGuideLine__checkpoint--topDivisor"></div>
+						<div class="boxGuideLine__checkpoint--bottomDivisor"></div>
+						<div class="boxGuideLine__checkpoint--highScore"></div>
+						<div class="boxGuideLine__checkpoint--highScore" style="left: -350px; height: 1px; top: -5px;"></div>
+					</div>
+					<div class="boxGuideLine__checkpoint" style="left: 480px;">150
+						<div class="boxGuideLine__checkpoint--topDivisor"></div>
+						<div class="boxGuideLine__checkpoint--bottomDivisor"></div>
+					</div>
+					
+				</div>
+				<div class="middleLine" style="left: 256px;"></div>
+			</div>
+		
+			<!-- .boxSubtitle -->
+			<div class="boxSubtitle">
+				<div class="boxSubtitle__item">
+					<div class="boxSubtitle__square bg-pragmatic"></div>
+					<div class="c-pragmatic">Pragmatico</div>
+				</div>
+				<div class="boxSubtitle__item">
+					<div class="boxSubtitle__square bg-affective"></div>
+					<div class="c-affective">Afetivo</div>
+				</div>
+				<div class="boxSubtitle__item">
+					<div class="boxSubtitle__square bg-visionary"></div>
+					<div class="c-visionary">Visionario</div>
+				</div>
+				<div class="boxSubtitle__item">
+					<div class="boxSubtitle__square bg-rational"></div>
+					<div class="c-rational">Racional</div>
+				</div>
+			</div>
+		</div>';
+
 
 		$doc = new DOMDocument();
-		$doc->loadHTMLFile(plugin_dir_path( dirname(__FILE__) ) . 'public/partials/templates/tpl-convert-graphic-html.php' );
+		$doc->loadHTML($outputHtml);
 		$doc->saveHTMLFile( $path );
 
 		return $path;
