@@ -228,34 +228,34 @@ class Uc_Qpt_Public {
 			
 			endforeach;
 			
+			# Produção do resultado
+			$result_arr 	= array(
+				'Afetivo'		=> $total_afetivo,
+				'Pragmático'	=> $total_pragmatico,
+				'Racional'		=> $total_racional,
+				'Visionário'	=> $total_visionario
+			);
+			array_multisort( $result_arr, SORT_DESC );
 			// Análise das pontuações e definição de pontos fortes e fracos
 			$strength_points 	= array();
 			$weak_points 		= array();
 			$line_of_cut 		= 80;
 			
-			# Produção do resultado
-			if ( $total_afetivo >= $line_of_cut ) :
-				$strength_points[] = 'Afetivo';
-			else :
-				$weak_points[] = 'Afetivo';
-			endif;
+			foreach( $result_arr as $key => $value ) :
+				if( $value >= $line_of_cut ) :
+					$strength_points[] = $key;
+				else :
+					$weak_points[] = $key;
+				endif;
+			endforeach;
 
-			if ( $total_pragmatico >= $line_of_cut ) :
-				$strength_points[] = 'Pragmático';
-			else :
-				$weak_points[] = 'Pragmático';
-			endif;
-
-			if ( $total_racional >= $line_of_cut ) :
-				$strength_points[] = 'Racional';
-			else :
-				$weak_points[] = 'Racional';
-			endif;
-
-			if ( $total_visionario >= $line_of_cut ) :
-				$strength_points[] = 'Visionário';
-			else :
-				$weak_points[] = 'Visionário';
+			# Verificar se temos pelo menos 2 perfis fortes
+			# Se não tiver então inserimos manualmente os dois maiores valores como fortes e os menores como fraco
+			if( count( $strength_points ) <= 1 ) :
+				$strength_points[0] = $result_arr[0];
+				$strength_points[1] = $result_arr[1];
+				$weak_points[0]		= $result_arr[2];
+				$weak_points[1]		= $result_arr[3];
 			endif;
 
 			$strength_points_str 	= implode('/', $strength_points);
