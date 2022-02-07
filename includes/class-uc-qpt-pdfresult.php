@@ -184,7 +184,6 @@ class Uc_Qpt_PDFResult {
 			</div>
 		</div>';
 
-
 		$doc = new DOMDocument();
 		$doc->loadHTML($outputHtml);
 		$doc->saveHTMLFile( $path );
@@ -307,12 +306,13 @@ class Uc_Qpt_PDFResult {
 	 * 
 	 * @return string $file
 	 */
-	private function _handle_graphic( $model_file = null, $graphic_png = null, $graphic_pdf )
+	private function _handle_graphic( $model_file = null, $graphic_png = null, $graphic_pdf, $voucher_id )
 	{
 		if ( $graphic_png == null ) return;
 		
 		$file_url;
 		$file_name;
+		$user_name = get_post_meta( $voucher_id, 'ucqpt_costumer_name', true );
 		if ( ! $model_file ) : 
 
 			# Se não houver pdf modelo
@@ -331,6 +331,13 @@ class Uc_Qpt_PDFResult {
 				$pdf->AddPage();
 				$tpl = $pdf->importPage( $i );
 				
+				if ( $i == 1 ) :
+					$pdf->useTemplate( $tpl, 0, 0, 210 );
+					$pdf->SetFont( 'Arial', '',14 );
+					$pdf->SetXY( 65, 215 );
+					$pdf->Write( 5, $user_name );
+				endif;
+
 				if ( $i == 4 ) :
 	
 					$pdf->useTemplate( $tpl, 0, 0, 210 );
