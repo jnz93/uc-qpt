@@ -29,7 +29,7 @@ class Uc_Qpt_PDFResult {
 		$content 		= Uc_Qpt_PDFResult::_sanitize_content( $file_html );
 		$pdf 			= Uc_Qpt_PDFResult::_convert_to_pdf( $content );
 		$file_img		= Uc_Qpt_PDFResult::_convert_to_image( $pdf );
-		$file_result	= Uc_Qpt_PDFResult::_handle_graphic( $file_tpl, $file_img, $pdf );
+		$file_result	= Uc_Qpt_PDFResult::_handle_graphic( $file_tpl, $file_img, $pdf, $id );
 		$attach_id 		= Uc_Qpt_PDFResult::_upload( $file_result, $id );
 
 		// Limpeza de arquivos temporários
