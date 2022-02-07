@@ -442,6 +442,13 @@ class Uc_Qpt_Public {
 			$by_user 		= get_post_meta( $v_id, 'ucqpt_for_user_data', true );
 			$company_id 	= get_post_meta( $v_id, 'ucqpt_company_id', true);
 			$result_data 	= get_post_meta( $v_id, 'ucqpt_test_result_data', true );
+			$attachment 	= get_attached_media( '', $v_id );
+			$pdf_link 		= '';
+			if( !empty( $attachment ) ) :
+				foreach( $attachment as $item ) {
+					$pdf_link .= $item->guid;
+				}
+			endif;
 
 			$data_voucher['id'] 			= $v_id;
 			$data_voucher['company_id']		= $company_id;
@@ -461,9 +468,10 @@ class Uc_Qpt_Public {
 			if ( $voucher_used ) :
 
 				$result = '<div class="uk-card uk-card-default uk-card-body uk-width-1-1 retorno">
-					<h3 class="uk-card-title">Ops! Algo deu errado.</h3>
+					<h3 class="uk-card-title">Voucher já utilizado.</h3>
 					<ul class="uk-list">
-						<p class="">Este voucher '. $voucher_code .' já foi utilizado.</p>
+						<p class="">Faça o download do resultado clicando no botão abaixo</p>
+						<a href="'. $pdf_link .'" class="uk-button uk-button-secondary" target="_blank">Baixar Resultado</a>
 					</ul>
 				</div>';
 
