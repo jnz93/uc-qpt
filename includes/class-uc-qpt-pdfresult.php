@@ -206,9 +206,22 @@ class Uc_Qpt_PDFResult {
 		$file_path 		= $dir_path . $file_name . '.pdf';
 		$file_exists 	= file_exists( $file_path );
 
-		if ( ! $file_exists ) :
-			$file_path = false;
-		endif;
+		if ( ! $file_exists ){
+			$countPerfis = count( explode( '-', $file_name ) );
+
+			if( $countPerfis == 3 ){
+				$arr = explode( '-', $file_name );
+				$arr = array_pop( $arr );
+				$file_name = implode( '-', $arr );
+
+				$file_path 		= $dir_path . $file_name . '.pdf';
+				$file_exists 	= file_exists( $file_path );
+
+				if( ! $file_exists ){
+					$file_path = false;
+				}
+			}
+		}
 
 		return $file_path;
 	}
