@@ -807,6 +807,7 @@ class Uc_Qpt_Admin {
 					<li>'. $user_data .'</li>
 					<li>'. $result .'</li>
 				</ul>';
+				Uc_Qpt_Public::render_graphic_result($sanitazed_data);
 		die();
 	}
 
