@@ -321,10 +321,6 @@ class Uc_Qpt_Public {
 				else :
 					$output .= '<p>Problema ao enviar e-mail.</p>';
 				endif;
-
-			else :
-
-				$output .= '<p>Resultado inválido!</p>';
 				
 			endif;
 			
