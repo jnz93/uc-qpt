@@ -721,12 +721,15 @@ class Uc_Qpt_Admin {
 			die('Dados inválido!');
 		endif;
 
+		$voucher_code = get_the_title( $post_id );
 		// Salvar dados do consumidor
 		update_post_meta( $post_id, 'ucqpt_costumer_name', $user_name );
 		update_post_meta( $post_id, 'ucqpt_costumer_email', $user_email );
 		update_post_meta( $post_id, 'ucqpt_costumer_cpf', $user_doc );
 		update_post_meta( $post_id, 'ucqpt_costumer_tel', $user_tel );
 
+		$this->notifyVoucherUser( $user_name, $user_email, $user_tel, $voucher_code);
+		
 		die();
 	}
 
