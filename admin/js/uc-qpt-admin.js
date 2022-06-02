@@ -563,8 +563,56 @@ function setVoucherIdOnResultModal(voucherId, voucherCode, ajaxUrl)
 	}
 }
 
+/**
+ * Checa se os valores dos parâmetros não são strings vazias
+ * Adiciona ou remove classes de validação dos campos conforme o resultado da checagem do valor
+ * retonar bool
+ * 
+ * @param {*} name 
+ * @param {*} email 
+ * @param {*} tel 
+ * @param {*} doc 
+ * @returns 
+ */
+ function checkVoucherForm(name, email, tel, doc){
+	let isValid = true;
 
- /**
+	if( name.val().length < 1 ){
+		name.addClass('uk-form-danger');
+		isValid = false;
+	} else {
+		name.addClass('uk-form-success');
+		name.removeClass('uk-form-danger');
+	}
+	
+	if( email.val().length < 1 ){
+		email.addClass('uk-form-danger');
+		isValid = false;
+	} else {
+		email.addClass('uk-form-success');
+		email.removeClass('uk-form-danger');
+	}
+
+	if( tel.val().length < 1 ){
+		tel.addClass('uk-form-danger');
+		isValid = false;
+	} else {
+		tel.addClass('uk-form-success');
+		tel.removeClass('uk-form-danger');
+	}
+
+	if( doc.val().length < 1 ){
+		doc.addClass('uk-form-danger');
+		isValid = false;
+	} else {
+		doc.addClass('uk-form-success');
+		doc.removeClass('uk-form-danger');
+	}
+
+	return isValid;
+}
+
+/**
  * Load inventory data from backend with ajax
  * @param {*} postId
  * @param {*} ajaxUrl 
