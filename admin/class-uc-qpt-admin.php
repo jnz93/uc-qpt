@@ -1228,4 +1228,101 @@ class Uc_Qpt_Admin {
 		include( plugin_dir_path( __FILE__ ) . 'partials/templates/company/company-data.php' );
 		die();
 	}
+
+	/**
+	 * Envia a notificação de acesso via e-mail
+	 * 
+	 * @param string 	$name
+	 * @param string 	$email
+	 * @param string 	$tel
+	 * @param string 	$voucher
+	 */
+	public function notifyVoucherUser($name, $email, $tel, $voucher)
+	{
+		$to 		= $email;
+		$subject 	= '[Mindflow Academy] Voucher de acesso';
+		$message 	= '
+			<style type="text/css">
+					.header {
+						background: #8a8a8a;
+					}
+					
+					.header .columns {
+						padding-bottom: 0;
+					}
+					
+					.header p {
+						color: #fff;
+						margin-bottom: 0;
+					}
+					
+					.header .wrapper-inner {
+						padding: 20px; /*controls the height of the header*/
+					}
+					
+					.header .container {
+						background: #8a8a8a;
+					}
+					
+					.wrapper.secondary {
+						background: #f3f3f3;
+					}
+				
+			</style>
+			<!-- move the above styles into your custom stylesheet -->
+			<wrapper class="header" bgcolor="#8a8a8a">
+				<container>
+					<row class="collapse">
+					<columns small="6" valign="middle">
+						<img src="http://metodoprav.com.br/wp-content/uploads/2021/04/logotipo-PRAV-e1617632526222.jpg">
+					</columns>
+					<columns small="6" valign="middle">
+						<p class="text-right">Mindflow Academy</p>
+					</columns>
+					</row>
+				</container>
+			</wrapper>
+			<container>
+			
+				<spacer size="16"></spacer>
+				
+				<row>
+					<columns>
+					
+						<h1>Olá, '. $name .'</h1>
+						<p class="lead">Você tem uma análise de perfil disponível.</p>
+						<p>Estamos enviando este e-mail para confirmar os dados de acesso a Análise de Perfil na plataforma Mindflow Academy.</p>
+					</columns>
+				</row>
+
+				<spacer size="16"></spacer>
+
+				<wrapper class="data">
+					<h4>Dados de acesso:</h4>
+					<table>
+						<tr>
+							<td>Voucher:</td>
+							<td style="margin-left: 16px; display: inline;"><b>'. $voucher .'</b></td>
+						</tr>
+						<tr>
+							<td>Nome completo:</td>
+							<td style="margin-left: 16px; display: inline;"><b>'. $name .'</b></td>
+						</tr>
+						<tr>
+							<td>E-mail:</td>
+							<td style="margin-left: 16px; display: inline;"><b>'. $email .'</b></td>
+						</tr>
+						<tr>
+							<td>Telefone:</td>
+							<td style="margin-left: 16px; display: inline;"><b>'. $tel .'</b></td>
+						</tr>
+					</table>
+				</wrapper>
+			</container>
+		';
+		$headers 	= ['Content-Type: text/html; charset=UTF-8'];
+		$attachments = ['http://metodoprav.com.br/wp-content/uploads/2021/04/logotipo-PRAV-e1617632526222.jpg'];
+
+		wp_mail( $to, $subject, $message, $headers, $attachments );
+	}
 }
