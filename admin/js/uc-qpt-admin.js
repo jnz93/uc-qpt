@@ -514,7 +514,7 @@ function setVoucherIdOnResultModal(voucherId, voucherCode, ajaxUrl)
 }
 
 /**
- * Salvar dados do usuário no voucher via painel da empresa
+ * Salvar dados no voucher via ajax
  * @param {*} ajaxUrl 
  * 
  * @since v1.3.0
@@ -523,36 +523,45 @@ function setVoucherIdOnResultModal(voucherId, voucherCode, ajaxUrl)
  {
 	'use strict';
  
-	var parentForm 		= el.parents('form'),
-		userName 		= parentForm.find('#ucqpt_customer_name').val(),
-		userEmail 		= parentForm.find('#ucqpt_customer_email').val(),
-		userTel 		= parentForm.find('#ucqpt_customer_tel').val(),
-		userDoc 		= parentForm.find('#ucqpt_customer_cpf').val(),
-		voucherId 		= parentForm.parents('#edit-voucher').attr('data-voucher'),
-		toBackEnd 		= {};
-	
-	toBackEnd.action 	= 'ucqpt_update_voucher_data';
-	toBackEnd.voucherId = voucherId;
-	toBackEnd.userName 	= userName;
-	toBackEnd.userEmail = userEmail;
-	toBackEnd.userTel 	= userTel;
-	toBackEnd.userDoc 	= userDoc;
-	
-	jQuery.ajax({
-		type: 'POST',
-		url: ajaxUrl,
-		data: toBackEnd
-	})
-	.done( function (res) {
-		if (res == 'error') {
-			console.log(res);
-		} else {
-			UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Os dados foram salvos com sucesso!', pos: 'bottom-center', status:'success' });
-			UIkit.modal('#edit-voucher').hide();
-			document.getElementById('form-voucher').reset();
-		}
-	});
- }
+	var form 			= el.parents('form'),
+		userName 		= form.find('#ucqpt_customer_name'),
+		userEmail 		= form.find('#ucqpt_customer_email'),
+		userTel 		= form.find('#ucqpt_customer_tel'),
+		userDoc 		= form.find('#ucqpt_customer_cpf'),
+		voucherId 		= form.parents('#edit-voucher').attr('data-voucher');
+
+	// Check form Data
+	let checkForm = checkVoucherForm(userName, userEmail, userTel, userDoc);
+
+	if( checkForm ){
+		let payload = {
+			'action': 'ucqpt_update_voucher_data',
+			'voucherId': voucherId,
+			'userName': userName.val(),
+			'userEmail': userEmail.val(),
+			'userTel': userTel.val(),
+			'userDoc': userDoc.val(),
+		};
+
+		// Requisição ajax
+		jQuery.ajax({
+			type: 'POST',
+			url: ajaxUrl,
+			data: payload
+		})
+		.done( function (res) {
+			if (res == 'error') {
+				UIkit.notification({ message: '<span uk-icon=\'icon: close\'></span> Erro, tente novamente.', pos: 'bottom-center', status:'danger' });
+			} else {
+				UIkit.notification({ message: '<span uk-icon=\'icon: check\'></span> Os dados foram salvos com sucesso!', pos: 'bottom-center', status:'success' });
+				UIkit.modal('#edit-voucher').hide();
+				document.getElementById('form-edit-voucher').reset();
+			}
+		});
+	} else {
+		UIkit.notification({ message: '<span uk-icon=\'icon: close\'></span> Preencha corretamente os campos e tente novamente.', pos: 'bottom-center', status:'danger' });
+	}
+}
 
 
  /**
