@@ -90,7 +90,7 @@ if ( ! empty( $companies ) ) :
                 </div>
             </div>
             <div class="uk-modal-body">
-                <form class="uk-grid-small" uk-grid>
+                <form id="form-edit-voucher" class="uk-grid-small" uk-grid>
                     
                     <p class="uk-width-1-1 uk-text-large">Dados do usuário</p>
 
