@@ -194,33 +194,55 @@ class Uc_Qpt_PDFResult {
 	/**
 	 * Retorna PDF que será manipulado
 	 * 
-	 * @param string $profile o perfil do resultado do teste, ex: Afetivo/Racional
+	 * @param string $result 	o perfil do resultado do teste, ex: Afetivo/Racional
 	 * @since 
 	 */
-	private function _import_model( $profile = null )
+	private function _import_model( $result = null )
 	{
-		if ( $profile == null ) return;
+		if ( $result == null ) return;
 
-		$dir_path 		= plugin_dir_path( dirname( __FILE__ ) ) . 'includes/library/results/';
-		$file_name 		= strtolower( str_replace( array('/', 'á'), array('-', 'a'), $profile ) );
-		$file_path 		= $dir_path . $file_name . '.pdf';
-		$file_exists 	= file_exists( $file_path );
+		$ext 				= '.pdf';
+		$path 				= plugin_dir_path( dirname( __FILE__ ) ) . 'includes/library/results/';
+		$sanitizedResult 	= strtolower( str_replace( array('/', 'á'), array('-', 'a'), $result ) );
+		$file_name 			= $sanitizedResult;
+		$file_path 			= $path . $file_name . $ext;
+		$file_exists 		= file_exists( $file_path );
 
-		if ( ! $file_exists ){
-			$countPerfis = count( explode( '-', $file_name ) );
+		if ( !$file_exists ){
+			$resultArr 		= explode( '-', $sanitizedResult );
+			$profilesTotal 	= count( $resultArr );
 
-			if( $countPerfis == 3 ){
-				$arr = explode( '-', $file_name );
-				$arr = array_pop( $arr );
-				$file_name = implode( '-', $arr );
+			if( $profilesTotal == 4 ){
+				unset( $resultArr[$profilesTotal-1] );
+				$profilesTotal 	= count( $resultArr );
 
-				$file_path 		= $dir_path . $file_name . '.pdf';
+				$file_name 		= implode( '-', $resultArr );
+				$file_path 		= $path . $file_name . $ext;
+				$file_exists 	= file_exists( $file_path );					
+
+				if( $file_exists ) return $file_path;
+			}
+
+			if( $profilesTotal == 3 ){
+				unset( $resultArr[$profilesTotal-1] );
+				$profilesTotal 	= count( $resultArr );
+
+				$file_name 		= implode( '-', $resultArr );
+				$file_path 		= $path . $file_name . $ext;
 				$file_exists 	= file_exists( $file_path );
 
-				if( ! $file_exists ){
-					$file_path = false;
-				}
+				if( $file_exists ) return $file_path;
 			}
+
+			if( $profilesTotal == 2 ){
+				$resultArr 		= array_reverse( $resultArr );
+
+				$file_name 		= implode( '-', $resultArr );
+				$file_path 		= $path . $file_name . $ext;
+				$file_exists 	= file_exists( $file_path );
+
+				return $file_path;
+			}			
 		}
 
 		return $file_path;
