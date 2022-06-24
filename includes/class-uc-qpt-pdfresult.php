@@ -25,17 +25,17 @@ class Uc_Qpt_PDFResult {
 
 		// Produção
 		$file_html 		= Uc_Qpt_PDFResult::_create_graphic_html( $points );
-		$file_tpl 		= Uc_Qpt_PDFResult::_import_model( $profile );
+		$model 			= Uc_Qpt_PDFResult::_import_model( $profile );
 		$content 		= Uc_Qpt_PDFResult::_sanitize_content( $file_html );
 		$pdf 			= Uc_Qpt_PDFResult::_convert_to_pdf( $content );
 		$file_img		= Uc_Qpt_PDFResult::_convert_to_image( $pdf );
-		$file_result	= Uc_Qpt_PDFResult::_handle_graphic( $file_tpl, $file_img, $pdf, $id );
+		$file_result	= Uc_Qpt_PDFResult::_handle_graphic( $model['path'], $file_img, $pdf, $id );
 		$attach_id 		= Uc_Qpt_PDFResult::_upload( $file_result, $id );
 
 		// Limpeza de arquivos temporários
 		Uc_Qpt_PDFResult::_clean_trash();
 
-		return $attach_id;
+		return $log;
 	}
 	
 	/**
@@ -200,10 +200,14 @@ class Uc_Qpt_PDFResult {
 	private function _import_model( $result = null )
 	{
 		if ( $result == null ) return;
-
+		
+		$log 				= array();
+		$model 				= array();
+		$try 				= 0;
 		$ext 				= '.pdf';
 		$path 				= plugin_dir_path( dirname( __FILE__ ) ) . 'includes/library/results/';
 		$sanitizedResult 	= strtolower( str_replace( array('/', 'á'), array('-', 'a'), $result ) );
+
 		$file_name 			= $sanitizedResult;
 		$file_path 			= $path . $file_name . $ext;
 		$file_exists 		= file_exists( $file_path );
@@ -215,37 +219,68 @@ class Uc_Qpt_PDFResult {
 			if( $profilesTotal == 4 ){
 				unset( $resultArr[$profilesTotal-1] );
 				$profilesTotal 	= count( $resultArr );
+				$try++;
 
 				$file_name 		= implode( '-', $resultArr );
 				$file_path 		= $path . $file_name . $ext;
 				$file_exists 	= file_exists( $file_path );					
 
-				if( $file_exists ) return $file_path;
+				$log[$try] = [
+					'result'	=> $file_name,
+					'file_path'	=> $file_path,
+					'exist'		=> $file_exists, 
+				];
+				$log['path']	= $file_path;
+
+				if( $file_exists ) return $log;
 			}
 
 			if( $profilesTotal == 3 ){
 				unset( $resultArr[$profilesTotal-1] );
 				$profilesTotal 	= count( $resultArr );
+				$try++;
 
 				$file_name 		= implode( '-', $resultArr );
 				$file_path 		= $path . $file_name . $ext;
 				$file_exists 	= file_exists( $file_path );
 
-				if( $file_exists ) return $file_path;
+				$log[$try] = [
+					'result'	=> $file_name,
+					'file_path'	=> $file_path,
+					'exist'		=> $file_exists, 
+				];
+				$log['path'] = $file_path;
+
+				if( $file_exists ) return $log;
 			}
 
 			if( $profilesTotal == 2 ){
 				$resultArr 		= array_reverse( $resultArr );
+				$try++;
 
 				$file_name 		= implode( '-', $resultArr );
 				$file_path 		= $path . $file_name . $ext;
 				$file_exists 	= file_exists( $file_path );
 
-				return $file_path;
+				$log[$try] = [
+					'result'	=> $file_name,
+					'file_path'	=> $file_path,
+					'exist'		=> $file_exists, 
+				];
+				$log['path'] = $file_path;
+
+				return $log;
 			}			
 		}
 
-		return $file_path;
+		$log[$try] = [
+			'result'	=> $file_name,
+			'file_path'	=> $file_path,
+			'exist'		=> $file_exists, 
+		];
+		$log['path'] = $file_path;
+
+		return $log;
 	}
 
 	/**
