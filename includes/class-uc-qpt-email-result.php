@@ -31,6 +31,109 @@ class Uc_Qpt_EmailResult{
     }
 
     /**
+     * Envia a notificação com log da conclusão do inventário
+     * 
+     * @param array     $data
+     */
+    public function sendAdminNotification( $data )
+    {
+        $log            = $data['log'];
+        $attach         = $data['attach'];
+        $attachLink     = get_permalink( $attach );
+
+        $voucherID      = wp_get_post_parent_id( $attach );
+        $voucher        = get_the_title( $voucherID );
+        $companyID      = get_the_author_ID( $voucherID );
+        $company        = get_userdata( $companyID );
+        $companyName    = $company->display_name;
+        $voucherUser    = get_post_meta( $voucherID, 'ucqpt_costumer_name', true );
+
+        $adminId        = 9; #Emerson Pinduka
+        $adminInfo      = get_userdata( $adminId );
+        $adminEmail     = $adminInfo->user_email;
+        $adminName      = $adminInfo->first_name .  ' ' . $adminInfo->last_name;
+
+        $siteUrl        = get_site_url();
+        // $send_to        = $adminEmail;
+        $send_to        = 'joanes.andrades@hotmail.com';
+        
+        $tryList        = '';
+        $result         = '';
+        if( !empty($log) ){
+            foreach( $log as $item => $value ){
+              if( is_array($value) ){
+                $tryList .= '<li style="text-align: left;">'. strtoupper( str_replace('-', ' ', $value['result']) ) .': '. ( $value['exist'] == true ? '<b>Modelo Disponível</b>' : '<i>Modelo Ausente</i>') .'</li>';
+              
+                if( $value['exist'] == false ){
+                  $result .= strtoupper( str_replace('-', '/', $value['result']) );
+                }
+              }
+            }
+        }
+        $subject = '[Notificação] Conclusão de Teste de personalidade';
+        $message .= '<style type="text/css">
+
+            .header {
+              background: #0d4d77;
+              padding: 12px 24px;
+            }
+            
+            .header .columns {
+              padding-bottom: 0;
+            }
+            
+            .header h1 {
+              color: #fff;
+            }
+            
+            .body{
+              padding: 12px 24px;
+              background: #f3f3f3;
+            }
+        
+        </style>
+        <div class="header">
+          <container>
+            <row class="collapse">
+              <columns small="6" valign="middle">
+                <h1 class="text-right">Notificação de Conclusão</h1>
+              </columns>
+            </row>
+          </container>
+        </div>
+        
+        <div class="body">
+          <spacer size="16"></spacer>
+          <row>
+            <div>
+              <h2>Olá, '. $adminName .'!</h2>
+              <p class="lead">Alguém concluiu com sucesso o teste de personalidade.</p>
+              <h4>Detalhes:</h4>
+              <ul class="vertical">
+                <li style="text-align: left;">Usuário: <b>'. $voucherUser .'</b></li>
+                <li style="text-align: left;">Empresa: <b>'. $companyName .'</b></li>
+                <li style="text-align: left;">Voucher: <a href="'. $attachLink .'" class="" target="_blank" rel="nofollow"><b>'. $voucher .'</b></a></li>
+                <li style="text-align: left;">Resultado: <b>'. $result .'</b></li>
+              </ul>
+            </div>
+
+            <columns small="12" large="6">
+                <h4>Tentativas para encontrar o modelo:</h4>
+                <ul class="vertical">             
+                  '. $tryList .'
+                </ul>
+              </columns>
+          </row>        
+        </div>';
+        
+        $headers = array();
+        $headers[] = 'From: Mindflow <'. $adminEmail .'>';
+        $headers[] = 'Content-Type: text/html; charset=UTF-8';
+        
+        return wp_mail( $send_to, $subject, $message, $headers );
+    }
+
+    /**
      * Retorna a url de um arquivo pdf vinculado ao $id
      * 
      * @param $id; voucher/parent
