@@ -310,12 +310,12 @@ class Uc_Qpt_Public {
 
 			// Testes
 			$result = Uc_Qpt_PDFResult::run( $voucher_id );		
-			if ( is_int( $result ) ) :
+			if ( $result ) :
 				
 				$output .= '<p>Resultado processado com sucesso!</p>';
 
-				$data = Uc_Qpt_EmailResult::send( $voucher_id );
-
+				$data 			= Uc_Qpt_EmailResult::send( $voucher_id ); # Disparo de notificação usuário
+				$notifyAdmin 	= Uc_Qpt_EmailResult::sendAdminNotification( $result ); # Disparo da notificação admin
 				if ( $data ) :
 					$output .= '<p>E-mail enviado com sucesso!</p>';
 				else :
