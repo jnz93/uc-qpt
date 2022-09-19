@@ -54,12 +54,12 @@ class Uc_Qpt_EmailResult{
         $adminName      = $adminInfo->first_name .  ' ' . $adminInfo->last_name;
 
         $siteUrl        = get_site_url();
-        // $send_to        = $adminEmail;
-        $send_to        = 'joanes.andrades@hotmail.com';
+        $send_to        = $adminEmail;
+        // $send_to        = 'joanes.andrades@hotmail.com';
         
         $tryList        = '';
         $result         = '';
-        if( !empty($log) ){
+        if( !empty($log) && true ){
             foreach( $log as $item => $value ){
               if( is_array($value) ){
                 $tryList .= '<li style="text-align: left;">'. strtoupper( str_replace('-', ' ', $value['result']) ) .': '. ( $value['exist'] == true ? '<b>Modelo Disponível</b>' : '<i>Modelo Ausente</i>') .'</li>';
@@ -111,7 +111,7 @@ class Uc_Qpt_EmailResult{
               <h4>Detalhes:</h4>
               <ul class="vertical">
                 <li style="text-align: left;">Usuário: <b>'. $voucherUser .'</b></li>
-                <li style="text-align: left;">Empresa: <b>'. $companyName .'</b></li>
+                <li style="text-align: left;">Empresa: <b>'. $companyID .'</b></li>
                 <li style="text-align: left;">Voucher: <a href="'. $attachLink .'" class="" target="_blank" rel="nofollow"><b>'. $voucher .'</b></a></li>
                 <li style="text-align: left;">Resultado: <b>'. $result .'</b></li>
               </ul>

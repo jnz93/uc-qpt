@@ -34,7 +34,8 @@ class Uc_Qpt_PDFResult {
 
 		// Limpeza de arquivos temporários
 		Uc_Qpt_PDFResult::_clean_trash();
-
+		$log['log'] = $model;
+		$log['attach'] = $attach_id; 
 		return $log;
 	}
 	
