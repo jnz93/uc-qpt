@@ -51,6 +51,7 @@ class Uc_Qpt_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+        $this->shortcodes = new Uc_Qpt_Shortcodes();
 
 		// Add shortcodes
 		add_shortcode( 'mindflow', array($this, 'template_quiz') );
