@@ -65,6 +65,10 @@ class Uc_Qpt_Public {
 		add_action('wp_ajax_uqpt_record_user_data', array($this, 'uqpt_record_user_data_by_ajax'));
 		add_action('wp_ajax_nopriv_uqpt_record_user_data', array($this, 'uqpt_record_user_data_by_ajax'));
 
+        # Validação do voucher
+		add_action('wp_ajax_validate_voucher',  [ $this, 'validateVoucher' ] );
+		add_action('wp_ajax_nopriv_validate_voucher', [ $this, 'validateVoucher' ] );
+
 	}
 
 	/**
@@ -498,6 +502,54 @@ class Uc_Qpt_Public {
 		die();
 	}
 
+
+    /**
+     * Validação do voucher via ajax
+     * Esta etapa avalia apenas a existência do código voucher digitado
+     * Caso seja válido e já tenha sido utilizado o template para download é retornado
+     * Caso seja válido e não foi utilizado um formulário de autenticação é retornado
+     * 
+     */
+    public function validateVoucher()
+    {
+        # Get Voucher data with rest api
+        $voucherCode    = $_POST['voucher'];
+		$voucherData   	= wp_remote_get( get_site_url() . '/wp-json/wp/v2/search?search='. $voucherCode .'&post_type=uc_voucher' );
+		$voucherData   	= wp_remote_retrieve_body($voucherData);
+		$voucherData   	= json_decode($voucherData);
+        $voucherExists  = false;
+
+        if( !empty($voucherData) ){
+            $voucherExists = true;
+
+            # Voucher Data
+			$vId 			= $voucherData[0]->id;
+
+			$wasUtilized    = get_post_meta( $vId, 'ucqpt_is_used', true );
+			$by_user 		= get_post_meta( $vId, 'ucqpt_for_user_data', true );
+			$company_id 	= get_post_meta( $vId, 'ucqpt_company_id', true);
+			$result_data 	= get_post_meta( $vId, 'ucqpt_test_result_data', true );
+
+			if ( $wasUtilized == 'yes' ) {
+                $attachment 	= get_attached_media( 'application/pdf', $vId );
+                $attachLink 		= '';
+                
+                if( !empty( $attachment ) ) {
+                    foreach( $attachment as $item ) {
+                        $attachLink = $item->guid;
+                    }
+                }
+				require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-utilized-voucher.php';
+            } else {
+                require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-authentication.php';
+            }
+
+        } else {
+            echo false;
+        }
+
+        die();
+    }
 	/**
 	 * Salva os dados do usuário no teste e voucher e libera o teste
 	 * 
