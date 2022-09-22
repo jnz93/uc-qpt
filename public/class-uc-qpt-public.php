@@ -481,7 +481,7 @@ class Uc_Qpt_Public {
 					</ul>
 				</div>';
 
-			echo $result;
+			    echo $result;
 
 			else :
 
