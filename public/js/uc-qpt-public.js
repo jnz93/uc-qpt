@@ -33,6 +33,48 @@
 	// 	$("#wizard").steps();
 	// })
 
+    /**
+     * Validação do voucher via ajax 
+     * Esta etapa avalia apenas a existência do código voucher digitado
+     * Caso ele seja válido um formulário de autenticação é retornado
+     * 
+     * @returns mixed
+     */
+    function validateVoucher(){
+        let vCode = $('#ucqpt_voucher_code').val();
+        if ( vCode.length < 10 ) {
+            UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher Inválido", {status:'danger', pos: 'bottom-right'} );
+            return;
+        }
+
+        let payload = {
+            action: 'validate_voucher',
+            nonce: ajax.nonce,
+            voucher: vCode
+        }
+
+        jQuery.ajax({
+            url: ajax.url,
+            type: 'POST',
+            data: payload,
+        })
+        .done( function(res) {
+            if( res ){
+                jQuery('#form-wrapper').html(res);
+            } else {
+                UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher Inválido", {status:'danger', pos: 'bottom-right'} );
+            }
+        });
+    }
+
+
+    $(document).ready( function(){
+        //Validar voucher
+        $('#validateVoucher').click( function(){
+            validateVoucher();
+        });
+    });
+
 })( jQuery );
 
 
