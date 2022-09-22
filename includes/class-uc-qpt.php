@@ -134,6 +134,11 @@ class Uc_Qpt {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-uc-qpt-public.php';
 
+		/**
+		 * The class responsible for defining all shortcodes
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-uc-qpt-shortcodes.php';
+
 		$this->loader = new Uc_Qpt_Loader();
 
 	}
