@@ -110,10 +110,15 @@ class Uc_Qpt_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/uc-qpt-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'ucqpt-public', plugin_dir_url( __FILE__ ) . 'js/uc-qpt-public.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( 'uikit', plugin_dir_url( __FILE__ ) . 'js/uikit.min.js', array(), '3.6.9', false );
 		wp_enqueue_script( 'uikit-icons', plugin_dir_url( __FILE__ ) . 'js/uikit-icons.min.js', array(), '3.6.9', false );
 		wp_enqueue_script( 'jquery-mask', plugin_dir_url( __FILE__ ) . 'js/jquery.mask.min.js', array(), '3.6.9', false );
+
+        wp_localize_script( 'ucqpt-public', 'ajax', [
+            'nonce' => wp_create_nonce('public-ajax'),
+            'url'   => admin_url('admin-ajax.php')
+        ] );
 
 	}
 
