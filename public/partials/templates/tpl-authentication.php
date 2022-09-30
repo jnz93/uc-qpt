@@ -25,8 +25,9 @@
             </div>
             
             <div class="uk-margin">
-                <button type="button" class="uk-button uk-button-primary" onclick="submitUserData('<?php echo admin_url('admin-ajax.php') ?>')">Enviar dados</button>
+                <button type="button" class="uk-button uk-button-primary" onclick="authenticateVoucher()"><?php _e( 'Autenticar Voucher', 'textdomain'); ?></button>
             </div>
+            <input type="hidden" name="voucher_id" id="voucher_id" value="<?php echo $vId; ?>">
         </form>
     </div>
 </div>

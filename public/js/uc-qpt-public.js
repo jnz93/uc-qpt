@@ -8,30 +8,7 @@
 	 * Note: It has been assumed you will write jQuery code here, so the
 	 * $ function reference has been prepared for usage within the scope
 	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
 	 */
-	// $(document).ready(function () {
-
-	// 	$("#wizard").steps();
-	// })
 
     /**
      * Validação do voucher via ajax 
@@ -76,6 +53,52 @@
     });
 
 })( jQuery );
+
+
+/**
+ * Autenticação do voucher
+ * Esta faz a autenticação dos dados inseridos pelo usuário com os dados salvos no voucher
+ * Caso eles sejam compativeis o template com o inventário de perguntas é retornado
+ * 
+ * @return mixed
+ */
+function authenticateVoucher(){
+    let userName    = jQuery('#user_full_name').val(),
+        userEmail   = jQuery('#user_email').val(),
+        userPhone   = jQuery('#user_phone').val(),
+        voucherId   = jQuery('#voucher_id').val(),
+        quizId      = jQuery('#quiz_id').val();
+
+    if(userName.length < 4 || userEmail < 4 || userPhone < 8 ){
+        UIkit.notification( "<span uk-icon='icon: warning'></span> Preencha todas as informações para prosseguir.", {status:'danger', pos: 'bottom-right'} );
+        return;
+    }
+
+    let payload = {
+        action: 'authenticate_voucher',
+        nonce: ajax.nonce,
+        name: userName,
+        email: userEmail,
+        phone: userPhone,
+        voucher: voucherId,
+        quiz: quizId
+    }
+
+    jQuery.ajax({
+        url: ajax.url,
+        type: 'POST',
+        data: payload,
+    })
+    .done( function(res) {
+        console.log(res);
+        if( res ){
+            jQuery('#modal-content').html(res);
+        } else {
+            UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher Inválido", {status:'danger', pos: 'bottom-right'} );
+        }
+    });
+}
+
 
 
 function submitAnswers(wrapperQuestion, quizId, voucherId, ajaxUrl)

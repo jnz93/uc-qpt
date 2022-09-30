@@ -70,6 +70,10 @@ class Uc_Qpt_Public {
 		add_action('wp_ajax_validate_voucher',  [ $this, 'validateVoucher' ] );
 		add_action('wp_ajax_nopriv_validate_voucher', [ $this, 'validateVoucher' ] );
 
+        # Autenticação do voucher
+		add_action('wp_ajax_authenticate_voucher',  [ $this, 'authenticateVoucher' ] );
+		add_action('wp_ajax_nopriv_authenticate_voucher', [ $this, 'authenticateVoucher' ] );
+
 	}
 
 	/**
@@ -551,6 +555,50 @@ class Uc_Qpt_Public {
 
         die();
     }
+
+
+    /**
+     * Autenticação do voucher via ajax
+     * Esta etapa avalia se os dados nome, email e telefone vinculados ao voucher
+     * pelo administrador são equivalentes aos inseridos pelo usuário.
+     * Caso sejam equivalentes o questionário é retornado.
+     * 
+     */
+    public function authenticateVoucher()
+    {
+        $nonce          = $_POST['nonce'];
+        $validateNonce  = wp_verify_nonce( $nonce, 'public-ajax' );
+
+        if( !$validateNonce ) return; # Nonce invalid
+
+        $userName       = strtoupper(trim($_POST['name']));
+        $userEmail      = trim($_POST['email']);
+        $userPhone      = trim($_POST['phone']);
+        $voucher        = trim($_POST['voucher']);
+        $quizId         = trim($_POST['quiz']);
+
+        $savedUserName  = strtoupper(get_post_meta( $voucher, 'ucqpt_costumer_name', true ));
+		$savedUserEmail = get_post_meta( $voucher, 'ucqpt_costumer_email', true );
+		$savedUserPhone = get_post_meta( $voucher, 'ucqpt_costumer_tel', true );
+		// $savedUserCpf   = get_post_meta( $voucher, 'ucqpt_costumer_cpf', true );
+
+        if( $userName == $savedUserName && $userEmail == $savedUserEmail && $userPhone == $savedUserPhone ){
+            $title      = get_the_title($quizId);
+            $content    = get_the_content($quizId);
+            $questions  = explode( ',', get_post_meta($quizId, 'quiz_questions_ids', true) );
+            $voucherCode = get_the_title($voucher);
+            
+            require_once plugin_dir_path( __FILE__ ) . '/partials/templates/tpl-new-quiz.php';
+        } else {
+            echo 'Nome: ' . ( strtoupper($savedUserName) == strtoupper($userName) ). ' </br>';
+            echo 'Email: ' . ( $savedUserEmail == $userEmail ). ' </br>';
+            echo 'Phone: ' . ( $savedUserPhone == $userPhone ). ' </br>';
+            echo false;
+        }
+
+        die();
+    }
+
 	/**
 	 * Salva os dados do usuário no teste e voucher e libera o teste
 	 * 

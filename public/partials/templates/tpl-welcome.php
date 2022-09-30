@@ -1,7 +1,7 @@
 <div id="modal-full" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
-        <div class="uk-grid-collapse uk-child-width-1-2@s uk-flex-middle" uk-grid>
+        <div id="modal-content" class="uk-grid-collapse uk-child-width-1-2@s uk-flex-middle" uk-grid>
             <div class="uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light uk-animation-slide-top" data-src="https://metodoprav.com.br/wp-content/uploads/2022/09/pexels-andrew-neel-3178818.jpg" uk-img uk-height-viewport></div>
             <div class="uk-padding-large uk-animation-slide-bottom">
                 <div class="modal-header uk-text-center">
@@ -28,4 +28,5 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="quiz_id" id="quiz_id" value="<?php echo $quizId; ?>">
 </div>
