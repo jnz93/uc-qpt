@@ -51,3 +51,249 @@ input.invalid {
 .step.finish {
     background-color: #07790a;
 }
+
+/* modal do teste */
+.modal-header .logotipo{
+    width: 110px;
+}
+
+/* asindeContent */
+.asideContent{
+    padding-top: 84px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #edebeb;
+}
+.asideContent__logo{
+    width: 120px;
+    height: 120px;
+    margin-bottom: 16px;
+}
+.asideContent__title{
+    font-size: 14px;
+    font-weight: bold;
+    color: #808080;
+}
+.asideContent__text{
+    font-size: 14px;
+    font-weight: lighter;
+    color: #808080;
+}
+
+/* Modal do inventário v1.7.0 */
+.questionItem__title{
+    position: relative;
+    font-size: 32px;
+    margin-left: 18px;
+}
+.questionItem__title::before{
+    content: '';
+    background: #188CBA;
+    width: 10px;
+    height: 100%;
+    left: -18px;
+    position: absolute;
+}
+
+.answerList{
+    margin: 0;
+    padding: 0;
+}
+.answerList__item{
+    border-bottom: 1px solid #edebeb;
+}
+
+.answerList__text{
+    font-size: 16px;
+}
+.answerList__text--dropcap{
+    font-size: 27px !important;
+    text-transform: uppercase;
+    margin: 0;
+    margin-right: 8px;
+}
+.answerList__text--small{
+    font-size: 11px;
+}
+
+.answerList__answered{
+    opacity: .5;
+}
+
+.answerList__weightItem{
+    font-size: 16px;
+    font-weight: bolder;
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    border: 1px solid #edebeb;
+    border-radius: 100%;
+    color: #A60D29;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.answerList__weightItem:hover{
+    background-color: #edebeb;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.answerList__weightItem--selected{
+    background: #A60D29;
+    color: #edebeb;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.answerList__weightItem--disabled{
+    background: #edebeb;
+    opacity: .6;
+    cursor: auto;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+/* Slider Nav dots */
+.uk-slideshow-nav li{
+    width: 14px;
+    height: 14px;
+    border: 1px solid #707070;
+    border-radius: 100%;
+    margin: 0 4px;
+    overflow: hidden;
+    opacity: .4;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.uk-slideshow-nav li.uk-active{
+    background: #188CBA;
+    border-color: #188CBA;
+    opacity: 1;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.uk-slideshow-nav li a{
+    opacity: 0;
+}
+
+/* Hack para inutilizar os "dots" do slider */
+.uk-slideshow-nav{
+    position: relative;
+}
+.uk-slideshow-nav::before,
+.uk-slideshow-nav::after{
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    position: absolute;
+}
+
+/* infoNext */
+.infoNext{
+    display: none !important;
+}
+.infoNext p{
+    margin: 0 !important;
+}
+.infoNext__pill{
+    width: 72px;
+    height: 72px;
+    border-radius: 100%;
+    background: #188CBA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.infoNext__aside{
+    margin-left: 8px;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+.infoNext__title{
+    font-size: 14px;
+    font-weight: 600;
+    color: #188CBA;
+}
+.infoNext__text{
+    font-size: 16px;
+    color: #28292B;
+}
+
+/* btnNext, btnFinish */
+.btnNext, 
+.btnFinish{
+    height: 72px;
+    background: #188CBA;
+    display: inline-block;
+    padding: 24px 32px;
+    border-radius: 8px;
+    display: none;
+}
+
+.btnNext--enabled,
+.btnFinish--enabled{
+    display: block !important;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+
+/* Finish */
+.finishCover{
+    background-image: url('https://metodoprav.com.br/wp-content/uploads/2022/11/pexels-kampus-production-5940841.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+.finishCover::after{
+    content: '';
+    background: linear-gradient(to top, #b92b27, #1565c0);
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    display: block;
+    opacity: .4;
+}
+.finishLogotipo{
+    width: 190px;
+    height: 190px;
+}
+.finishTitle{
+    font-size: 48px;
+    font-weight: bolder;
+    text-transform: uppercase;
+    color: #808080;
+}
+.finishText{
+    font-size: 16px;
+    line-height: 1.7;
+    color: #808080;
+}
+.finishLink{
+    width: 390px;
+    height: 80px;
+    background: #188CBA;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 21px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-top: 48px;
+    border-radius: 12px;
+    opacity: .9;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.finishLink:hover{
+    color: #fff;
+    text-decoration: none;
+    opacity: 1;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.finishLink .uk-icon{
+    margin-left: 8px;
+}
