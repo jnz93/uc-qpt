@@ -46,10 +46,15 @@
 
 
     $(document).ready( function(){
-        //Validar voucher
+        // Validar voucher
         $('#validateVoucher').click( function(){
             validateVoucher();
         });
+
+        // Finish test
+        $('.btnFinish').click( function(){
+            finishHim();
+        })
     });
 
 })( jQuery );
@@ -357,6 +362,8 @@ function finishTest(){
 	}
 }
 
+
+// Funções versão antiga ----------------
 
 
 function submitAnswers(wrapperQuestion, quizId, voucherId, ajaxUrl)
