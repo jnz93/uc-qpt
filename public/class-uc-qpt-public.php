@@ -56,6 +56,10 @@ class Uc_Qpt_Public {
 		// Add shortcodes
 		add_shortcode( 'mindflow', array($this, 'template_quiz') );
 
+		// Finalizar teste - novo
+		add_action('wp_ajax_finish_quiz', [ $this, 'finishQuiz' ]);
+		add_action('wp_ajax_nopriv_finish_quiz', [ $this, 'finishQuiz' ]);
+
 		// Ajax Actions
 		add_action('wp_ajax_ucqpt_submit_quiz', array($this, 'ucqpt_submit_quiz'));
 		add_action('wp_ajax_nopriv_ucqpt_submit_quiz', array($this, 'ucqpt_submit_quiz'));
@@ -345,6 +349,155 @@ class Uc_Qpt_Public {
 		else :
 			die('Dados inválidos. Atualize a página e faça o teste novamente!');
 		endif;
+	}
+
+    /**
+	 * Finalizar Teste
+	 * 
+	 * @since 1.0.0
+	 */
+	public function finishQuiz()
+	{
+		# Data - model array = [pos] => 'q_id:a_id:weight'
+		$data 		= $_POST['data'];
+		$quiz_id 	= $_POST['quizId'];
+		$voucher_id = $_POST['voucherId'];
+
+		$voucher_email = get_post_meta( $voucher_id, 'ucqpt_costumer_email', true );
+
+		if ( !empty($data) ) :
+
+			# Iniciação das variaveis de contagem
+			$total_afetivo 		= 0;
+			$total_pragmatico 	= 0;
+			$total_racional 	= 0;
+			$total_visionario 	= 0;
+			$total_points 		= 0;
+
+			# Avaliação e notas
+			foreach ( $data as $item ) : 
+
+				# collect ids and weight
+				$itemarr	= explode(':', $item);
+				$q_id 		= intval($itemarr[0]);
+				$a_id 		= intval($itemarr[1]);
+				$weight 	= intval($itemarr[2]);
+
+				if ( strlen($q_id) != 0 && strlen($a_id) != 0 && strlen($weight) != 0 ) :
+					
+					# Definição do perfil e contagem dos pontos
+					$a_perfil_abv 	= get_post_meta( $a_id, 'answer_perfil', true);
+					$a_perfil_str 	= '';
+					switch ( $a_perfil_abv ) :
+						case 'A':
+							$a_perfil_str = 'Afetivo';
+							$total_afetivo += $weight;
+							break;
+						case 'P':
+							$a_perfil_str = 'Pragmático';
+							$total_pragmatico += $weight;
+							break;
+						case 'R':
+							$a_perfil_str = 'Racional';
+							$total_racional += $weight;
+							break;
+						case 'V':
+							$a_perfil_str = 'Visionário';
+							$total_visionario += $weight;
+							break;
+						default:
+							$a_perfil_str = 'Perfil não cadastrado.';
+							break;
+					endswitch;
+					$total_points += $weight;
+				else : 
+					die('Verifique os dados enviados e tente novamente.');
+				endif;
+			
+			endforeach;
+			
+			# Produção do resultado
+			$result_arr 	= array(
+				'Afetivo'		=> $total_afetivo,
+				'Pragmático'	=> $total_pragmatico,
+				'Racional'		=> $total_racional,
+				'Visionário'	=> $total_visionario
+			);
+			array_multisort( $result_arr, SORT_DESC );
+			// Análise das pontuações e definição de pontos fortes e fracos
+			$strength_points 	= array();
+			$weak_points 		= array();
+			$line_of_cut 		= 80;
+			
+			foreach( $result_arr as $key => $value ) :
+				if( $value >= $line_of_cut ) :
+					$strength_points[] = $key;
+				else :
+					$weak_points[] = $key;
+				endif;
+			endforeach;
+
+			# Verificar se temos pelo menos 2 perfis fortes
+			# Se não tiver então inserimos manualmente os dois maiores valores como fortes e os menores como fraco
+			if( count( $strength_points ) <= 1 ) :
+				$strength_points[0] = $result_arr[0];
+				$strength_points[1] = $result_arr[1];
+				$weak_points[0]		= $result_arr[2];
+				$weak_points[1]		= $result_arr[3];
+			endif;
+
+			$strength_points_str 	= implode('/', $strength_points);
+			$weak_points_str 		= implode('/', $weak_points);
+
+			# Tratamento dados do resultado do quiz para salvar no voucher
+			$key_voucher_result 		= 'ucqpt_test_result_data';
+			$key_voucher_is_used 		= 'ucqpt_is_used';
+			$voucher_value_result_data 	= $quiz_id
+											.'|res_str_pts:'. $strength_points_str 
+											.'|res_weak_pts:'. $weak_points_str 
+											.'|pts_a:'. $total_afetivo 
+											.'|pts_p:'. $total_pragmatico 
+											.'|pts_r:'. $total_racional 
+											.'|pts_v:'. $total_visionario 
+											.'|total_pts:'. $total_points;
+
+			$key_voucher_id		= 'ucqpt_vouchers_data';
+			$value_voucher_ids 	= get_post_meta( $quiz_id, $meta_key_voucher_id, true ) . ',' . $voucher_id;	
+
+			# Salvar resultado no voucher
+			update_post_meta( $voucher_id, $key_voucher_result, $voucher_value_result_data );
+			update_post_meta( $voucher_id, $key_voucher_is_used, 'yes' );
+			
+			# Salvar id do voucher no quiz(id)
+			update_post_meta( $quiz_id, $key_voucher_id, $value_voucher_ids );
+
+			# Descrição e textos
+			$result_description = 'Os pontos fortes são representados pelas funções cognitivas principal e auxiliar (es) (uma ou duas funções auxiliares). O estilo é o resultado da combinação dos pontos fortes ou aptidões em que podemos atuar naturalmente e desenvolver nossos talentos. Os pontos fracos serão representados por áreas que não possuímos aptidões para atuar. O estilo não muda ao longo da vida, o desafio é conhecê-lo e gerir melhor suas forças, riscos e fraquezas.';
+			$persona_afetiva	= array( 'Afetiva', 'Padrão cognitivo com aptidão para relacionamento com as pessoas. Sua energia psíquica busca a empatia e a participação das pessoas. Perfil Afetivo visa harmonizar e integrar as pessoas.' );
+			$persona_racional 	= array( 'Racional', 'Padrão cognitivo com aptidão para dados e fatos e senso de realidade. Sua energia psíquica busca sistematizar, organizar e padronizar ambientes e relações. Perfil lógico e analítico traz precisão e controle ao meio.' );
+			$persona_pragmatico = array( 'Pragmático', 'Padrão cognitivo com aptidão para ação, foco e resultados. Sua energia psíquica busca fazer o que precisa ser feito. Perfil prático, decidido e realizador torna o ambiente produtivo.' );
+			$persona_visionario = array( 'Visionário', 'Padrão cognitivo com aptidão para ideias, conceitos e oportunidades. Sua energia psíquica busca mudar e inovar seu campo de percepção. Perfil reflexivo busca trazer estratégia e renovação para o meio.' );
+	
+			# Linkando o doc para donwload
+			$name_archive = strtolower($strength_points_str);
+			$name_archive = str_replace('/', '-', $name_archive);
+			$name_archive = $name_archive . '.pdf';
+			$path_archive = plugin_dir_url( __FILE__ ) . 'reports/'.$name_archive;
+
+			// Salvar caminho do arquivo no voucher
+			update_post_meta($voucher_id, 'ucqpt_path_archive', $path_archive);
+
+
+            $result = Uc_Qpt_PDFResult::run( $voucher_id );
+            $resultLink = wp_get_attachment_url( $result['attach'] );
+
+            # Imprimindo o Resultado
+            require plugin_dir_path( __DIR__ ) . 'public/partials/templates/tpl-congratulations.php';
+		else :
+			echo 'Dados inválidos. Atualize a página e faça o teste novamente!';
+		endif;
+
+        die();
 	}
 
 	
