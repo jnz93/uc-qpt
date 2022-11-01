@@ -28,7 +28,7 @@
             action: 'validate_voucher',
             nonce: ajax.nonce,
             voucher: vCode
-        }
+        };
 
         jQuery.ajax({
             url: ajax.url,
