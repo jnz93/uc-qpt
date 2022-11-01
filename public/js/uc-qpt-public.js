@@ -177,45 +177,184 @@ function listenerNextEvent(){
 }
 
 /**
- * Trocar título e número da próxima questão
+ * Submeter teste para avaliação
+ * Coletagem dos pontos assinalados por questão
  * 
- * @return mixed
  */
-function authenticateVoucher(){
-    let userName    = jQuery('#user_full_name').val(),
-        userEmail   = jQuery('#user_email').val(),
-        userPhone   = jQuery('#user_phone').val(),
-        voucherId   = jQuery('#voucher_id').val(),
-        quizId      = jQuery('#quiz_id').val();
+function finishHim(){
+    var result      = [],
+        quizId      = jQuery('#quizId').attr('data-quiz-id'),
+        voucher     = jQuery('#quizId').attr('data-voucher-id').split('-')[1],
+        questions   = jQuery('.questionItem');
 
-    if(userName.length < 4 || userEmail < 4 || userPhone < 8 ){
-        UIkit.notification( "<span uk-icon='icon: warning'></span> Preencha todas as informações para prosseguir.", {status:'danger', pos: 'bottom-right'} );
-        return;
+    // Montando resultado
+    if( questions ){
+        questions.each( function(i){
+            let question = jQuery(this),
+                questionId = question.attr('data-question-id'),
+                answerList = question.find('ul.answerList').children();
+
+            // Respostas
+            answerList.each( function(i){
+                let answer          = jQuery(this),
+                    answerId        = answer.attr('data-answer-id'),
+                    answerWeight    = answer.find('span.answerList__weightItem--selected').attr('data-value'),
+                    payload		    = questionId + ":" + answerId + ":" + answerWeight;
+
+                result.push(payload);
+            });
+        });
     }
 
-    let payload = {
-        action: 'authenticate_voucher',
-        nonce: ajax.nonce,
-        name: userName,
-        email: userEmail,
-        phone: userPhone,
-        voucher: voucherId,
-        quiz: quizId
-    }
+    // Enviando o resultado
+    if (result) {
+		jQuery.ajax({
+			type: 'POST',
+			url: ajax.url,
+			data: {
+				action: 'finish_quiz',
+				data: result,
+				quizId: quizId,
+				voucherId: voucher
+			},
+		}).done( function(res){
+            if( res ){
+                jQuery('#modal-content').html(res);
+            } else {
+                UIkit.notification( "<span uk-icon='icon: warning'></span> Tivemos um problema. Tente novamente!", {status:'danger', pos: 'bottom-right'} );
+            }
+            console.log(res);
+		});
+	}
+}
 
-    jQuery.ajax({
-        url: ajax.url,
-        type: 'POST',
-        data: payload,
-    })
-    .done( function(res) {
-        console.log(res);
-        if( res ){
-            jQuery('#modal-content').html(res);
-        } else {
-            UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher Inválido", {status:'danger', pos: 'bottom-right'} );
-        }
-    });
+
+function finishTest(){
+    var result = [
+        "251:252:4",
+        "251:253:2",
+        "251:254:6",
+        "251:255:1",
+        "256:257:6",
+        "256:258:1",
+        "256:259:2",
+        "256:260:4",
+        "261:262:4",
+        "261:263:1",
+        "261:264:2",
+        "261:265:6",
+        "266:267:2",
+        "266:268:4",
+        "266:269:1",
+        "266:270:6",
+        "271:272:1",
+        "271:273:6",
+        "271:274:2",
+        "271:275:4",
+        "276:277:1",
+        "276:278:6",
+        "276:279:2",
+        "276:280:4",
+        "281:282:1",
+        "281:283:4",
+        "281:284:6",
+        "281:285:2",
+        "286:287:1",
+        "286:288:4",
+        "286:289:2",
+        "286:290:6",
+        "291:292:4",
+        "291:293:6",
+        "291:294:2",
+        "291:295:1",
+        "296:297:1",
+        "296:298:6",
+        "296:299:2",
+        "296:300:4",
+        "301:302:1",
+        "301:303:2",
+        "301:304:4",
+        "301:305:6",
+        "306:307:4",
+        "306:308:1",
+        "306:309:2",
+        "306:310:6",
+        "311:312:6",
+        "311:313:4",
+        "311:314:2",
+        "311:315:1",
+        "316:317:1",
+        "316:318:2",
+        "316:319:4",
+        "316:320:6",
+        "321:325:4",
+        "321:322:1",
+        "321:323:2",
+        "321:324:6",
+        "326:327:4",
+        "326:328:1",
+        "326:329:2",
+        "326:330:6",
+        "331:332:1",
+        "331:333:6",
+        "331:334:2",
+        "331:335:4",
+        "336:337:1",
+        "336:338:4",
+        "336:339:6",
+        "336:340:2",
+        "341:342:1",
+        "341:343:4",
+        "341:344:6",
+        "341:345:2",
+        "346:347:1",
+        "346:348:4",
+        "346:349:2",
+        "346:350:6",
+        "351:352:1",
+        "351:353:6",
+        "351:354:2",
+        "351:355:4",
+        "356:360:2",
+        "356:357:1",
+        "356:358:4",
+        "356:359:6",
+        "361:362:4",
+        "361:363:1",
+        "361:364:2",
+        "361:365:6",
+        "366:367:2",
+        "366:368:1",
+        "366:369:4",
+        "366:370:6",
+        "371:372:4",
+        "371:373:1",
+        "371:374:2",
+        "371:375:6"
+    ];
+
+    var quizId  = 250,
+        voucher = 526;
+
+    if (result) {
+		jQuery.ajax({
+			type: 'POST',
+			url: ajax.url,
+			data: {
+				action: 'finish_quiz',
+				data: result,
+				quizId: quizId,
+				voucherId: voucher
+			},
+		}).done( function(res){
+            if( res ){
+                jQuery('#modal-content').html(res);
+            } else {
+                UIkit.notification( "<span uk-icon='icon: warning'></span> Tivemos um problema. Tente novamente!", {status:'danger', pos: 'bottom-right'} );
+            }
+            console.log(res);
+		});
+	}
 }
 
 
