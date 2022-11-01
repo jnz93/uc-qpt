@@ -56,9 +56,128 @@
 
 
 /**
- * Autenticação do voucher
- * Esta faz a autenticação dos dados inseridos pelo usuário com os dados salvos no voucher
- * Caso eles sejam compativeis o template com o inventário de perguntas é retornado
+ * Marcação do peso selecionado
+ * Esta função marca o peso da resposta selecionada e torna indisponível o peso igual em outra resposta
+ * 
+ */
+function selectWeight(self){
+    // console.log(self);
+    var hasSelected = hasSelectedWeight(self);
+    if( hasSelected == 1 ){
+        return;
+    }
+    
+    let answer = self.parent().parent().siblings();
+    
+    self.addClass('answerList__weightItem--selected');
+    answer.addClass('answerList__answered');
+
+    // Desabilitar itens "irmãos" e o mesmo valor em outras respostas
+    disableWeights(self);
+
+    // Habilitar botão "Próxima Pergunta"
+    toggleNextButton();
+    
+}
+
+/**
+ * Verifica se algum peso já foi selecionado para aquela resposta
+ * 
+ * @param {*} element
+ * 
+ * @return bool
+ */
+function hasSelectedWeight( clickedItem ){
+    var hasSelected = 0,
+        items       = clickedItem.siblings();
+    
+    items.each( function(i){
+        let item = jQuery(this);
+    
+        if( item.hasClass('answerList__weightItem--selected') || clickedItem.hasClass('answerList__weightItem--disabled') ){
+            hasSelected = 1;
+        }
+    });
+
+    return hasSelected;
+}
+
+/**
+ * Desabilitar itens "irmãos" do peso selecionado
+ * e também o mesmo valor em outras respostas
+ * 
+ * @param {*} element
+ */
+function disableWeights( element ){
+    var siblings        = element.siblings(),
+        weightSelected  = element.attr('data-value'),
+        answers         = element.parents('.answerList__item').siblings();
+
+    // Desabilitando pesos "irmãos" do item selecionado
+    siblings.each( function(i){
+        let item = jQuery(this);
+
+        item.addClass('answerList__weightItem--disabled');
+    });
+    
+    // Desabilitando pesos com mesmo valor em outras respostas
+    answers.each( function(i){
+        let aWeights = jQuery(this).find('.answerList__weightItem');
+        aWeights.each( function(i){
+            let item = jQuery(this);
+
+            if( item.attr('data-value') == weightSelected ){
+                item.addClass('answerList__weightItem--disabled');
+            }
+        });
+    });
+}
+
+
+/**
+ * Habilitar o botão de "próxima pergunta" quando todos os pesos forem selecionados
+ * 
+ */
+function toggleNextButton(){
+    var answers = jQuery('.answerList__weightItem--selected'),
+        btnNext = jQuery('.btnNext'),
+        btnFinish = jQuery('#btnFinish');
+
+    if( answers.length % 4 == 0 ){
+        btnNext.addClass('btnNext--enabled');
+    } else {
+        btnNext.removeClass('btnNext--enabled');
+    }
+
+    if( answers.length == 100 ){
+        btnFinish.addClass('btnFinish--enabled');
+        btnNext.removeClass('btnNext--enabled');
+        console.info(answers.length);
+        console.info('total = 100');
+        console.log(btnFinish);
+    }
+}
+
+
+/**
+ * Esconder botão de "Próxima Pergunta" ao passar o slider.
+ * 
+ */
+function listenerNextEvent(){
+    addEventListener('itemshow', () => {
+        var btnNext = jQuery('.btnNext');
+
+        if(btnNext){
+            btnNext.removeClass('btnNext--enabled');
+        }
+
+        // toggleNextQuestion();
+
+    })
+}
+
+/**
+ * Trocar título e número da próxima questão
  * 
  * @return mixed
  */
