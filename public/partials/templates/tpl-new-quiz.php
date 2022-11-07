@@ -1,4 +1,4 @@
-<div class="uk-flex uk-width-1-1 uk-padding-small">
+<div class="uk-flex uk-flex-middle uk-width-1-1 uk-padding-small">
     <!-- Aside -->
     <div class="uk-flex uk-flex-wrap uk-flex-wrap-top uk-width-1-5 uk-box-shadow-small uk-text-center">
         <div class="asideContent uk-width-1-1">
