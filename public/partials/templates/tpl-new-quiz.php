@@ -49,18 +49,11 @@
                 <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
 
                 <div class="wrapper-next uk-flex">
-                    <div class="uk-width-3-4">
-                        <div class="infoNext uk-flex uk-flex-middle">
-                            <div class="infoNext__pill">
-                                02
-                            </div>
-                            <div class="infoNext__aside">
-                                <span class="infoNext__title"><?php _e( 'Próxima', 'textodmain'); ?></span>
-                                <p class="infoNext__text">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-width-1-4 uk-flex uk-flex-right">
+                    <div class="uk-width-1-1 uk-flex uk-align-center">
+                        <!-- Btn reset -->
+                        <button type="button" class="btnReset">
+                            <span class="btnNext__text"><?php _e( 'Resetar pesos', 'textdomain' ); ?></span>
+                        </button>
                         <!-- Btn Next -->
                         <a href="#" uk-slideshow-item="next" class="btnNext">
                             <span class="btnNext__text"><?php _e( 'Próxima Pergunta', 'textdomain' ); ?></span>
