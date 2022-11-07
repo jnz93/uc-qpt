@@ -15,7 +15,7 @@
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="ucqpt_voucher_code"><?php _e( 'Voucher', 'textdomain' ); ?></label>
                                 <div class="uk-form-controls">
-                                    <input class="uk-input uk-input uk-form-width-medium uk-form-large uk-text-center" id="ucqpt_voucher_code" type="text" placeholder="Ex: XXXXXXXX-XXX">
+                                    <input class="uk-input uk-input uk-form-width-medium uk-form-large uk-text-center uk-text-uppercase uk-text-bold uk-text-emphasis" id="ucqpt_voucher_code" type="text" placeholder="Ex: XXXXXXXX-XXX">
                                 </div>
                             </div>
         
