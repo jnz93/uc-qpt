@@ -224,7 +224,22 @@ function listenerNextEvent(){
         if(btnReset){
             btnReset.removeClass('btnReset--enabled');
         }
+
+        handleDots();
     })
+}
+
+/**
+ * Adicionar a classe .answered no item anterior ao .uk-active
+ * 
+ */
+function handleDots(){
+    let dotActive = jQuery('.uk-slideshow-nav li.uk-active'),
+        prevDot = dotActive.prev();
+
+    if(dotActive && prevDot){
+        prevDot.addClass('answered');
+    }
 }
 
 /**

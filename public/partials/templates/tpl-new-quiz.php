@@ -46,7 +46,7 @@
                     }   
                     ?>
                 </div> <!-- /end slideshow-items -->
-                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
+                <ul class="uk-slideshow-nav uk-dotnav uk-flex-center"></ul>
 
                 <div class="wrapper-next uk-flex">
                     <div class="uk-width-1-1 uk-flex uk-flex-center uk-position-absolute">
