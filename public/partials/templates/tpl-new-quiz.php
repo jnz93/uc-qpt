@@ -12,10 +12,27 @@
             <span class="asideContent__text asideContent__text--caption"><?php _e( 'Você está utilizando o voucher:', 'textdomain' ); ?></span>
             <span class="asideContent__text"><strong><?php echo $voucherCode; ?></strong></span>
             <span class="asideContent__text uk-margin"><?php the_date( 'd-m-Y' ) ?></span>
-            <a href="#" class="asideContent__link">
+            <a href="#" class="asideContent__link" onclick="openHowtoWork()">
                 <span uk-icon="question"></span>
                 <?php _e( 'Como funciona?', 'textdomain'); ?>
             </a>
+        </div>
+
+        <!-- Como funciona -->
+        <div id="how-to-work" class="howtowork">
+            <div class="howtowork__body">
+                <h2 class="uk-text-bolder uk-text-emphasis"><?php _e('Inventário de Personalidade', 'textdomain'); ?></h2>
+                <p><?php _e('Analise cuidadosamente cada questão e suas alternativas e atribua:', 'textdomain'); ?></p>
+                <ul class="uk-list uk-list-striped uk-margin-medium-top uk-margin-medium-bottom">
+                    <li><?php _e('<b>Nota 6</b> para a alternativa que MAIS tem a ver com você.', 'textdomain'); ?></li>
+                    <li><?php _e('<b>Nota 4</b> para a alternativa que se aproxima UM POUCO MAIS de você.', 'textdomain'); ?></li>
+                    <li><?php _e('<b>Nota 2</b> para a alternativa que se aproxima UM POUCO MENOS de você.', 'textdomain'); ?></li>
+                    <li><?php _e('<b>Nota 1</b> para alternativa que MENOS tem a ver com você.', 'textdomain'); ?></li>
+                </ul>
+                <p class="uk-text-meta"><?php _e('OBS: Use a pontuação 1, 2, 4 e 6 em todas as questões, na ordem que escolher, sem repetir valores.', 'textdomain'); ?></p>
+
+                <button class="uk-button uk-button-primary uk-width-1-1 uk-margin-medium-top" onclick="closeHowtoWork()"><?php _e( 'Fechar', 'textdomain' ); ?></button>
+            </div>
         </div>
     </div>
 

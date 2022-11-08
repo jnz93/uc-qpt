@@ -262,6 +262,27 @@ function countSlider(){
 }
 
 /**
+ * Abrir o "modal" how-to-work
+ * 
+ */
+function openHowtoWork(){
+    let howtowork = jQuery('#how-to-work');
+
+    howtowork.addClass('howtowork--enabled');
+}
+
+/**
+ * Fechar o "modal" how-to-work
+ * 
+ */
+function closeHowtoWork(){
+    let howtowork = jQuery('#how-to-work');
+
+    howtowork.removeClass('howtowork--enabled');
+}
+
+
+/**
  * Submeter teste para avaliação
  * Coletagem dos pontos assinalados por questão
  * 
