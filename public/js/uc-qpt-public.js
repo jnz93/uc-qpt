@@ -189,20 +189,21 @@ function disableWeights( element ){
 function toggleNextButton(){
     var answers = jQuery('.answerList__weightItem--selected'),
         btnNext = jQuery('.btnNext'),
+        btnReset = jQuery('.btnReset'),
         btnFinish = jQuery('#btnFinish');
 
     if( answers.length % 4 == 0 ){
         btnNext.addClass('btnNext--enabled');
+        // btnReset.addClass('btnReset--enabled');
     } else {
         btnNext.removeClass('btnNext--enabled');
+        // btnReset.removeClass('btnReset--enabled');
     }
 
     if( answers.length == 100 ){
         btnFinish.addClass('btnFinish--enabled');
         btnNext.removeClass('btnNext--enabled');
-        console.info(answers.length);
-        console.info('total = 100');
-        console.log(btnFinish);
+        btnReset.removeClass('btnReset--enabled');
     }
 }
 
@@ -213,14 +214,16 @@ function toggleNextButton(){
  */
 function listenerNextEvent(){
     addEventListener('itemshow', () => {
-        var btnNext = jQuery('.btnNext');
+        var btnNext = jQuery('.btnNext'),
+            btnReset = jQuery('.btnReset');
 
         if(btnNext){
             btnNext.removeClass('btnNext--enabled');
         }
 
-        // toggleNextQuestion();
-
+        if(btnReset){
+            btnReset.removeClass('btnReset--enabled');
+        }
     })
 }
 
