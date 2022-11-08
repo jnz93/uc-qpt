@@ -61,6 +61,49 @@
 
 
 /**
+ * Autenticação do voucher
+ * Esta faz a autenticação dos dados inseridos pelo usuário com os dados salvos no voucher
+ * Caso eles sejam compativeis o template com o inventário de perguntas retornado
+ * 
+ * @return mixed
+ */
+ function authenticateVoucher(){
+    let userName    = jQuery('#user_full_name').val(),
+        userEmail   = jQuery('#user_email').val(),
+        userPhone   = jQuery('#user_phone').val(),
+        voucherId   = jQuery('#voucher_id').val(),
+        quizId      = jQuery('#quiz_id').val();
+
+    if(userName.length < 4 || userEmail < 4 || userPhone < 8 ){
+        UIkit.notification( "<span uk-icon='icon: warning'></span> Preencha todas as informações.", {status:'danger', pos: 'bottom-right'} );
+        return;
+    }
+
+    let payload = {
+        action: 'authenticate_voucher',
+        nonce: ajax.nonce,
+        name: userName,
+        email: userEmail,
+        phone: userPhone,
+        voucher: voucherId,
+        quiz: quizId
+    }
+
+    jQuery.ajax({
+        url: ajax.url,
+        type: 'POST',
+        data: payload,
+    })
+    .done( function(res) {
+        if( res ){
+            jQuery('#modal-content').html(res);
+        } else {
+            UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher inválido", {status:'danger', pos: 'bottom-right'} );
+        }
+    });
+}
+
+/**
  * Marcação do peso selecionado
  * Esta função marca o peso da resposta selecionada e torna indisponível o peso igual em outra resposta
  * 
