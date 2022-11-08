@@ -1,6 +1,6 @@
-<div class="uk-flex uk-flex-middle uk-width-1-1 uk-padding-small">
+<div class="uk-flex uk-flex-middle uk-width-1-1">
     <!-- Aside -->
-    <div class="uk-flex uk-flex-wrap uk-flex-wrap-top uk-width-1-5 uk-box-shadow-small uk-text-center">
+    <div class="uk-flex uk-flex-wrap uk-flex-wrap-top uk-width-1-5 uk-box-shadow-small uk-text-center uk-padding-small uk-padding-remove-top uk-padding-remove-bottom" style="height: 100vh">
         <div class="asideContent uk-width-1-1">
             <div class="asideContent__logoWrapper">
                 <img src="https://metodoprav.com.br/wp-content/uploads/2021/04/logotipo-PRAV-e1617632526222.jpg" alt="" class="asideContent__logo">
@@ -49,11 +49,12 @@
                 <ul class="uk-slideshow-nav uk-dotnav uk-flex-center uk-margin"></ul>
 
                 <div class="wrapper-next uk-flex">
-                    <div class="uk-width-1-1 uk-flex uk-align-center">
+                    <div class="uk-width-1-1 uk-flex uk-flex-center uk-position-absolute">
                         <!-- Btn reset -->
                         <button type="button" class="btnReset">
                             <span class="btnNext__text"><?php _e( 'Resetar pesos', 'textdomain' ); ?></span>
                         </button>
+
                         <!-- Btn Next -->
                         <a href="#" uk-slideshow-item="next" class="btnNext">
                             <span class="btnNext__text"><?php _e( 'Próxima Pergunta', 'textdomain' ); ?></span>
