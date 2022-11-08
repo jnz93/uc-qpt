@@ -21,6 +21,19 @@
 
     <!-- Perguntas/Sliders -->
     <div id="contentBody" class="uk-padding-large uk-animation-slide-bottom uk-width-4-5">
+        
+        <!-- Contador -->
+        <div class="uk-position-absolute questionCount">
+            <div class="questionCount__container">
+                <div class="uk-width-1-2">
+                    <span class="questionCount__text countValue"></span>
+                </div>
+                <div class="uk-width-1-2">
+                    <span class="questionCount__text questionCount__text--white countTotal"></span>
+                </div>
+            </div>
+        </div>
+
         <div uk-slideshow="animation: scale; draggable: false; finite: true;">
             <div id="quizId" class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" data-quiz-id="<?php echo $quizId; ?>" data-voucher-id="<?php echo $voucherCode; ?>">
                 <div class="uk-slideshow-items uk-box-shadow-medium">

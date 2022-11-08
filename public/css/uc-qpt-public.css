@@ -308,3 +308,44 @@ input.invalid {
 .finishLink .uk-icon{
     margin-left: 8px;
 }
+
+/* questionCount */
+.questionCount{
+    z-index: 9;
+    right: 20px;
+    width: 110px;
+    height: 44px;
+    border: 2px solid #188CBA;
+    border-radius: 4px;
+    margin-top: 30px;
+    margin-right: 90px;
+    overflow: hidden;
+}
+.questionCount__container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.questionCount__container::before{
+    content: '';
+    display: block;
+    background: #188CBA;
+    width: 100%;
+    height: 160%;
+    top: 0px;
+    left: 30%;
+    position: absolute;
+    z-index: -1;
+    transform: rotate(290deg);
+}
+.questionCount__text{
+    font-size: 21px;
+    font-weight: bolder;
+    color: #188CBA;
+}
+.questionCount__text--white{
+    color: #ffffff;
+}

@@ -226,6 +226,7 @@ function listenerNextEvent(){
         }
 
         handleDots();
+        countSlider();
     })
 }
 
@@ -240,6 +241,24 @@ function handleDots(){
     if(dotActive && prevDot){
         prevDot.addClass('answered');
     }
+}
+
+
+/**
+ * Contador de perguntas
+ * Ao trocar de slider de pergunta a função é chamada
+ * A partir dai ela conta o número da pergunta atual e insere no contador
+ * A contagem acontece baseada nos elements .uk-dots
+ * 
+ */
+function countSlider(){
+    let total = jQuery('.uk-slideshow-nav li').length,
+        currVal = parseInt(jQuery('.uk-slideshow-nav li.uk-active').attr('uk-slideshow-item')) + 1,
+        elValue = jQuery('.countValue'),
+        elTotal = jQuery('.countTotal');
+
+    elTotal.text(total);
+    elValue.text(currVal);
 }
 
 /**
