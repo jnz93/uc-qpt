@@ -57,6 +57,36 @@ input.invalid {
     width: 110px;
 }
 
+/* Welcome blocks */
+.welcome__coverBackground{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(to bottom, #188CBA, #A60D29);
+    opacity: .6;
+    z-index: -1;
+    position: absolute;
+}
+
+/* Form Validation */
+.formValidation{
+    min-height: 680px;
+}
+.formValidation__input{
+    width: 100%;
+    border: 1px solid #dcdce0 !important;
+    border-radius: 8px !important;
+    background: #f2f2f2;
+}
+.formValidation__submit{
+    width: 100% !important;
+    height: 64px;
+    background: #188CBA;
+    border-radius: 8px;
+}
+
+
 /* asindeContent */
 .asideContent{
     padding-top: 84px;
