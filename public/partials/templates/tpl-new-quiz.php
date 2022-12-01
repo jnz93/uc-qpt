@@ -81,18 +81,22 @@
                 <div class="wrapper-next uk-flex">
                     <div class="uk-width-1-1 uk-flex uk-flex-center uk-position-absolute">
                         <!-- Btn reset -->
-                        <button type="button" class="btnReset">
-                            <span class="btnNext__text"><?php _e( 'Resetar pesos', 'textdomain' ); ?></span>
+                        <button type="button" class="btnReset uk-text-center uk-width-1-3 uk-margin-small-right">
+                            <span class="btnNext__text uk-margin-small-right"><?php _e( 'Resetar pesos', 'textdomain' ); ?></span>
+                            <span uk-icon="refresh"></span>
                         </button>
 
                         <!-- Btn Next -->
-                        <a href="#" uk-slideshow-item="next" class="btnNext">
-                            <span class="btnNext__text"><?php _e( 'Próxima Pergunta', 'textdomain' ); ?></span>
-                            <span class="btnNext__counter">05</span>
+                        <a href="#" uk-slideshow-item="next" class="btnNext uk-link-reset uk-text-center uk-width-2-3">
+                            <span class="btnNext__text uk-margin-small-right"><?php _e( 'Próxima Pergunta', 'textdomain' ); ?></span>
+                            <span uk-icon="arrow-right"></span>
                         </a>
 
                         <!-- Btn finish -->
-                        <button type="button" id="btnFinish" class="btnFinish"><?php _e( 'Finalizar Teste', 'textdomain' ); ?></button>
+                        <button type="button" id="btnFinish" class="btnFinish uk-text-center uk-width-3-3">
+                            <?php _e( 'Finalizar Teste', 'textdomain' ); ?>
+                            <span uk-icon="check uk-margin-small-left"></span>
+                        </button>
                     </div>
                 </div>
             </div>

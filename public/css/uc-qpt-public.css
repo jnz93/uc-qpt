@@ -266,6 +266,8 @@ input.invalid {
     display: inline-block;
     padding: 24px 32px;
     border-radius: 8px;
+    font-size: 1.2em;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
     display: none;
 }
 
@@ -276,6 +278,15 @@ input.invalid {
     transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+.btnReset{
+    background: none !important;
+    border: 2px solid #C62828 !important;
+    color: #C62828 !important;
+}
+.btnReset:hover{
+    background: #EF9A9A !important;
+    transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
 
 /* Finish */
 .finishCover{
