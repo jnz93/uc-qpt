@@ -1,4 +1,4 @@
-<div class="questionItem uk-card uk-card-default uk-card-large uk-padding" data-question-id="<?php echo $id ?>">
+<div class="questionItem uk-card uk-card-default uk-card-large uk-padding uk-flex uk-flex-column uk-flex-center" data-question-id="<?php echo $id ?>">
     <h2 class="questionItem__title uk-card-title uk-text-bolder uk-width-5-6"><?php _e( $questionTitle, 'textdomain' ); ?></h2>
 
     <div class="containerAnswers">
