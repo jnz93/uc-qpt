@@ -17,12 +17,15 @@
      * 
      * @returns mixed
      */
-    function validateVoucher(){
+    function validateVoucher(btn){
         let vCode = $('#ucqpt_voucher_code').val();
         if ( vCode.length < 10 ) {
             UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher Inválido", {status:'danger', pos: 'bottom-right'} );
             return;
         }
+
+        btn.hide();
+        btn.after('<div uk-spinner></div>');
 
         let payload = {
             action: 'validate_voucher',
@@ -30,17 +33,27 @@
             voucher: vCode
         };
 
-        jQuery.ajax({
+        $.ajax({
             url: ajax.url,
             type: 'POST',
             data: payload,
         })
+        .error( function(xhr, status, err){
+            console.log(`[Mindflow] Erro: ${err}`);
+            UIkit.notification( "<span uk-icon='icon: warning'></span> Erro. Tente novamente! ["+ status +"]", {status:'danger', pos: 'bottom-right'} );
+            btn.show();
+            btn.siblings('.uk-spinner').remove();
+        })
         .done( function(res) {
-            if( res ){
-                jQuery('#form-wrapper').html(res);
-            } else {
-                UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher Inválido", {status:'danger', pos: 'bottom-right'} );
-            }
+            setTimeout(() => {
+                if( res ){
+                    $('#form-wrapper').html(res);
+                } else {
+                    UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher Inválido", {status:'danger', pos: 'bottom-right'} );
+                    btn.show();
+                    btn.siblings('.uk-spinner').remove();
+                }
+            }, 1000);
         });
     }
 
@@ -48,7 +61,7 @@
     $(document).ready( function(){
         // Validar voucher
         $('#validateVoucher').click( function(){
-            validateVoucher();
+            validateVoucher($(this));
         });
 
         // Finish test
@@ -67,7 +80,7 @@
  * 
  * @return mixed
  */
- function authenticateVoucher(){
+ function authenticateVoucher(btn){
     let userName    = jQuery('#user_full_name').val(),
         userEmail   = jQuery('#user_email').val(),
         userPhone   = jQuery('#user_phone').val(),
@@ -78,6 +91,9 @@
         UIkit.notification( "<span uk-icon='icon: warning'></span> Preencha todas as informações.", {status:'danger', pos: 'bottom-right'} );
         return;
     }
+
+    btn.hide();
+    btn.after('<div uk-spinner></div>');
 
     let payload = {
         action: 'authenticate_voucher',
@@ -94,12 +110,22 @@
         type: 'POST',
         data: payload,
     })
+    .error( function(xhr, status, err){
+        console.log(`[Mindflow] Erro: ${err}`);
+        UIkit.notification( "<span uk-icon='icon: warning'></span> Erro. Tente novamente! ["+ status +"]", {status:'danger', pos: 'bottom-right'} );
+        btn.show();
+        btn.siblings('.uk-spinner').remove();
+    })
     .done( function(res) {
-        if( res ){
-            jQuery('#modal-content').html(res);
-        } else {
-            UIkit.notification( "<span uk-icon='icon: warning'></span> Voucher inválido", {status:'danger', pos: 'bottom-right'} );
-        }
+        setTimeout(() => {
+            if( res ){
+                jQuery('#modal-content').html(res);
+            } else {
+                UIkit.notification( "<span uk-icon='icon: warning'></span> Dados inválidos.", {status:'danger', pos: 'bottom-right'} );
+                btn.show();
+                btn.siblings('.uk-spinner').remove();
+            }
+        }, 1000);
     });
 }
 

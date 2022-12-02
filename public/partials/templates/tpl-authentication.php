@@ -26,7 +26,7 @@
         </div>
         
         <div class="uk-margin">
-            <button type="button" class="uk-button uk-box-shadow-small uk-box-shadow-hover-medium formValidation__submit" onclick="authenticateVoucher()"><?php _e( 'Autenticar Voucher', 'textdomain'); ?></button>
+            <button type="button" class="uk-button uk-box-shadow-small uk-box-shadow-hover-medium formValidation__submit" onclick="authenticateVoucher(jQuery(this))"><?php _e( 'Autenticar Voucher', 'textdomain'); ?></button>
         </div>
         <input type="hidden" name="voucher_id" id="voucher_id" value="<?php echo $vId; ?>">
     </form>
