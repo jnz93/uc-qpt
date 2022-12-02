@@ -108,6 +108,10 @@ input.invalid {
     font-weight: lighter;
     color: #808080;
 }
+.asideContent__button{
+    background: none !important;
+    color: #0f6ecd !important;
+}
 
 /* Modal do inventário v1.7.0 */
 .questionItem__title{

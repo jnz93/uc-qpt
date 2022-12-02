@@ -12,10 +12,10 @@
             <span class="asideContent__text asideContent__text--caption"><?php _e( 'Você está utilizando o voucher:', 'textdomain' ); ?></span>
             <span class="asideContent__text"><strong><?php echo $voucherCode; ?></strong></span>
             <span class="asideContent__text uk-margin"><?php the_date( 'd-m-Y' ) ?></span>
-            <a href="#" class="asideContent__link" onclick="openHowtoWork()">
+            <button class="asideContent__button uk-link" onclick="openHowtoWork()">
                 <span uk-icon="question"></span>
                 <?php _e( 'Como funciona?', 'textdomain'); ?>
-            </a>
+            </button>
         </div>
 
         <!-- Como funciona -->
