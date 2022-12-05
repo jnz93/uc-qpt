@@ -114,5 +114,9 @@ jQuery('#btnFinish').click(function(){
     finishHim();
 })
 
+jQuery('.btnReset').click( function(){
+    clearAnswers();
+})
+
 listenerNextEvent();
 </script>

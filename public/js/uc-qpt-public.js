@@ -220,10 +220,10 @@ function toggleNextButton(){
 
     if( answers.length % 4 == 0 ){
         btnNext.addClass('btnNext--enabled');
-        // btnReset.addClass('btnReset--enabled');
+        btnReset.addClass('btnReset--enabled');
     } else {
         btnNext.removeClass('btnNext--enabled');
-        // btnReset.removeClass('btnReset--enabled');
+        btnReset.removeClass('btnReset--enabled');
     }
 
     if( answers.length == 100 ){
@@ -307,6 +307,66 @@ function closeHowtoWork(){
     howtowork.removeClass('howtowork--enabled');
 }
 
+/**
+ * Limpar as respostas de cada pergunta
+ */
+function clearAnswers(){
+    let currentSlide        = jQuery('.uk-transition-active'),
+        selectedWeights     = currentSlide.find('.answerList__weightItem--selected'),
+        notSelectedWeights  = currentSlide.find('.answerList__weightItem--disabled'),
+        selectedAnswers     = currentSlide.find('.answerList__answered');
+
+    clearSelectedWeights(selectedWeights);
+    clearNotSelectedWeights(notSelectedWeights);
+    clearAnswered(selectedAnswers);
+    hideButtonsOnClearAnswer();
+}
+
+function clearSelectedWeights(elements){
+    if( elements.length == 0) return;
+
+    elements.each(function(i){
+        let item = jQuery(this);
+        if(item.hasClass('answerList__weightItem--selected')){
+            item.removeClass('answerList__weightItem--selected');
+        }
+    });
+}
+
+function clearNotSelectedWeights(elements){
+    if( elements.length == 0 ) return;
+
+    elements.each(function(i){
+        let item = jQuery(this);
+        if(item.hasClass('answerList__weightItem--disabled')){
+            item.removeClass('answerList__weightItem--disabled');
+        }
+    })
+}
+
+function clearAnswered(elements){
+    if( elements.length == 0 ) return;
+
+    elements.each( function(i){
+        let item = jQuery(this);
+        if(item.hasClass('answerList__answered')){
+            item.removeClass('answerList__answered');
+        }
+    })
+}
+
+function hideButtonsOnClearAnswer(){
+    var btnNext = jQuery('.btnNext'),
+        btnReset = jQuery('.btnReset');
+
+    if(btnNext.hasClass('btnNext--enabled')){
+        btnNext.removeClass('btnNext--enabled');
+    }
+
+    if(btnReset.hasClass('btnReset--enabled')){
+        btnReset.removeClass('btnReset--enabled');
+    }
+}
 
 /**
  * Submeter teste para avaliação
