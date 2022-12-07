@@ -6,7 +6,7 @@
                 <img src="https://metodoprav.com.br/wp-content/uploads/2021/04/logotipo-PRAV-e1617632526222.jpg" alt="" class="asideContent__logo">
             </div>
             <h6 class="asideContent__title"><?php _e( 'Bem vindo(a) ' . $userName . '!', 'textdomain' ); ?></h6>
-            <p class="asideContent__text"><?php _e( 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas pariatur expedita officiis veritatis', 'textdomain' ); ?></p>
+            <p class="asideContent__text"><?php _e( '"Se você conhece o inimigo e conhece a si mesmo, não precisa temer o resultado de cem batalhas. Se… conheces a ti mesmo, mas não conhece o inimigo, para cada vitória ganha sofrerá também uma derrota. Caso não conheça nem o inimigo nem a si mesmo, perderá todas as batalhas" - Sun Tzu, A arte da Guerra', 'textdomain' ); ?></p>
         </div>
         <div class="asideContent uk-flex uk-flex-column uk-width-1-1">
             <span class="asideContent__text asideContent__text--caption"><?php _e( 'Você está utilizando o voucher:', 'textdomain' ); ?></span>
