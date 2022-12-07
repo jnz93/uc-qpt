@@ -79,21 +79,29 @@
                 <ul class="uk-slideshow-nav uk-dotnav uk-flex-center"></ul>
 
                 <div class="wrapper-next uk-flex">
-                    <div class="uk-width-1-1 uk-flex uk-flex-center uk-position-absolute">
-                        <!-- Btn reset -->
-                        <button type="button" class="btnReset uk-text-center uk-width-1-3 uk-margin-small-right">
-                            <span class="btnNext__text uk-margin-small-right"><?php _e( 'Resetar pesos', 'textdomain' ); ?></span>
-                            <span uk-icon="refresh"></span>
-                        </button>
-
-                        <!-- Btn Next -->
-                        <a href="#" uk-slideshow-item="next" class="btnNext uk-link-reset uk-text-center uk-width-2-3">
-                            <span class="btnNext__text uk-margin-small-right"><?php _e( 'Próxima Pergunta', 'textdomain' ); ?></span>
-                            <span uk-icon="arrow-right"></span>
-                        </a>
+                    <div class="uk-width-1-1 uk-position-absolute">
+                        <div class="actionBar uk-flex-center">
+                            <!-- Btn Voltar -->
+                            <button type="button" uk-slideshow-item="previous" class="btnPrevious uk-text-center uk-width-2-5 uk-margin-small-right">
+                                <span uk-icon="arrow-left"></span>
+                                <span class="uk-margin-small-left"><?php _e( 'Voltar', 'textdomain' ); ?></span>
+                            </button>
+    
+                            <!-- Btn reset -->
+                            <button type="button" class="btnReset uk-text-center uk-width-1-5 uk-margin-small-right">
+                                <span class="btnNext__text uk-margin-small-right"><?php _e( 'Resetar pesos', 'textdomain' ); ?></span>
+                                <span uk-icon="refresh"></span>
+                            </button>
+    
+                            <!-- Btn Next -->
+                            <button type="button" uk-slideshow-item="next" class="btnNext uk-text-center uk-width-2-5">
+                                <span class="btnNext__text uk-margin-small-right"><?php _e( 'Próxima Pergunta', 'textdomain' ); ?></span>
+                                <span uk-icon="arrow-right"></span>
+                            </button>
+                        </div>
 
                         <!-- Btn finish -->
-                        <button type="button" id="btnFinish" class="btnFinish uk-text-center uk-width-3-3">
+                        <button type="button" id="btnFinish" class="btnFinish uk-text-center uk-width-1-1">
                             <?php _e( 'Finalizar Teste', 'textdomain' ); ?>
                             <span uk-icon="check uk-margin-small-left"></span>
                         </button>
@@ -105,6 +113,8 @@
 </div>
 
 <script>
+listenerAfterSlideEvent();
+
 jQuery('.answerList__weightItem').click( function(){
     var el = jQuery(this);
     selectWeight(el);
@@ -116,7 +126,10 @@ jQuery('#btnFinish').click(function(){
 
 jQuery('.btnReset').click( function(){
     clearAnswers();
+    jQuery('.actionBar').removeClass('actionBar--enabled');
 })
 
-listenerNextEvent();
+jQuery('.btnNext').click(function(){
+    jQuery('.actionBar').removeClass('actionBar--enabled');
+})
 </script>

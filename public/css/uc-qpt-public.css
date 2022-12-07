@@ -261,24 +261,35 @@ input.invalid {
     color: #28292B;
 }
 
+/* actionBar */
+.actionBar{
+    display: none;
+}
+.actionBar--enabled{
+    display: flex;
+}
+
 /* btnNext, btnFinish */
 .btnNext,
+.btnPrevious,
 .btnReset, 
 .btnFinish{
-    height: 72px;
+    height: 48px;
     background: #188CBA;
-    display: inline-block;
-    padding: 24px 32px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-size: 1.2em;
     transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnFinish{
     display: none;
 }
 
-.btnNext--enabled,
-.btnReset--enabled,
 .btnFinish--enabled{
-    display: block !important;
+    display: flex !important;
     transition: .2s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 

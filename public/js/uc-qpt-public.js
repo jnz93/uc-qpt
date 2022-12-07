@@ -149,8 +149,8 @@ function selectWeight(self){
     // Desabilitar itens "irmãos" e o mesmo valor em outras respostas
     disableWeights(self);
 
-    // Habilitar botão "Próxima Pergunta"
-    toggleNextButton();
+    // Habilitar action bar
+    toggleActionBar();
     
 }
 
@@ -212,24 +212,17 @@ function disableWeights( element ){
  * Habilitar o botão de "próxima pergunta" quando todos os pesos forem selecionados
  * 
  */
-function toggleNextButton(){
+function toggleActionBar(){
     var answers = jQuery('.answerList__weightItem--selected'),
-        btnNext = jQuery('.btnNext'),
-        btnReset = jQuery('.btnReset'),
+        actionBar = jQuery('.actionBar'),
         btnFinish = jQuery('#btnFinish');
 
-    if( answers.length % 4 == 0 ){
-        btnNext.addClass('btnNext--enabled');
-        btnReset.addClass('btnReset--enabled');
-    } else {
-        btnNext.removeClass('btnNext--enabled');
-        btnReset.removeClass('btnReset--enabled');
-    }
-
-    if( answers.length == 100 ){
+    if( answers.length !== 100 && answers.length % 4 == 0 ){
+        actionBar.addClass('actionBar--enabled');
+    } else if( answers.length == 100 ){
         btnFinish.addClass('btnFinish--enabled');
-        btnNext.removeClass('btnNext--enabled');
-        btnReset.removeClass('btnReset--enabled');
+    } else {
+        actionBar.removeClass('actionBar--enabled');
     }
 }
 
@@ -238,22 +231,26 @@ function toggleNextButton(){
  * Esconder botão de "Próxima Pergunta" ao passar o slider.
  * 
  */
-function listenerNextEvent(){
-    addEventListener('itemshow', () => {
-        var btnNext = jQuery('.btnNext'),
-            btnReset = jQuery('.btnReset');
-
-        if(btnNext){
-            btnNext.removeClass('btnNext--enabled');
-        }
-
-        if(btnReset){
-            btnReset.removeClass('btnReset--enabled');
+function listenerAfterSlideEvent(){
+    addEventListener( 'itemshown', () => {
+        var actionBar = jQuery('.actionBar'),
+            currentSlide = jQuery('.uk-transition-active'),
+            btnFinish = jQuery('#btnFinish'),
+            selectedAnswers = currentSlide.find('.answerList__weightItem--selected');
+        console.log(selectedAnswers);
+        if( selectedAnswers.length !== 0 ){
+            if( selectedAnswers.length !== 100 && selectedAnswers.length % 4 == 0 ){
+                actionBar.addClass('actionBar--enabled');
+            } else if( selectedAnswers.length == 100 ){
+                btnFinish.addClass('btnFinish--enabled');
+            } else {
+                actionBar.removeClass('actionBar--enabled');
+            }
         }
 
         handleDots();
         countSlider();
-    })
+    });
 }
 
 /**
@@ -269,6 +266,18 @@ function handleDots(){
     }
 }
 
+
+/**
+ * Mostrar botões ao voltar o slider
+ * 
+ */
+function listenerPreviousEvent(){
+    var btnNext = jQuery('.btnNext'),
+        btnReset = jQuery('.btnReset');
+    
+    btnNext.addClass('btnNext--enabled');
+    btnReset.addClass('btnReset--enabled');
+}
 
 /**
  * Contador de perguntas
