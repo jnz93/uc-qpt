@@ -1,5 +1,3 @@
-# README
-
 ## MINDFLOW PERSONALITY
 Solução para aplicação do inventário de personalidade Método PRAV da [Mindflow Academy](https://metodoprav.com.br). Um sistema multi-camadas e desenhado especificamente para o gerenciamento e aplicação dos testes de personalidade.
 O sistema possibilita a criação de inventários, cadastro de novas perguntas e respostas, reutilização de perguntas já cadastradas no banco, cadastro de empresas, sistema de vouchers para aplicação dos testes, disparos de notificações via e-mail, edição e customização de arquivos PDF's e muito mais.
